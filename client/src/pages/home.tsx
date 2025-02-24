@@ -3,11 +3,14 @@ import { Competition } from "@shared/schema";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Logo } from "@/components/ui/logo";
 import { Flame } from "lucide-react";
+import { useTranslation } from "@/lib/i18n";
 
 export default function Home() {
   const { data: competitions, isLoading } = useQuery<Competition[]>({
     queryKey: ["/api/competitions/active"],
   });
+
+  const t = useTranslation();
 
   return (
     <div className="p-4 pb-20">
@@ -19,7 +22,7 @@ export default function Home() {
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-4">
           <Flame className="text-red-500" />
-          <h2 className="text-lg font-semibold">Активные соревнования</h2>
+          <h2 className="text-lg font-semibold">{t('activeCompetitions')}</h2>
         </div>
 
         {isLoading ? (
