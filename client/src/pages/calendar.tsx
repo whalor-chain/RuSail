@@ -17,7 +17,7 @@ export default function Calendar() {
   return (
     <div className="p-4 pb-20">
       <div className="flex items-center mb-6">
-        <CalendarIcon className="w-8 h-8 text-primary mr-2" />
+        <CalendarIcon className="w-8 h-8 text-red-500 mr-2" />
         <h1 className="text-2xl font-bold">{t('calendar')}</h1>
       </div>
 
