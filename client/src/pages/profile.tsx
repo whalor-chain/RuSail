@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { FaCheck } from "react-icons/fa";
 import { useTheme } from "@/lib/theme";
 import { useI18n, useTranslation } from "@/lib/i18n";
-import { Moon, Sun, Languages } from "lucide-react";
+import { Moon, Sun, Languages, User } from "lucide-react";
 
 export default function Profile() {
   const { theme, setTheme } = useTheme();
@@ -13,6 +13,7 @@ export default function Profile() {
   return (
     <div className="p-4 pb-20">
       <div className="flex items-center mb-6">
+        <User className="w-8 h-8 text-primary mr-2" />
         <h1 className="text-2xl font-bold">{t('profile')}</h1>
       </div>
 

@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useTranslation } from "@/lib/i18n";
+import { Calendar as CalendarIcon } from "lucide-react";
 
 export default function Calendar() {
   const [selectedYear, setSelectedYear] = useState(2024);
@@ -15,7 +16,10 @@ export default function Calendar() {
 
   return (
     <div className="p-4 pb-20">
-      <h1 className="text-2xl font-bold mb-6">{t('calendar')}</h1>
+      <div className="flex items-center mb-6">
+        <CalendarIcon className="w-8 h-8 text-primary mr-2" />
+        <h1 className="text-2xl font-bold">{t('calendar')}</h1>
+      </div>
 
       <div className="mb-6">
         <h2 className="text-lg mb-4">{t('year')}</h2>
