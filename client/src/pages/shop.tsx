@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Heart } from "lucide-react";
+import { Heart, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "@/lib/i18n";
 
@@ -53,7 +53,10 @@ export default function Shop() {
   return (
     <div className="p-4 pb-20">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">Каталог</h1>
+        <div className="flex items-center gap-2">
+          <ShoppingBag className="w-8 h-8 text-green-500" />
+          <h1 className="text-2xl font-bold">Каталог</h1>
+        </div>
       </div>
 
       <div className="relative mb-6">
@@ -84,7 +87,7 @@ export default function Shop() {
                 />
               </button>
             </div>
-            
+
             <div className="p-3">
               <h3 className="text-sm font-medium mb-2 line-clamp-2">{product.name}</h3>
               <div className="flex items-baseline gap-2 mb-2">
