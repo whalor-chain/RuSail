@@ -9,7 +9,7 @@ export function BottomNav() {
   const linkClasses = (path: string) => `
     flex flex-col items-center 
     ${location === path ? "text-primary" : "text-muted-foreground"}
-    active:scale-95 transition-transform duration-100
+    active:scale-90 transition-transform duration-75
     hover:text-primary/80
   `;
 
