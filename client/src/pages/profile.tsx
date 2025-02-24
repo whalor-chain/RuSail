@@ -34,11 +34,11 @@ export default function Profile() {
           </Button>
 
           <Button variant="outline" className="w-full bg-purple-50 border-purple-300 text-purple-700">
-            World Sailing
+            Сайт "World Sailing"
           </Button>
 
           <Button variant="outline" className="w-full">
-            ВФПС
+            Сайт "ВФПС"
           </Button>
         </div>
 
