@@ -10,6 +10,7 @@ import Home from "@/pages/home";
 import Calendar from "@/pages/calendar";
 import Results from "@/pages/results";
 import Profile from "@/pages/profile";
+import Shop from "@/pages/shop";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -17,6 +18,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/calendar" component={Calendar} />
+      <Route path="/shop" component={Shop} />
       <Route path="/results" component={Results} />
       <Route path="/profile" component={Profile} />
       <Route component={NotFound} />
