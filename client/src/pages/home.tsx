@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <div className="p-4 pb-20">
       <div className="flex items-center justify-between mb-6">
-        <Logo className="text-primary" />
-        <h1 className="text-2xl font-bold">Парусный спорт</h1>
+        <Logo className="text-primary w-12 h-12" />
+        <h1 className="text-2xl font-bold">RuSail</h1>
       </div>
 
       <div className="mb-6">

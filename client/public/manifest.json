@@ -1,6 +1,6 @@
 {
-  "name": "Парусный спорт",
-  "short_name": "Sailing",
+  "name": "RuSail",
+  "short_name": "RuSail",
   "description": "Мобильное приложение для парусного спорта с календарем соревнований и профилями спортсменов",
   "start_url": "/",
   "display": "standalone",
