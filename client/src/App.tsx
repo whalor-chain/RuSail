@@ -29,6 +29,16 @@ function App() {
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
+
+    // Отключаем контекстное меню
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+    document.addEventListener('contextmenu', handleContextMenu);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
   }, [theme]);
 
   return (
