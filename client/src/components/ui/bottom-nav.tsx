@@ -11,8 +11,8 @@ export function BottomNav() {
   const linkClasses = (path: string) => `
     flex flex-col items-center 
     ${location === path ? "text-primary" : "text-muted-foreground"}
-    ${pressedItem === path ? "scale-90" : "scale-100"}
-    transition-transform duration-150
+    ${pressedItem === path ? "scale-85" : "scale-100"}
+    transition-transform duration-200 ease-in-out
     touch-action-manipulation
   `;
 
