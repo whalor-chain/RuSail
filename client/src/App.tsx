@@ -17,8 +17,6 @@ import AuthPage from "@/pages/auth";
 import NotFound from "@/pages/not-found";
 import { ProtectedRoute } from "./components/protected-route";
 
-// Use base path for GitHub Pages
-const base = '/RuSail';
 const useHashLocation = () => {
   const [hash, setHash] = useState(window.location.hash.replace('#', '') || '/');
 
