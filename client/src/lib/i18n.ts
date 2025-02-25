@@ -33,9 +33,7 @@ export const translations = {
     worldSailingSite: 'Сайт "World Sailing"',
     rusadaSite: 'Сайт "ВФПС"',
     appearance: 'Внешний вид',
-    winterStarts: 'Зимние Старты',
-    viewFullVersion: 'Смотреть полную версию',
-    viewFullResults: 'Смотреть все результаты'
+    winterStarts: 'Зимние Старты'
   },
   en: {
     home: 'Home',
@@ -61,9 +59,7 @@ export const translations = {
     worldSailingSite: 'World Sailing Website',
     rusadaSite: 'WFSS Website',
     appearance: 'Appearance',
-    winterStarts: 'Winter Starts',
-    viewFullVersion: 'View full version',
-    viewFullResults: 'View all results'
+    winterStarts: 'Winter Starts'
   }
 };
 
