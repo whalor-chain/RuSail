@@ -8,12 +8,12 @@
     <!-- PWA meta tags -->
     <meta name="theme-color" content="#3B82F6" />
     <meta name="description" content="Мобильное приложение для парусного спорта с календарем соревнований и профилями спортсменов" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
 
     <!-- Предварительная загрузка критических ресурсов -->
-    <link rel="preload" href="/icons/icon.svg" as="image" />
+    <link rel="preload" href="icons/icon.svg" as="image" />
   </head>
   <body>
     <div id="root"></div>
@@ -22,12 +22,10 @@
     <!-- Оптимизированная регистрация service worker -->
     <script>
       if ('serviceWorker' in navigator) {
-        // Откладываем регистрацию service worker до завершения загрузки страницы
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          navigator.serviceWorker.register('sw.js')
             .then(registration => {
               console.log('ServiceWorker registration successful');
-              // Запрашиваем немедленное обновление service worker
               registration.update();
             })
             .catch(err => {
@@ -35,7 +33,6 @@
             });
         });
 
-        // Добавляем обработчик для обновления кэша
         let refreshing = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
           if (!refreshing) {
