@@ -1,11 +1,11 @@
 const CACHE_NAME = 'rusail-app-v1';
 const ASSETS_TO_CACHE = [
-  '/RuSail/',
-  '/RuSail/index.html',
-  '/RuSail/manifest.json',
-  '/RuSail/icons/icon.svg',
-  '/RuSail/icons/icon-192x192.png',
-  '/RuSail/icons/icon-512x512.png'
+  './',
+  './index.html',
+  './manifest.json',
+  './icons/icon.svg',
+  './icons/icon-192x192.png',
+  './icons/icon-512x512.png'
 ];
 
 // Установка service worker и предварительное кэширование основных ресурсов
@@ -17,7 +17,6 @@ self.addEventListener('install', (event) => {
         return cache.addAll(ASSETS_TO_CACHE);
       })
   );
-  // Принудительно активируем service worker сразу после установки
   self.skipWaiting();
 });
 
@@ -34,7 +33,6 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
-  // Берём под контроль все открытые вкладки
   self.clients.claim();
 });
 
@@ -43,20 +41,16 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        // Возвращаем закэшированный ответ, если он есть
         if (response) {
           return response;
         }
 
-        // Иначе делаем запрос к сети
         return fetch(event.request)
           .then((response) => {
-            // Проверяем валидность ответа
             if (!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
 
-            // Кэшируем новый успешный ответ
             const responseToCache = response.clone();
             caches.open(CACHE_NAME)
               .then((cache) => {
