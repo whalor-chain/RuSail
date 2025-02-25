@@ -17,29 +17,25 @@ import AuthPage from "@/pages/auth";
 import NotFound from "@/pages/not-found";
 import { ProtectedRoute } from "./components/protected-route";
 
-// Configure hash-based routing for GitHub Pages
+// Настройка хэш-роутинга для GitHub Pages
 const useHashLocation = () => {
-  const [hash, setHash] = useState(window.location.hash.substring(1) || "/");
+  const [location, setLocation] = useState(window.location.hash.replace('#', '') || '/');
 
   useEffect(() => {
-    const handler = () => {
-      const newHash = window.location.hash.substring(1) || "/";
-      setHash(newHash);
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '') || '/';
+      setLocation(hash);
     };
 
-    window.addEventListener("hashchange", handler);
-    window.addEventListener("popstate", handler);
-    return () => {
-      window.removeEventListener("hashchange", handler);
-      window.removeEventListener("popstate", handler);
-    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   const navigate = useCallback((to: string) => {
     window.location.hash = to;
   }, []);
 
-  return [hash, navigate];
+  return [location, navigate] as const;
 };
 
 function Router() {

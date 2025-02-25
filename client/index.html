@@ -8,12 +8,15 @@
     <!-- PWA meta tags -->
     <meta name="theme-color" content="#3B82F6" />
     <meta name="description" content="Мобильное приложение для парусного спорта с календарем соревнований и профилями спортсменов" />
-    <link rel="manifest" href="manifest.json" />
-    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
+    <link rel="apple-touch-icon" href="./icons/icon-192x192.png" />
 
     <!-- Предварительная загрузка критических ресурсов -->
-    <link rel="preload" href="icons/icon.svg" as="image" />
+    <link rel="preload" href="./icons/icon.svg" as="image" />
+
+    <!-- Base URL for GitHub Pages -->
+    <base href="%PUBLIC_URL%/" />
   </head>
   <body>
     <div id="root"></div>
@@ -23,7 +26,7 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js')
+          navigator.serviceWorker.register('./sw.js')
             .then(registration => {
               console.log('ServiceWorker registration successful');
               registration.update();

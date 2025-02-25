@@ -1,11 +1,11 @@
 const CACHE_NAME = 'rusail-app-v1';
 const ASSETS_TO_CACHE = [
-  '.',
-  'index.html',
-  'manifest.json',
-  'icons/icon.svg',
-  'icons/icon-192x192.png',
-  'icons/icon-512x512.png'
+  './',
+  './index.html',
+  './manifest.json',
+  './icons/icon.svg',
+  './icons/icon-192x192.png',
+  './icons/icon-512x512.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -34,6 +34,13 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+
+  // Обработка запросов к API отдельно
+  if (url.pathname.startsWith('/api/')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
