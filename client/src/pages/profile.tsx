@@ -4,6 +4,7 @@ import { FaCheck } from "react-icons/fa";
 import { useTheme } from "@/lib/theme";
 import { useI18n, useTranslation } from "@/lib/i18n";
 import { Moon, Sun, Languages, User } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Profile() {
   const { theme, setTheme } = useTheme();
@@ -20,9 +21,13 @@ export default function Profile() {
       <div className="space-y-6">
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-4">{t('personalData')}</h2>
-          <Button variant="outline" className="w-full mb-4">
-            ID ВФПС
-          </Button>
+          <Link href="/rusada-id">
+            <a className="block">
+              <Button variant="outline" className="w-full mb-4">
+                {t('rusadaIdTitle')}
+              </Button>
+            </a>
+          </Link>
         </div>
 
         <div className="space-y-4">
@@ -30,23 +35,21 @@ export default function Profile() {
 
           <Button variant="outline" className="w-full bg-green-50 border-green-300 text-green-700">
             <FaCheck className="mr-2" />
-            Тест Антидопинг 2025 (РУСАДА)
+            {t('rusadaTest')}
           </Button>
 
           <Button variant="outline" className="w-full bg-purple-50 border-purple-300 text-purple-700">
-            Сайт "World Sailing"
+            {t('worldSailingSite')}
           </Button>
 
           <Button variant="outline" className="w-full">
-            Сайт "ВФПС"
+            {t('rusadaSite')}
           </Button>
         </div>
 
-        {/* Appearance Section */}
         <div className="space-y-4 mt-8">
-          <h2 className="text-lg font-semibold">Внешний вид</h2>
+          <h2 className="text-lg font-semibold">{t('appearance')}</h2>
 
-          {/* Theme Switcher */}
           <div className="flex gap-2">
             <Button 
               variant={theme === 'light' ? 'default' : 'outline'}
@@ -66,7 +69,6 @@ export default function Profile() {
             </Button>
           </div>
 
-          {/* Language Switcher */}
           <div className="flex gap-2">
             <Button 
               variant={language === 'ru' ? 'default' : 'outline'}

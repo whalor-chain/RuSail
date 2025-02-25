@@ -11,6 +11,7 @@ import Calendar from "@/pages/calendar";
 import Results from "@/pages/results";
 import Profile from "@/pages/profile";
 import Shop from "@/pages/shop";
+import RusadaId from "@/pages/rusada-id";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/shop" component={Shop} />
       <Route path="/results" component={Results} />
       <Route path="/profile" component={Profile} />
+      <Route path="/rusada-id" component={RusadaId} />
       <Route component={NotFound} />
     </Switch>
   );

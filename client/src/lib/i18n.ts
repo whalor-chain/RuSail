@@ -33,7 +33,13 @@ export const translations = {
     worldSailingSite: 'Сайт "World Sailing"',
     rusadaSite: 'Сайт "ВФПС"',
     appearance: 'Внешний вид',
-    winterStarts: 'Зимние Старты'
+    winterStarts: 'Зимние Старты',
+    rusadaIdTitle: 'ID ВФПС',
+    enterRusadaId: 'Введите ваш ID ВФПС',
+    rusadaIdExample: 'Например: 12345',
+    save: 'Сохранить',
+    rusadaIdSaved: 'ID ВФПС сохранен',
+    yourId: 'Ваш ID'
   },
   en: {
     home: 'Home',
@@ -59,7 +65,13 @@ export const translations = {
     worldSailingSite: 'World Sailing Website',
     rusadaSite: 'WFSS Website',
     appearance: 'Appearance',
-    winterStarts: 'Winter Starts'
+    winterStarts: 'Winter Starts',
+    rusadaIdTitle: 'WFSS ID',
+    enterRusadaId: 'Enter your WFSS ID',
+    rusadaIdExample: 'Example: 12345',
+    save: 'Save',
+    rusadaIdSaved: 'WFSS ID saved',
+    yourId: 'Your ID'
   }
 };
 
