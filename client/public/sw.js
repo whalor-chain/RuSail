@@ -8,19 +8,16 @@ const ASSETS_TO_CACHE = [
   './icons/icon-512x512.png'
 ];
 
-// Установка service worker и предварительное кэширование основных ресурсов
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('Opened cache');
         return cache.addAll(ASSETS_TO_CACHE);
       })
   );
   self.skipWaiting();
 });
 
-// Активация service worker и очистка старого кэша
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -36,8 +33,14 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Стратегия кэширования: сначала кэш, потом сеть
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+
+  // Обработка запросов к API отдельно
+  if (url.pathname.startsWith('/api/')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {

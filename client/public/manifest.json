@@ -3,6 +3,7 @@
   "short_name": "RuSail",
   "description": "Мобильное приложение для парусного спорта с календарем соревнований и профилями спортсменов",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3B82F6",

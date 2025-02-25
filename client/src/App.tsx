@@ -18,21 +18,23 @@ import NotFound from "@/pages/not-found";
 import { ProtectedRoute } from "./components/protected-route";
 
 const useHashLocation = () => {
-  const [hash, setHash] = useState(window.location.hash.replace('#', '') || '/');
+  const [location, setLocation] = useState(window.location.hash.replace('#', '') || '/');
 
   useEffect(() => {
-    const handler = () => {
-      setHash(window.location.hash.replace('#', '') || '/');
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '') || '/';
+      setLocation(hash);
     };
-    window.addEventListener('hashchange', handler);
-    return () => window.removeEventListener('hashchange', handler);
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   const navigate = useCallback((to: string) => {
     window.location.hash = to;
   }, []);
 
-  return [hash, navigate];
+  return [location, navigate] as const;
 };
 
 function Router() {
