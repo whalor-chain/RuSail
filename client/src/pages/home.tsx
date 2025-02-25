@@ -38,11 +38,11 @@ export default function Home() {
                 <Logo className="text-primary w-8 h-8" />
                 <div>
                   <h3 className="font-medium">RuSail</h3>
-                  <p className="text-sm text-muted-foreground">Вы используете бета-версию приложения</p>
+                  <p className="text-sm text-muted-foreground">{t('betaVersion')}</p>
                 </div>
               </div>
               <p className="text-sm text-gray-600">
-                Если заметите ошибки или у вас будут идеи по улучшению, поделитесь обратной связь — это поможет сделать наше приложение лучше!
+                {t('feedbackMessage')}
               </p>
             </div>
           </PopoverContent>

@@ -55,14 +55,14 @@ export default function Shop() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <ShoppingBag className="w-8 h-8 text-green-500" />
-          <h1 className="text-2xl font-bold">Каталог</h1>
+          <h1 className="text-2xl font-bold">{t('catalog')}</h1>
         </div>
       </div>
 
       <div className="relative mb-6">
         <Input
           type="search"
-          placeholder="Найти товар"
+          placeholder={t('searchProduct')}
           className="w-full bg-gray-100 dark:bg-gray-800"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -98,7 +98,7 @@ export default function Shop() {
                 />
               </button>
               <Button variant="outline" size="sm" className="whitespace-nowrap">
-                В корзину
+                {t('addToCart')}
               </Button>
             </div>
           </div>

@@ -23,7 +23,17 @@ export const translations = {
     dark: 'Темная',
     language: 'Язык',
     year: 'год',
-    inDevelopment: 'в разработке...'
+    inDevelopment: 'в разработке...',
+    catalog: 'Каталог',
+    searchProduct: 'Найти товар',
+    addToCart: 'В корзину',
+    betaVersion: 'Вы используете бета-версию приложения',
+    feedbackMessage: 'Если заметите ошибки или у вас будут идеи по улучшению, поделитесь обратной связь — это поможет сделать наше приложение лучше!',
+    rusadaTest: 'Тест Антидопинг 2025 (РУСАДА)',
+    worldSailingSite: 'Сайт "World Sailing"',
+    rusadaSite: 'Сайт "ВФПС"',
+    appearance: 'Внешний вид',
+    winterStarts: 'Зимние Старты'
   },
   en: {
     home: 'Home',
@@ -39,7 +49,17 @@ export const translations = {
     dark: 'Dark',
     language: 'Language',
     year: 'year',
-    inDevelopment: 'in development...'
+    inDevelopment: 'in development...',
+    catalog: 'Catalog',
+    searchProduct: 'Search product',
+    addToCart: 'Add to Cart',
+    betaVersion: 'You are using the beta version of the app',
+    feedbackMessage: 'If you notice any bugs or have ideas for improvement, share your feedback - it will help make our app better!',
+    rusadaTest: 'Anti-Doping Test 2025 (RUSADA)',
+    worldSailingSite: 'World Sailing Website',
+    rusadaSite: 'WFSS Website',
+    appearance: 'Appearance',
+    winterStarts: 'Winter Starts'
   }
 };
 
