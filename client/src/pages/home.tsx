@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Competition } from "@shared/schema";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Logo } from "@/components/ui/logo";
-import { Flame } from "lucide-react";
+import { Flame, ExternalLink } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -67,10 +67,19 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">{competition.location}</p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 mb-3">
                   {new Date(competition.startDate).toLocaleDateString("ru-RU")} - {" "}
                   {new Date(competition.endDate).toLocaleDateString("ru-RU")}
                 </p>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full"
+                  onClick={() => window.open('https://rusyf.ru/calendar', '_blank')}
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  {t('viewFullVersion')}
+                </Button>
               </CardContent>
             </Card>
           ))

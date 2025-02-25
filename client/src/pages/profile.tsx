@@ -30,21 +30,21 @@ export default function Profile() {
 
           <Button variant="outline" className="w-full bg-green-50 border-green-300 text-green-700">
             <FaCheck className="mr-2" />
-            Тест Антидопинг 2025 (РУСАДА)
+            {t('rusadaTest')}
           </Button>
 
           <Button variant="outline" className="w-full bg-purple-50 border-purple-300 text-purple-700">
-            Сайт "World Sailing"
+            {t('worldSailingSite')}
           </Button>
 
           <Button variant="outline" className="w-full">
-            Сайт "ВФПС"
+            {t('rusadaSite')}
           </Button>
         </div>
 
         {/* Appearance Section */}
         <div className="space-y-4 mt-8">
-          <h2 className="text-lg font-semibold">Внешний вид</h2>
+          <h2 className="text-lg font-semibold">{t('appearance')}</h2>
 
           {/* Theme Switcher */}
           <div className="flex gap-2">
