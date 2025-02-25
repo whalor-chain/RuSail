@@ -1,9 +1,13 @@
 import type { Express } from "express";
 import { createServer } from "http";
 import { storage } from "./storage";
+import { setupAuth } from "./auth";
 
 export async function registerRoutes(app: Express) {
   const httpServer = createServer(app);
+
+  // Set up authentication routes and middleware
+  setupAuth(app);
 
   // Active competitions
   app.get("/api/competitions/active", async (_req, res) => {
@@ -25,15 +29,19 @@ export async function registerRoutes(app: Express) {
     res.json(results);
   });
 
-  // User profile
-  app.get("/api/users/:id", async (req, res) => {
-    const id = parseInt(req.params.id);
-    const user = await storage.getUser(id);
-    if (!user) {
-      res.status(404).json({ message: "User not found" });
-      return;
+  // Protected routes
+  app.use("/api/protected", (req, res, next) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
-    res.json(user);
+    next();
+  });
+
+  // Update user profile
+  app.patch("/api/protected/user", async (req, res) => {
+    const userId = req.user!.id;
+    const updatedUser = await storage.updateUser(userId, req.body);
+    res.json(updatedUser);
   });
 
   return httpServer;
