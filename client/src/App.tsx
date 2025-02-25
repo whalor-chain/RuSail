@@ -1,11 +1,11 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { BottomNav } from "@/components/ui/bottom-nav";
 import { useTheme } from "./lib/theme";
 import { AuthProvider } from "./hooks/use-auth";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 import Home from "@/pages/home";
 import Calendar from "@/pages/calendar";
@@ -17,18 +17,40 @@ import AuthPage from "@/pages/auth";
 import NotFound from "@/pages/not-found";
 import { ProtectedRoute } from "./components/protected-route";
 
+// Use base path for GitHub Pages
+const base = '/RuSail';
+const useHashLocation = () => {
+  const [hash, setHash] = useState(window.location.hash.replace('#', '') || '/');
+
+  useEffect(() => {
+    const handler = () => {
+      setHash(window.location.hash.replace('#', '') || '/');
+    };
+    window.addEventListener('hashchange', handler);
+    return () => window.removeEventListener('hashchange', handler);
+  }, []);
+
+  const navigate = useCallback((to: string) => {
+    window.location.hash = to;
+  }, []);
+
+  return [hash, navigate] as const;
+};
+
 function Router() {
   return (
-    <Switch>
-      <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/" component={Home} />
-      <ProtectedRoute path="/calendar" component={Calendar} />
-      <ProtectedRoute path="/shop" component={Shop} />
-      <ProtectedRoute path="/results" component={Results} />
-      <ProtectedRoute path="/profile" component={Profile} />
-      <ProtectedRoute path="/rusada-id" component={RusadaId} />
-      <Route component={NotFound} />
-    </Switch>
+    <WouterRouter hook={useHashLocation}>
+      <Switch>
+        <Route path="/auth" component={AuthPage} />
+        <ProtectedRoute path="/" component={Home} />
+        <ProtectedRoute path="/calendar" component={Calendar} />
+        <ProtectedRoute path="/shop" component={Shop} />
+        <ProtectedRoute path="/results" component={Results} />
+        <ProtectedRoute path="/profile" component={Profile} />
+        <ProtectedRoute path="/rusada-id" component={RusadaId} />
+        <Route component={NotFound} />
+      </Switch>
+    </WouterRouter>
   );
 }
 
