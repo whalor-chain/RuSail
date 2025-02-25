@@ -34,7 +34,7 @@ const useHashLocation = () => {
     window.location.hash = to;
   }, []);
 
-  return [hash, navigate] as const;
+  return [hash, navigate];
 };
 
 function Router() {
