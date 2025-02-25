@@ -69,28 +69,17 @@ export default function Shop() {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-4">
         {products.map((product) => (
-          <div key={product.id} className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
-            <div className="relative">
-              <img 
-                src={product.image} 
-                alt={product.name}
-                className="w-full aspect-square object-cover"
-              />
-              <button
-                onClick={() => toggleFavorite(product.id)}
-                className="absolute top-2 right-2 p-2 rounded-full bg-white/80 dark:bg-gray-800/80"
-              >
-                <Heart 
-                  className={`w-5 h-5 ${product.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-500'}`}
-                />
-              </button>
-            </div>
-
-            <div className="p-3">
-              <h3 className="text-sm font-medium mb-2 line-clamp-2">{product.name}</h3>
-              <div className="flex items-baseline gap-2 mb-2">
+          <div key={product.id} className="flex items-center gap-4 bg-white dark:bg-gray-800 p-4 rounded-lg">
+            <img 
+              src={product.image} 
+              alt={product.name}
+              className="w-20 h-20 object-cover rounded-md"
+            />
+            <div className="flex-1">
+              <h3 className="font-medium mb-1">{product.name}</h3>
+              <div className="flex items-baseline gap-2">
                 <span className="text-lg font-bold">{product.price.toLocaleString()} ₽</span>
                 {product.oldPrice && (
                   <span className="text-sm text-gray-500 line-through">
@@ -98,7 +87,17 @@ export default function Shop() {
                   </span>
                 )}
               </div>
-              <Button variant="outline" className="w-full text-sm">
+            </div>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => toggleFavorite(product.id)}
+                className="p-2 rounded-full bg-gray-100 dark:bg-gray-700"
+              >
+                <Heart 
+                  className={`w-5 h-5 ${product.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-500'}`}
+                />
+              </button>
+              <Button variant="outline" size="sm" className="whitespace-nowrap">
                 В корзину
               </Button>
             </div>
