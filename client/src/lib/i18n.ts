@@ -39,7 +39,14 @@ export const translations = {
     rusadaIdExample: 'Например: 12345',
     save: 'Сохранить',
     rusadaIdSaved: 'ID ВФПС сохранен',
-    yourId: 'Ваш ID'
+    yourId: 'Ваш ID',
+    selectIdType: 'Выберите тип ID',
+    ownId: 'Мой ID',
+    otherId: 'ID другого спортсмена',
+    enterName: 'Введите имя',
+    enterSurname: 'Введите фамилию',
+    nameExample: 'Например: Иван',
+    surnameExample: 'Например: Петров'
   },
   en: {
     home: 'Home',
@@ -71,7 +78,14 @@ export const translations = {
     rusadaIdExample: 'Example: 12345',
     save: 'Save',
     rusadaIdSaved: 'WFSS ID saved',
-    yourId: 'Your ID'
+    yourId: 'Your ID',
+    selectIdType: 'Select ID type',
+    ownId: 'My ID',
+    otherId: 'Other athlete ID',
+    enterName: 'Enter name',
+    enterSurname: 'Enter surname',
+    nameExample: 'Example: John',
+    surnameExample: 'Example: Smith'
   }
 };
 
