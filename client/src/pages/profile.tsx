@@ -5,18 +5,23 @@ import { useTheme } from "@/lib/theme";
 import { useI18n, useTranslation } from "@/lib/i18n";
 import { Moon, Sun, Languages, User } from "lucide-react";
 import { Link } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function Profile() {
   const { theme, setTheme } = useTheme();
   const { language, setLanguage } = useI18n();
   const t = useTranslation();
+  const { user } = useAuth();
 
   return (
     <div className="p-4 pb-20">
-      <div className="flex items-center mb-6">
+      <div className="flex items-center mb-2">
         <User className="w-8 h-8 text-primary mr-2" />
         <h1 className="text-2xl font-bold">{t('profile')}</h1>
       </div>
+      {user && (
+        <p className="text-primary font-medium mb-6">@{user.username}</p>
+      )}
 
       <div className="space-y-6">
         <div className="mb-6">
