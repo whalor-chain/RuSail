@@ -2,18 +2,18 @@
   "name": "RuSail",
   "short_name": "RuSail",
   "description": "Мобильное приложение для парусного спорта с календарем соревнований и профилями спортсменов",
-  "start_url": "/",
+  "start_url": "/RuSail/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3B82F6",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/RuSail/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/RuSail/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

@@ -1,11 +1,11 @@
-const CACHE_NAME = 'sailing-app-v1';
+const CACHE_NAME = 'rusail-app-v1';
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon.svg',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
+  '/RuSail/',
+  '/RuSail/index.html',
+  '/RuSail/manifest.json',
+  '/RuSail/icons/icon.svg',
+  '/RuSail/icons/icon-192x192.png',
+  '/RuSail/icons/icon-512x512.png'
 ];
 
 // Установка service worker и предварительное кэширование основных ресурсов
