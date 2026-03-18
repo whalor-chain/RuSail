@@ -6,14 +6,90 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		DA6D631B2F5CCFCE000AD912 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA6D631A2F5CCFCE000AD912 /* WidgetKit.framework */; };
+		DA6D631D2F5CCFCE000AD912 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA6D631C2F5CCFCE000AD912 /* SwiftUI.framework */; };
+		DA6D632E2F5CCFCF000AD912 /* RuSailWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DA6D63182F5CCFCE000AD912 /* RuSailWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DA6D632C2F5CCFCF000AD912 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA6D62D72F567E53000AD912 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA6D63172F5CCFCE000AD912;
+			remoteInfo = RuSailWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DA6D63332F5CCFCF000AD912 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				DA6D632E2F5CCFCF000AD912 /* RuSailWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		DA6D62DF2F567E53000AD912 /* RuSail.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RuSail.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA6D63182F5CCFCE000AD912 /* RuSailWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RuSailWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA6D631A2F5CCFCE000AD912 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		DA6D631C2F5CCFCE000AD912 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		DA6D63342F5CD07C000AD912 /* RuSailWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RuSailWidgetExtension.entitlements; sourceTree = "<group>"; };
+		DA72A5CF2F5D05E30015026D /* RuSail.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RuSail.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DA6D632F2F5CCFCF000AD912 /* Exceptions for "RuSailWidget" folder in "RuSailWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DA6D63172F5CCFCE000AD912 /* RuSailWidgetExtension */;
+		};
+		DA72A5E62F5DDF700015026D /* Exceptions for "RuSail" folder in "RuSailWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				FavoriteRaceLockScreenWidget.swift,
+				FavoritesStorage.swift,
+				FavoritesStore.swift,
+				RaceEvent.swift,
+				RaceEventsData.swift,
+			);
+			target = DA6D63172F5CCFCE000AD912 /* RuSailWidgetExtension */;
+		};
+		DA72A5F12F5DFCE50015026D /* Exceptions for "RuSail" folder in "RuSail" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DA6D62DE2F567E53000AD912 /* RuSail */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DA6D62E12F567E53000AD912 /* RuSail */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DA72A5F12F5DFCE50015026D /* Exceptions for "RuSail" folder in "RuSail" target */,
+				DA72A5E62F5DDF700015026D /* Exceptions for "RuSail" folder in "RuSailWidgetExtension" target */,
+			);
 			path = RuSail;
+			sourceTree = "<group>";
+		};
+		DA6D631E2F5CCFCE000AD912 /* RuSailWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DA6D632F2F5CCFCF000AD912 /* Exceptions for "RuSailWidget" folder in "RuSailWidgetExtension" target */,
+			);
+			path = RuSailWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -26,13 +102,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DA6D63152F5CCFCE000AD912 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA6D631D2F5CCFCE000AD912 /* SwiftUI.framework in Frameworks */,
+				DA6D631B2F5CCFCE000AD912 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		DA6D62D62F567E53000AD912 = {
 			isa = PBXGroup;
 			children = (
+				DA6D63342F5CD07C000AD912 /* RuSailWidgetExtension.entitlements */,
+				DA72A5CF2F5D05E30015026D /* RuSail.entitlements */,
 				DA6D62E12F567E53000AD912 /* RuSail */,
+				DA6D631E2F5CCFCE000AD912 /* RuSailWidget */,
+				DA6D63192F5CCFCE000AD912 /* Frameworks */,
 				DA6D62E02F567E53000AD912 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,8 +130,18 @@
 			isa = PBXGroup;
 			children = (
 				DA6D62DF2F567E53000AD912 /* RuSail.app */,
+				DA6D63182F5CCFCE000AD912 /* RuSailWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		DA6D63192F5CCFCE000AD912 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DA6D631A2F5CCFCE000AD912 /* WidgetKit.framework */,
+				DA6D631C2F5CCFCE000AD912 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -55,10 +154,12 @@
 				DA6D62DB2F567E53000AD912 /* Sources */,
 				DA6D62DC2F567E53000AD912 /* Frameworks */,
 				DA6D62DD2F567E53000AD912 /* Resources */,
+				DA6D63332F5CCFCF000AD912 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				DA6D632D2F5CCFCF000AD912 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				DA6D62E12F567E53000AD912 /* RuSail */,
@@ -69,6 +170,28 @@
 			productName = RuSail;
 			productReference = DA6D62DF2F567E53000AD912 /* RuSail.app */;
 			productType = "com.apple.product-type.application";
+		};
+		DA6D63172F5CCFCE000AD912 /* RuSailWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA6D63302F5CCFCF000AD912 /* Build configuration list for PBXNativeTarget "RuSailWidgetExtension" */;
+			buildPhases = (
+				DA6D63142F5CCFCE000AD912 /* Sources */,
+				DA6D63152F5CCFCE000AD912 /* Frameworks */,
+				DA6D63162F5CCFCE000AD912 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				DA6D631E2F5CCFCE000AD912 /* RuSailWidget */,
+			);
+			name = RuSailWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = RuSailWidgetExtension;
+			productReference = DA6D63182F5CCFCE000AD912 /* RuSailWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -81,6 +204,9 @@
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					DA6D62DE2F567E53000AD912 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					DA6D63172F5CCFCE000AD912 = {
 						CreatedOnToolsVersion = 26.3;
 					};
 				};
@@ -100,12 +226,20 @@
 			projectRoot = "";
 			targets = (
 				DA6D62DE2F567E53000AD912 /* RuSail */,
+				DA6D63172F5CCFCE000AD912 /* RuSailWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		DA6D62DD2F567E53000AD912 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA6D63162F5CCFCE000AD912 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +256,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DA6D63142F5CCFCE000AD912 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DA6D632D2F5CCFCF000AD912 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA6D63172F5CCFCE000AD912 /* RuSailWidgetExtension */;
+			targetProxy = DA6D632C2F5CCFCF000AD912 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		DA6D62E82F567E54000AD912 /* Debug */ = {
@@ -244,12 +393,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = RuSail.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SLMJT7S555;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RuSail/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -267,10 +421,11 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Wave.RuSail;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -286,12 +441,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = RuSail.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SLMJT7S555;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RuSail/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -309,10 +469,11 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Wave.RuSail;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -320,6 +481,75 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		DA6D63312F5CCFCF000AD912 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = RuSailWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SLMJT7S555;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RuSailWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RuSailWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Wave.RuSail.RuSailWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DA6D63322F5CCFCF000AD912 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = RuSailWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SLMJT7S555;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RuSailWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RuSailWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Wave.RuSail.RuSailWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -340,6 +570,15 @@
 			buildConfigurations = (
 				DA6D62EB2F567E54000AD912 /* Debug */,
 				DA6D62EC2F567E54000AD912 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA6D63302F5CCFCF000AD912 /* Build configuration list for PBXNativeTarget "RuSailWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA6D63312F5CCFCF000AD912 /* Debug */,
+				DA6D63322F5CCFCF000AD912 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

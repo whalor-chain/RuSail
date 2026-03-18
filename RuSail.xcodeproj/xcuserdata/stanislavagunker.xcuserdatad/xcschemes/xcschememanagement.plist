@@ -7,7 +7,25 @@
 		<key>RuSail.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>RuSailWidgetExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>DA6D62DE2F567E53000AD912</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DA6D63172F5CCFCE000AD912</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
