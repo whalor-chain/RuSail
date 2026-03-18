@@ -24,6 +24,7 @@ struct RuSailApp: App {
             }
             .animation(.easeInOut(duration: 0.5), value: showSplash)
             .onAppear {
+                setupNavigationBarAppearance()
                 setupQuickActions()
 
                 let impact = UIImpactFeedbackGenerator(style: .medium)
@@ -37,6 +38,19 @@ struct RuSailApp: App {
                 }
             }
         }
+    }
+
+    private func setupNavigationBarAppearance() {
+        let navAppearance = UINavigationBarAppearance()
+        navAppearance.configureWithDefaultBackground()
+        navAppearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
+        navAppearance.backgroundColor = UIColor.white.withAlphaComponent(0.03)
+        navAppearance.shadowColor = .clear
+        navAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        UINavigationBar.appearance().standardAppearance = navAppearance
+        UINavigationBar.appearance().compactAppearance = navAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
     }
 
     private func setupQuickActions() {
@@ -101,22 +115,69 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
 struct SplashView: View {
     @State private var logoScale: CGFloat = 0.8
     @State private var logoOpacity: Double = 0
+    @State private var ringScale: CGFloat = 0.6
+    @State private var ringOpacity: Double = 0
 
     var body: some View {
         ZStack {
-            Color.black
+            Color(red: 0.03, green: 0.03, blue: 0.07)
                 .ignoresSafeArea()
+
+            // Ambient glow behind logo
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [Color(hex: "#5272FF").opacity(0.30), .clear],
+                        center: .center,
+                        startRadius: 20,
+                        endRadius: 180
+                    )
+                )
+                .frame(width: 360, height: 360)
+                .scaleEffect(ringScale)
+                .opacity(ringOpacity)
+
+            // Glass ring around logo
+            Circle()
+                .strokeBorder(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.18), Color.white.opacity(0.04)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1.2
+                )
+                .frame(width: 160, height: 160)
+                .scaleEffect(ringScale)
+                .opacity(ringOpacity)
 
             Image("AppLogo")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 120, height: 120)
+                .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 28, style: .continuous)
+                        .strokeBorder(
+                            LinearGradient(
+                                colors: [Color.white.opacity(0.22), Color.white.opacity(0.06)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 0.8
+                        )
+                )
+                .shadow(color: Color(hex: "#5272FF").opacity(0.35), radius: 30, x: 0, y: 10)
                 .scaleEffect(logoScale)
                 .opacity(logoOpacity)
                 .onAppear {
-                    withAnimation(.easeOut(duration: 0.6)) {
+                    withAnimation(.easeOut(duration: 0.7)) {
                         logoScale = 1.0
                         logoOpacity = 1.0
+                    }
+                    withAnimation(.easeOut(duration: 1.0).delay(0.15)) {
+                        ringScale = 1.0
+                        ringOpacity = 1.0
                     }
                 }
         }
