@@ -2372,18 +2372,86 @@ struct MyDataSheet: View {
     @State private var copied = false
 
     var body: some View {
-        ZStack {
-            GlassBackground()
+        NavigationStack {
+            ZStack {
+                GlassBackground()
 
-            VStack(spacing: 0) {
-                // Header
-                HStack {
-                    Text("Мои данные")
-                        .font(.title2.weight(.bold))
-                        .foregroundStyle(.white)
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 12) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("ВФПС ID")
+                                    .font(.caption)
+                                    .foregroundStyle(.white.opacity(0.55))
 
-                    Spacer()
+                                if vm.vfpsID.isEmpty {
+                                    Text("Не добавлено")
+                                        .font(.system(size: 18, weight: .semibold))
+                                        .foregroundStyle(.white.opacity(0.35))
+                                } else {
+                                    Text(vm.vfpsID)
+                                        .font(.system(size: 22, weight: .bold, design: .monospaced))
+                                        .foregroundStyle(.white)
+                                }
+                            }
 
+                            Spacer()
+                        }
+
+                        if !vm.vfpsID.isEmpty {
+                            Button {
+                                UIPasteboard.general.string = vm.vfpsID
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                    copied = true
+                                }
+                                Task {
+                                    try? await Task.sleep(nanoseconds: 1_500_000_000)
+                                    withAnimation { copied = false }
+                                }
+                            } label: {
+                                HStack(spacing: 6) {
+                                    Image(systemName: copied ? "checkmark" : "doc.on.doc")
+                                        .font(.system(size: 13, weight: .semibold))
+
+                                    Text(copied ? "Скопировано" : "Скопировать")
+                                        .font(.subheadline.weight(.semibold))
+                                }
+                                .foregroundStyle(copied ? .green : .white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
+                                .background(.ultraThinMaterial, in: Capsule())
+                                .background(
+                                    copied ? Color.green.opacity(0.15) : Color.clear,
+                                    in: Capsule()
+                                )
+                                .overlay(
+                                    Capsule()
+                                        .strokeBorder(
+                                            LinearGradient(
+                                                colors: [
+                                                    copied ? Color.green.opacity(0.40) : Color.white.opacity(0.18),
+                                                    copied ? Color.green.opacity(0.10) : Color.white.opacity(0.05)
+                                                ],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            ),
+                                            lineWidth: 0.8
+                                        )
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding(16)
+                    .glassPane(cornerRadius: 20)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 16)
+                }
+            }
+            .navigationTitle("Мои данные")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         dismiss()
                     } label: {
@@ -2394,84 +2462,9 @@ struct MyDataSheet: View {
                     }
                     .buttonStyle(.plain)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 20)
-                .padding(.bottom, 16)
-
-                // VFPS ID card
-                VStack(spacing: 12) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("ВФПС ID")
-                                .font(.caption)
-                                .foregroundStyle(.white.opacity(0.55))
-
-                            if vm.vfpsID.isEmpty {
-                                Text("Не добавлено")
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .foregroundStyle(.white.opacity(0.35))
-                            } else {
-                                Text(vm.vfpsID)
-                                    .font(.system(size: 22, weight: .bold, design: .monospaced))
-                                    .foregroundStyle(.white)
-                            }
-                        }
-
-                        Spacer()
-                    }
-
-                    if !vm.vfpsID.isEmpty {
-                        Button {
-                            UIPasteboard.general.string = vm.vfpsID
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                copied = true
-                            }
-                            Task {
-                                try? await Task.sleep(nanoseconds: 1_500_000_000)
-                                withAnimation { copied = false }
-                            }
-                        } label: {
-                            HStack(spacing: 6) {
-                                Image(systemName: copied ? "checkmark" : "doc.on.doc")
-                                    .font(.system(size: 13, weight: .semibold))
-
-                                Text(copied ? "Скопировано" : "Скопировать")
-                                    .font(.subheadline.weight(.semibold))
-                            }
-                            .foregroundStyle(copied ? .green : .white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 10)
-                            .background(.ultraThinMaterial, in: Capsule())
-                            .background(
-                                copied ? Color.green.opacity(0.15) : Color.clear,
-                                in: Capsule()
-                            )
-                            .overlay(
-                                Capsule()
-                                    .strokeBorder(
-                                        LinearGradient(
-                                            colors: [
-                                                copied ? Color.green.opacity(0.40) : Color.white.opacity(0.18),
-                                                copied ? Color.green.opacity(0.10) : Color.white.opacity(0.05)
-                                            ],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        ),
-                                        lineWidth: 0.8
-                                    )
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .padding(16)
-                .glassPane(cornerRadius: 20)
-                .padding(.horizontal, 16)
-
-                Spacer()
             }
         }
-        .presentationDetents([.fraction(0.4)])
+        .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
     }
 }
@@ -2482,18 +2475,33 @@ struct MyFilesSheet: View {
     @State private var previewURL: URL?
 
     var body: some View {
-        ZStack {
-            GlassBackground()
+        NavigationStack {
+            ZStack {
+                GlassBackground()
 
-            VStack(spacing: 0) {
-                // Header
-                HStack {
-                    Text("Мои файлы")
-                        .font(.title2.weight(.bold))
-                        .foregroundStyle(.white)
-
-                    Spacer()
-
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 10) {
+                        ForEach(DocKind.allCases) { kind in
+                            FileRowButton(
+                                icon: kind.icon,
+                                title: kind.title,
+                                tint: kind.tint,
+                                hasFile: docStore.hasFile(kind)
+                            ) {
+                                if let url = docStore.url(for: kind) {
+                                    previewURL = url
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 16)
+                }
+            }
+            .navigationTitle("Мои файлы")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         dismiss()
                     } label: {
@@ -2504,28 +2512,6 @@ struct MyFilesSheet: View {
                     }
                     .buttonStyle(.plain)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 20)
-                .padding(.bottom, 16)
-
-                // File buttons
-                VStack(spacing: 10) {
-                    ForEach(DocKind.allCases) { kind in
-                        FileRowButton(
-                            icon: kind.icon,
-                            title: kind.title,
-                            tint: kind.tint,
-                            hasFile: docStore.hasFile(kind)
-                        ) {
-                            if let url = docStore.url(for: kind) {
-                                previewURL = url
-                            }
-                        }
-                    }
-                }
-                .padding(.horizontal, 16)
-
-                Spacer()
             }
         }
         .presentationDetents([.medium])
