@@ -141,13 +141,23 @@ struct RootTabView: View {
             }
             .tint(AppTheme.accent)
             .onAppear {
-                let appearance = UITabBarAppearance()
-                appearance.configureWithDefaultBackground()
-                appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
-                appearance.backgroundColor = UIColor.white.withAlphaComponent(0.04)
-                appearance.shadowColor = .clear
-                UITabBar.appearance().standardAppearance = appearance
-                UITabBar.appearance().scrollEdgeAppearance = appearance
+                let tabAppearance = UITabBarAppearance()
+                tabAppearance.configureWithDefaultBackground()
+                tabAppearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
+                tabAppearance.backgroundColor = UIColor.white.withAlphaComponent(0.04)
+                tabAppearance.shadowColor = .clear
+                UITabBar.appearance().standardAppearance = tabAppearance
+                UITabBar.appearance().scrollEdgeAppearance = tabAppearance
+
+                let navAppearance = UINavigationBarAppearance()
+                navAppearance.configureWithTransparentBackground()
+                navAppearance.shadowColor = .clear
+                navAppearance.backgroundColor = .clear
+                navAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+                navAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+                UINavigationBar.appearance().standardAppearance = navAppearance
+                UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
+                UINavigationBar.appearance().compactAppearance = navAppearance
             }
 
             FavoriteToastOverlay()
@@ -2471,7 +2481,7 @@ struct MyDataSheet: View {
                 Spacer()
             }
         }
-        .presentationDetents([.fraction(0.3)])
+        .presentationDetents([.fraction(0.4)])
         .presentationDragIndicator(.visible)
     }
 }
