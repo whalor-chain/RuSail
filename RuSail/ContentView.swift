@@ -2441,10 +2441,9 @@ struct MyDataSheet: View {
                             .foregroundStyle(copied ? .green : .white)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 10)
+                            .background(.ultraThinMaterial, in: Capsule())
                             .background(
-                                copied
-                                ? Color.green.opacity(0.15)
-                                : .ultraThinMaterial,
+                                copied ? Color.green.opacity(0.15) : Color.clear,
                                 in: Capsule()
                             )
                             .overlay(
