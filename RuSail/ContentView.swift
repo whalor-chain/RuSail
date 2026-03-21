@@ -87,8 +87,8 @@ struct ContentView: View {
 
 enum RuSailTab: Hashable {
     case home
-    case search
-    case shop
+    case calendar
+    case browse
     case profile
 }
 
@@ -117,19 +117,19 @@ struct RootTabView: View {
                     }
 
                 SearchView()
-                    .tag(RuSailTab.search)
+                    .tag(RuSailTab.calendar)
                     .tabItem {
                         Image(systemName: calendarIcon)
                         Text("Календарь")
                     }
 
                 NavigationStack {
-                    NewsView()
+                    BrowseView()
                 }
-                .tag(RuSailTab.shop)
+                .tag(RuSailTab.browse)
                 .tabItem {
-                    Image(systemName: "network")
-                    Text("Новости")
+                    Image(systemName: "magnifyingglass")
+                    Text("Поиск")
                 }
 
                 ProfileView()
@@ -144,7 +144,7 @@ struct RootTabView: View {
                 let tabAppearance = UITabBarAppearance()
                 tabAppearance.configureWithDefaultBackground()
                 tabAppearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
-                tabAppearance.backgroundColor = UIColor.white.withAlphaComponent(0.04)
+                tabAppearance.backgroundColor = UIColor(white: 0.08, alpha: 0.94)
                 tabAppearance.shadowColor = .clear
                 UITabBar.appearance().standardAppearance = tabAppearance
                 UITabBar.appearance().scrollEdgeAppearance = tabAppearance
@@ -353,19 +353,7 @@ struct SettingsToastOverlay: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 14)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .strokeBorder(
-                            LinearGradient(
-                                colors: [Color.white.opacity(0.20), Color.white.opacity(0.05)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 0.8
-                        )
-                )
-                .shadow(color: .black.opacity(0.35), radius: 20, x: 0, y: 10)
+                .background(Color(white: 0.15), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .padding(.horizontal, 20)
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
@@ -404,19 +392,7 @@ struct FavoriteToastOverlay: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 14)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .strokeBorder(
-                            LinearGradient(
-                                colors: [Color.white.opacity(0.20), Color.white.opacity(0.05)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 0.8
-                        )
-                )
-                .shadow(color: .black.opacity(0.35), radius: 20, x: 0, y: 10)
+                .background(Color(white: 0.15), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .padding(.horizontal, 20)
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
@@ -431,59 +407,38 @@ struct FavoriteToastOverlay: View {
 // MARK: - Shared UI
 
 struct GlassBackground: View {
+    var showGradient: Bool = true
+
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: [
-                    Color(red: 0.03, green: 0.03, blue: 0.07),
-                    Color(red: 0.06, green: 0.07, blue: 0.13),
-                    Color(red: 0.04, green: 0.04, blue: 0.09)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+            Color.black
 
-            // Primary accent orb — top right
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [AppTheme.accent.opacity(0.30), AppTheme.accent.opacity(0.08), .clear],
-                        center: .center,
-                        startRadius: 20,
-                        endRadius: 220
-                    )
+            if showGradient {
+                // Warm gradient at top — Apple Health style
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.85, green: 0.35, blue: 0.15).opacity(0.60),
+                        Color(red: 0.90, green: 0.25, blue: 0.10).opacity(0.35),
+                        Color.clear
+                    ],
+                    startPoint: .top,
+                    endPoint: .center
                 )
-                .frame(width: 440, height: 440)
-                .offset(x: 140, y: -200)
-                .blur(radius: 60)
 
-            // Secondary orb — bottom left
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [AppTheme.secondary.opacity(0.18), Color.purple.opacity(0.06), .clear],
-                        center: .center,
-                        startRadius: 10,
-                        endRadius: 200
+                // Subtle blue accent orb — top right
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            colors: [AppTheme.accent.opacity(0.15), .clear],
+                            center: .center,
+                            startRadius: 20,
+                            endRadius: 200
+                        )
                     )
-                )
-                .frame(width: 380, height: 380)
-                .offset(x: -120, y: 300)
-                .blur(radius: 50)
-
-            // Subtle warm orb — center
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [Color.cyan.opacity(0.08), .clear],
-                        center: .center,
-                        startRadius: 10,
-                        endRadius: 160
-                    )
-                )
-                .frame(width: 300, height: 300)
-                .offset(x: 40, y: 80)
-                .blur(radius: 70)
+                    .frame(width: 400, height: 400)
+                    .offset(x: 140, y: -180)
+                    .blur(radius: 80)
+            }
         }
         .ignoresSafeArea()
     }
@@ -491,73 +446,29 @@ struct GlassBackground: View {
 
 struct GlassCardModifier: ViewModifier {
     var material: Material = .ultraThinMaterial
-    var cornerRadius: CGFloat = 24
+    var cornerRadius: CGFloat = 16
 
     func body(content: Content) -> some View {
         content
             .padding(14)
             .background {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(material)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                            .fill(
-                                LinearGradient(
-                                    colors: [Color.white.opacity(0.08), Color.white.opacity(0.02)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                    )
+                    .fill(Color(white: 0.11))
             }
-            .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .strokeBorder(
-                        LinearGradient(
-                            colors: [Color.white.opacity(0.22), Color.white.opacity(0.06)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 0.8
-                    )
-            )
-            .shadow(color: .black.opacity(0.30), radius: 20, x: 0, y: 12)
     }
 }
 
 extension View {
-    func glassCard(_ material: Material = .ultraThinMaterial, cornerRadius: CGFloat = 24) -> some View {
+    func glassCard(_ material: Material = .ultraThinMaterial, cornerRadius: CGFloat = 16) -> some View {
         modifier(GlassCardModifier(material: material, cornerRadius: cornerRadius))
     }
 
-    func glassPane(cornerRadius: CGFloat = 22) -> some View {
+    func glassPane(cornerRadius: CGFloat = 16) -> some View {
         self
             .background {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(.ultraThinMaterial)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                            .fill(
-                                LinearGradient(
-                                    colors: [Color.white.opacity(0.07), Color.white.opacity(0.02)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                    )
+                    .fill(Color(white: 0.11))
             }
-            .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .strokeBorder(
-                        LinearGradient(
-                            colors: [Color.white.opacity(0.18), Color.white.opacity(0.05)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 0.8
-                    )
-            )
-            .shadow(color: .black.opacity(0.22), radius: 14, x: 0, y: 8)
     }
 }
 
@@ -572,17 +483,6 @@ struct Pill: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .background(color.opacity(0.55), in: Capsule())
-            .overlay(
-                Capsule()
-                    .strokeBorder(
-                        LinearGradient(
-                            colors: [color.opacity(0.6), color.opacity(0.15)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 0.8
-                    )
-            )
     }
 }
 
@@ -596,18 +496,7 @@ struct PrimaryButton: View {
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
-            .background(color.opacity(0.55), in: Capsule())
-            .overlay(
-                Capsule().strokeBorder(
-                    LinearGradient(
-                        colors: [Color.white.opacity(0.20), Color.white.opacity(0.05)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 0.8
-                )
-            )
-            .shadow(color: color.opacity(0.30), radius: 12, x: 0, y: 6)
+            .background(color, in: Capsule())
     }
 }
 
@@ -657,8 +546,7 @@ struct FavoriteEventCard: View {
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundStyle(favoritesStore.contains(event) ? .red : .white)
                         .frame(width: 36, height: 36)
-                        .background(.ultraThinMaterial, in: Circle())
-                        .overlay(Circle().strokeBorder(Color.white.opacity(0.12), lineWidth: 0.6))
+                        .background(Color(white: 0.2), in: Circle())
                 }
                 .buttonStyle(.plain)
                 .animation(.spring(response: 0.28, dampingFraction: 0.75), value: favoritesStore.contains(event))
@@ -680,18 +568,7 @@ struct FavoriteEventCard: View {
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 8)
-                                .background(.ultraThinMaterial, in: Capsule())
-                                .overlay(
-                                    Capsule()
-                                        .strokeBorder(
-                                            LinearGradient(
-                                                colors: [Color.white.opacity(0.16), Color.white.opacity(0.04)],
-                                                startPoint: .topLeading,
-                                                endPoint: .bottomTrailing
-                                            ),
-                                            lineWidth: 0.6
-                                        )
-                                )
+                                .background(Color(white: 0.18), in: Capsule())
                         }
                     }
                 }
@@ -700,31 +577,9 @@ struct FavoriteEventCard: View {
         }
         .padding(18)
         .background {
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 28, style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: [Color.white.opacity(0.12), Color.white.opacity(0.03)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                )
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(white: 0.11))
         }
-        .overlay(
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .strokeBorder(
-                    LinearGradient(
-                        colors: [Color.white.opacity(0.25), Color.white.opacity(0.06)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 0.8
-                )
-        )
-        .shadow(color: .black.opacity(0.25), radius: 16, x: 0, y: 10)
     }
 
     private func infoRow(icon: String, text: String) -> some View {
@@ -923,17 +778,7 @@ struct LiveNowCarouselSection: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
-                        .background(.ultraThinMaterial, in: Capsule())
-                        .overlay(
-                            Capsule().strokeBorder(
-                                LinearGradient(
-                                    colors: [Color.white.opacity(0.16), Color.white.opacity(0.04)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 0.6
-                            )
-                        )
+                        .background(Color(white: 0.18), in: Capsule())
                     }
                     .buttonStyle(.plain)
                 }
@@ -1012,17 +857,7 @@ struct FavoritesSection: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
-                        .background(.ultraThinMaterial, in: Capsule())
-                        .overlay(
-                            Capsule().strokeBorder(
-                                LinearGradient(
-                                    colors: [Color.white.opacity(0.16), Color.white.opacity(0.04)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 0.6
-                            )
-                        )
+                        .background(Color(white: 0.18), in: Capsule())
                     }
                     .buttonStyle(.plain)
                 }
@@ -1079,7 +914,7 @@ struct FavoritesEventsSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                GlassBackground()
+                GlassBackground(showGradient: false)
 
                 ScrollView(showsIndicators: false) {
                     LazyVStack(alignment: .leading, spacing: 16) {
@@ -1122,7 +957,7 @@ struct LiveNowEventsSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                GlassBackground()
+                GlassBackground(showGradient: false)
 
                 ScrollView(showsIndicators: false) {
                     LazyVStack(alignment: .leading, spacing: 16) {
@@ -1214,18 +1049,7 @@ struct LiveEventCard: View {
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 8)
-                                .background(.ultraThinMaterial, in: Capsule())
-                                .overlay(
-                                    Capsule()
-                                        .strokeBorder(
-                                            LinearGradient(
-                                                colors: [Color.white.opacity(0.16), Color.white.opacity(0.04)],
-                                                startPoint: .topLeading,
-                                                endPoint: .bottomTrailing
-                                            ),
-                                            lineWidth: 0.6
-                                        )
-                                )
+                                .background(Color(white: 0.18), in: Capsule())
                         }
                     }
                 }
@@ -1237,31 +1061,9 @@ struct LiveEventCard: View {
         .padding(18)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background {
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 28, style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: [Color.white.opacity(0.12), Color.white.opacity(0.03)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                )
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(white: 0.11))
         }
-        .overlay(
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .strokeBorder(
-                    LinearGradient(
-                        colors: [Color.white.opacity(0.25), Color.white.opacity(0.06)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 0.8
-                )
-        )
-        .shadow(color: .black.opacity(0.30), radius: 20, x: 0, y: 12)
     }
 
     private func infoRow(icon: String, text: String) -> some View {
@@ -1531,19 +1333,6 @@ struct SearchView: View {
                                 : Color.white.opacity(0.08),
                                 in: Capsule()
                             )
-                            .overlay(
-                                Capsule().strokeBorder(
-                                    LinearGradient(
-                                        colors: [
-                                            isSelected ? filter.color.opacity(0.5) : Color.white.opacity(0.16),
-                                            isSelected ? filter.color.opacity(0.15) : Color.white.opacity(0.04)
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 0.8
-                                )
-                            )
                             .shadow(color: isSelected ? filter.color.opacity(0.25) : .clear, radius: 8, x: 0, y: 4)
                     }
                     .buttonStyle(.plain)
@@ -1604,8 +1393,7 @@ struct SearchView: View {
                         .foregroundStyle(isFavorite ? .red : .white)
                         .scaleEffect(isFavorite ? 1.0 : 0.92)
                         .frame(width: 34, height: 34)
-                        .background(.ultraThinMaterial, in: Circle())
-                        .overlay(Circle().strokeBorder(Color.white.opacity(0.12), lineWidth: 0.6))
+                        .background(Color(white: 0.2), in: Circle())
                 }
                 .buttonStyle(.plain)
                 .animation(.spring(response: 0.28, dampingFraction: 0.75), value: isFavorite)
@@ -1631,7 +1419,7 @@ struct SearchView: View {
                             .foregroundStyle(.white)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
-                            .background(.ultraThinMaterial, in: Capsule())
+                            .background(Color(white: 0.18), in: Capsule())
                             .overlay(
                                 Capsule()
                                     .strokeBorder(
@@ -1650,7 +1438,7 @@ struct SearchView: View {
         .padding(12)
         .background {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(.ultraThinMaterial)
+                .fill(Color(white: 0.11))
                 .overlay(
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .fill(Color.white.opacity(0.04))
@@ -1707,7 +1495,128 @@ struct NewsArticle: Identifiable, Hashable {
     let isFeatured: Bool
 }
 
-// MARK: - View
+// MARK: - Browse (Search tab)
+
+struct BrowseCategory: Identifiable {
+    let id = UUID()
+    let icon: String
+    let title: String
+    let tint: Color
+}
+
+struct BrowseView: View {
+    @State private var searchText = ""
+
+    private let categories: [BrowseCategory] = [
+        BrowseCategory(icon: "newspaper.fill", title: "Новости", tint: .blue),
+        BrowseCategory(icon: "person.3.fill", title: "Отбор в Сборную", tint: .orange),
+        BrowseCategory(icon: "trophy.fill", title: "Результаты", tint: .yellow),
+        BrowseCategory(icon: "cart.fill", title: "Магазин", tint: .green),
+    ]
+
+    private var filteredCategories: [BrowseCategory] {
+        if searchText.isEmpty { return categories }
+        return categories.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+    }
+
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Категории")
+                        .font(.title3.weight(.bold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 20)
+                        .padding(.top, 8)
+                        .padding(.bottom, 4)
+
+                    VStack(spacing: 0) {
+                        ForEach(Array(filteredCategories.enumerated()), id: \.element.id) { index, cat in
+                            NavigationLink {
+                                destinationView(for: cat.title)
+                            } label: {
+                                HStack(spacing: 14) {
+                                    Image(systemName: cat.icon)
+                                        .font(.system(size: 18))
+                                        .foregroundStyle(cat.tint)
+                                        .frame(width: 32, height: 32)
+
+                                    Text(cat.title)
+                                        .font(.body)
+                                        .foregroundStyle(.white)
+
+                                    Spacer()
+
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 13, weight: .semibold))
+                                        .foregroundStyle(.white.opacity(0.3))
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 14)
+                            }
+                            .buttonStyle(.plain)
+
+                            if index < filteredCategories.count - 1 {
+                                Divider()
+                                    .background(Color.white.opacity(0.1))
+                                    .padding(.leading, 62)
+                            }
+                        }
+                    }
+                    .background(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(Color(white: 0.11))
+                    )
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                }
+                .padding(.bottom, 32)
+            }
+        }
+        .navigationTitle("Поиск")
+        .navigationBarTitleDisplayMode(.large)
+        .searchable(text: $searchText, prompt: "Поиск")
+    }
+
+    @ViewBuilder
+    private func destinationView(for title: String) -> some View {
+        switch title {
+        case "Новости":
+            NewsView()
+        case "Отбор в Сборную":
+            placeholderPage(title: "Отбор в Сборную", icon: "person.3.fill", color: .orange)
+        case "Результаты":
+            placeholderPage(title: "Результаты", icon: "trophy.fill", color: .yellow)
+        case "Магазин":
+            placeholderPage(title: "Магазин", icon: "cart.fill", color: .green)
+        default:
+            EmptyView()
+        }
+    }
+
+    private func placeholderPage(title: String, icon: String, color: Color) -> some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+            VStack(spacing: 16) {
+                Image(systemName: icon)
+                    .font(.system(size: 48))
+                    .foregroundStyle(color)
+                Text("Скоро")
+                    .font(.title2.weight(.semibold))
+                    .foregroundStyle(.white)
+                Text("Раздел в разработке")
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.5))
+            }
+        }
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - News
 
 struct NewsView: View {
     @State private var searchText = ""
@@ -1802,7 +1711,7 @@ struct NewsView: View {
 
     var body: some View {
         ZStack {
-            GlassBackground()
+            GlassBackground(showGradient: false)
 
             ScrollView(showsIndicators: false) {
                 LazyVStack(alignment: .leading, spacing: 20) {
@@ -1857,19 +1766,6 @@ struct NewsView: View {
                                 ? AppTheme.accent.opacity(0.65)
                                 : Color.white.opacity(0.08),
                                 in: Capsule()
-                            )
-                            .overlay(
-                                Capsule().strokeBorder(
-                                    LinearGradient(
-                                        colors: [
-                                            selectedCategory == category ? AppTheme.accent.opacity(0.5) : Color.white.opacity(0.16),
-                                            Color.white.opacity(0.04)
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 0.8
-                                )
                             )
                             .shadow(color: selectedCategory == category ? AppTheme.accent.opacity(0.25) : .clear, radius: 8, x: 0, y: 4)
                     }
@@ -1943,7 +1839,7 @@ struct FeaturedNewsCard: View {
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(.ultraThinMaterial)
+                .fill(Color(white: 0.11))
                 .overlay(
                     RoundedRectangle(cornerRadius: 28, style: .continuous)
                         .fill(
@@ -1967,9 +1863,6 @@ struct FeaturedNewsCard: View {
                         .padding(.horizontal, 10)
                         .padding(.vertical, 8)
                         .background(Color.white.opacity(0.12), in: Capsule())
-                        .overlay(
-                            Capsule().strokeBorder(Color.white.opacity(0.15), lineWidth: 0.6)
-                        )
 
                     Spacer()
                 }
@@ -2021,7 +1914,7 @@ struct NewsRowCard: View {
         HStack(spacing: 14) {
             ZStack {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(.ultraThinMaterial)
+                    .fill(Color(white: 0.11))
                     .overlay(
                         RoundedRectangle(cornerRadius: 18, style: .continuous)
                             .fill(AppTheme.accent.opacity(0.12))
@@ -2077,13 +1970,13 @@ struct NewsDetailView: View {
 
     var body: some View {
         ZStack {
-            GlassBackground()
+            GlassBackground(showGradient: false)
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 18) {
                     ZStack(alignment: .bottomLeading) {
                         RoundedRectangle(cornerRadius: 28, style: .continuous)
-                            .fill(.ultraThinMaterial)
+                            .fill(Color(white: 0.11))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 28, style: .continuous)
                                     .fill(
@@ -2374,7 +2267,7 @@ struct MyDataSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                GlassBackground()
+                GlassBackground(showGradient: false)
 
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 12) {
@@ -2419,24 +2312,9 @@ struct MyDataSheet: View {
                                 .foregroundStyle(copied ? .green : .white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 10)
-                                .background(.ultraThinMaterial, in: Capsule())
                                 .background(
-                                    copied ? Color.green.opacity(0.15) : Color.clear,
+                                    copied ? Color.green.opacity(0.15) : Color(white: 0.18),
                                     in: Capsule()
-                                )
-                                .overlay(
-                                    Capsule()
-                                        .strokeBorder(
-                                            LinearGradient(
-                                                colors: [
-                                                    copied ? Color.green.opacity(0.40) : Color.white.opacity(0.18),
-                                                    copied ? Color.green.opacity(0.10) : Color.white.opacity(0.05)
-                                                ],
-                                                startPoint: .topLeading,
-                                                endPoint: .bottomTrailing
-                                            ),
-                                            lineWidth: 0.8
-                                        )
                                 )
                             }
                             .buttonStyle(.plain)
@@ -2477,7 +2355,7 @@ struct MyFilesSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                GlassBackground()
+                GlassBackground(showGradient: false)
 
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 10) {
@@ -2591,7 +2469,7 @@ struct SettingsView: View {
 
     var body: some View {
         ZStack {
-            GlassBackground()
+            GlassBackground(showGradient: false)
 
             VStack(spacing: 0) {
                 ScrollView {
@@ -2608,7 +2486,7 @@ struct SettingsView: View {
                                 .padding(14)
                                 .background {
                                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                        .fill(.ultraThinMaterial)
+                                        .fill(Color(white: 0.11))
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 18, style: .continuous)
                                                 .fill(Color.white.opacity(0.04))
@@ -2665,17 +2543,6 @@ struct SettingsView: View {
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
                             .background(Color.orange.opacity(0.10), in: Capsule())
-                            .overlay(
-                                Capsule()
-                                    .strokeBorder(
-                                        LinearGradient(
-                                            colors: [Color.orange.opacity(0.35), Color.orange.opacity(0.10)],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        ),
-                                        lineWidth: 0.8
-                                    )
-                            )
                         }
                         .buttonStyle(.plain)
 
@@ -2694,17 +2561,6 @@ struct SettingsView: View {
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
                             .background(Color.red.opacity(0.10), in: Capsule())
-                            .overlay(
-                                Capsule()
-                                    .strokeBorder(
-                                        LinearGradient(
-                                            colors: [Color.red.opacity(0.35), Color.red.opacity(0.10)],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        ),
-                                        lineWidth: 0.8
-                                    )
-                            )
                         }
                         .buttonStyle(.plain)
                     }
@@ -2823,7 +2679,7 @@ struct SettingsView: View {
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.red.opacity(0.7))
                         .frame(width: 34, height: 34)
-                        .background(.ultraThinMaterial, in: Circle())
+                        .background(Color(white: 0.2), in: Circle())
                         .overlay(Circle().strokeBorder(Color.red.opacity(0.15), lineWidth: 0.6))
                 }
                 .buttonStyle(.plain)
@@ -2835,8 +2691,7 @@ struct SettingsView: View {
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.white.opacity(0.6))
                         .frame(width: 34, height: 34)
-                        .background(.ultraThinMaterial, in: Circle())
-                        .overlay(Circle().strokeBorder(Color.white.opacity(0.12), lineWidth: 0.6))
+                        .background(Color(white: 0.2), in: Circle())
                 }
                 .buttonStyle(.plain)
             } else {
@@ -2925,7 +2780,7 @@ struct DocumentsListView: View {
 
     var body: some View {
         ZStack {
-            GlassBackground()
+            GlassBackground(showGradient: false)
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
@@ -3043,7 +2898,7 @@ struct LinksListView: View {
 
     var body: some View {
         ZStack {
-            GlassBackground()
+            GlassBackground(showGradient: false)
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
