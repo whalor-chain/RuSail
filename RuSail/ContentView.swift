@@ -88,7 +88,6 @@ struct ContentView: View {
 enum RuSailTab: Hashable {
     case home
     case calendar
-    case browse
     case profile
 }
 
@@ -109,46 +108,26 @@ struct RootTabView: View {
     var body: some View {
         ZStack {
             TabView(selection: $selectedTab) {
-                HomeView()
-                    .tag(RuSailTab.home)
-                    .tabItem {
-                        Image(systemName: "figure.sailing")
-                        Text("Главная")
-                    }
-
-                SearchView()
-                    .tag(RuSailTab.calendar)
-                    .tabItem {
-                        Image(systemName: calendarIcon)
-                        Text("Календарь")
-                    }
-
-                NavigationStack {
-                    BrowseView()
+                Tab("Главная", systemImage: "figure.sailing", value: .home) {
+                    HomeView()
                 }
-                    .tag(RuSailTab.browse)
-                    .tabItem {
-                        Image(systemName: "magnifyingglass")
-                        Text("Обзор")
-                    }
 
-                ProfileView()
-                    .tag(RuSailTab.profile)
-                    .tabItem {
-                        Image(systemName: "person.fill")
-                        Text("Профиль")
+                Tab("Календарь", systemImage: calendarIcon, value: .calendar) {
+                    SearchView()
+                }
+
+                Tab("Профиль", systemImage: "person.fill", value: .profile) {
+                    ProfileView()
+                }
+
+                Tab(role: .search) {
+                    NavigationStack {
+                        BrowseView()
                     }
+                }
             }
             .tint(AppTheme.accent)
             .onAppear {
-                let tabAppearance = UITabBarAppearance()
-                tabAppearance.configureWithDefaultBackground()
-                tabAppearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
-                tabAppearance.backgroundColor = UIColor(white: 0.08, alpha: 0.94)
-                tabAppearance.shadowColor = .clear
-                UITabBar.appearance().standardAppearance = tabAppearance
-                UITabBar.appearance().scrollEdgeAppearance = tabAppearance
-
                 let navAppearance = UINavigationBarAppearance()
                 navAppearance.configureWithTransparentBackground()
                 navAppearance.shadowColor = .clear
