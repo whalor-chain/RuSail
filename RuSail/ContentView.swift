@@ -88,6 +88,7 @@ struct ContentView: View {
 enum RuSailTab: Hashable {
     case home
     case calendar
+    case browse
     case profile
 }
 
@@ -99,8 +100,6 @@ struct RootTabView: View {
     @StateObject private var toast = FavoriteToastState()
     @StateObject private var settingsToast = SettingsToastState()
     @State private var selectedTab: RuSailTab = .home
-
-    @State private var showBrowse = false
 
     private var calendarIcon: String {
         let day = Calendar.current.component(.day, from: Date())
@@ -122,6 +121,15 @@ struct RootTabView: View {
                     .tabItem {
                         Image(systemName: calendarIcon)
                         Text("Календарь")
+                    }
+
+                NavigationStack {
+                    BrowseView()
+                }
+                    .tag(RuSailTab.browse)
+                    .tabItem {
+                        Image(systemName: "magnifyingglass")
+                        Text("Обзор")
                     }
 
                 ProfileView()
@@ -152,36 +160,6 @@ struct RootTabView: View {
                 UINavigationBar.appearance().compactAppearance = navAppearance
             }
 
-            // Floating glass search button — Telegram-style FAB above tab bar
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    Button {
-                        showBrowse = true
-                    } label: {
-                        Image(systemName: "magnifyingglass")
-                            .font(.system(size: 22, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 54, height: 54)
-                            .background {
-                                Circle()
-                                    .fill(.ultraThinMaterial)
-                                    .environment(\.colorScheme, .dark)
-                            }
-                            .overlay(
-                                Circle()
-                                    .strokeBorder(Color.white.opacity(0.15), lineWidth: 0.5)
-                            )
-                            .shadow(color: .black.opacity(0.25), radius: 12, x: 0, y: 4)
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.trailing, 20)
-                    .padding(.bottom, 62)
-                }
-            }
-            .ignoresSafeArea(.keyboard)
-
             FavoriteToastOverlay()
             SettingsToastOverlay()
         }
@@ -190,11 +168,6 @@ struct RootTabView: View {
         .onChange(of: deepLink.showFavorites) { newValue in
             if newValue {
                 selectedTab = .home
-            }
-        }
-        .fullScreenCover(isPresented: $showBrowse) {
-            NavigationStack {
-                BrowseView()
             }
         }
     }
