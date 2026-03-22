@@ -454,7 +454,7 @@ struct GlassCardModifier: ViewModifier {
             .padding(14)
             .background {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(Color(white: 0.11))
+                    .fill(Color(white: 0.14))
             }
     }
 }
@@ -468,7 +468,7 @@ extension View {
         self
             .background {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(Color(white: 0.11))
+                    .fill(Color(white: 0.14))
             }
     }
 }
@@ -547,7 +547,7 @@ struct FavoriteEventCard: View {
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundStyle(favoritesStore.contains(event) ? .red : .white)
                         .frame(width: 36, height: 36)
-                        .background(Color(white: 0.2), in: Circle())
+                        .background(Color(white: 0.24), in: Circle())
                 }
                 .buttonStyle(.plain)
                 .animation(.spring(response: 0.28, dampingFraction: 0.75), value: favoritesStore.contains(event))
@@ -569,7 +569,7 @@ struct FavoriteEventCard: View {
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 8)
-                                .background(Color(white: 0.18), in: Capsule())
+                                .background(Color(white: 0.22), in: Capsule())
                         }
                     }
                 }
@@ -579,7 +579,7 @@ struct FavoriteEventCard: View {
         .padding(18)
         .background {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(Color(white: 0.11))
+                .fill(Color(white: 0.14))
         }
     }
 
@@ -779,7 +779,7 @@ struct LiveNowCarouselSection: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
-                        .background(Color(white: 0.18), in: Capsule())
+                        .background(Color(white: 0.22), in: Capsule())
                     }
                     .buttonStyle(.plain)
                 }
@@ -858,7 +858,7 @@ struct FavoritesSection: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
-                        .background(Color(white: 0.18), in: Capsule())
+                        .background(Color(white: 0.22), in: Capsule())
                     }
                     .buttonStyle(.plain)
                 }
@@ -1050,7 +1050,7 @@ struct LiveEventCard: View {
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 8)
-                                .background(Color(white: 0.18), in: Capsule())
+                                .background(Color(white: 0.22), in: Capsule())
                         }
                     }
                 }
@@ -1063,7 +1063,7 @@ struct LiveEventCard: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(Color(white: 0.11))
+                .fill(Color(white: 0.14))
         }
     }
 
@@ -1331,7 +1331,7 @@ struct SearchView: View {
                             .background(
                                 isSelected
                                 ? filter.color.opacity(0.65)
-                                : Color.white.opacity(0.08),
+                                : Color.white.opacity(0.10),
                                 in: Capsule()
                             )
                             .shadow(color: isSelected ? filter.color.opacity(0.25) : .clear, radius: 8, x: 0, y: 4)
@@ -1394,7 +1394,7 @@ struct SearchView: View {
                         .foregroundStyle(isFavorite ? .red : .white)
                         .scaleEffect(isFavorite ? 1.0 : 0.92)
                         .frame(width: 34, height: 34)
-                        .background(Color(white: 0.2), in: Circle())
+                        .background(Color(white: 0.24), in: Circle())
                 }
                 .buttonStyle(.plain)
                 .animation(.spring(response: 0.28, dampingFraction: 0.75), value: isFavorite)
@@ -1420,12 +1420,12 @@ struct SearchView: View {
                             .foregroundStyle(.white)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
-                            .background(Color(white: 0.18), in: Capsule())
+                            .background(Color(white: 0.22), in: Capsule())
                             .overlay(
                                 Capsule()
                                     .strokeBorder(
                                         LinearGradient(
-                                            colors: [Color.white.opacity(0.14), Color.white.opacity(0.04)],
+                                            colors: [Color.white.opacity(0.14), Color.white.opacity(0.06)],
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
                                         ),
@@ -1439,17 +1439,17 @@ struct SearchView: View {
         .padding(12)
         .background {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color(white: 0.11))
+                .fill(Color(white: 0.14))
                 .overlay(
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .fill(Color.white.opacity(0.04))
+                        .fill(Color.white.opacity(0.06))
                 )
         }
         .overlay(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .strokeBorder(
                     LinearGradient(
-                        colors: [Color.white.opacity(0.14), Color.white.opacity(0.04)],
+                        colors: [Color.white.opacity(0.14), Color.white.opacity(0.06)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ),
@@ -1560,7 +1560,7 @@ struct BrowseView: View {
                 }
                 .background(
                     RoundedRectangle(cornerRadius: 22, style: .continuous)
-                        .fill(Color(white: 0.11))
+                        .fill(Color(white: 0.14))
                 )
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
@@ -1756,7 +1756,7 @@ struct NewsView: View {
                             .background(
                                 selectedCategory == category
                                 ? AppTheme.accent.opacity(0.65)
-                                : Color.white.opacity(0.08),
+                                : Color.white.opacity(0.10),
                                 in: Capsule()
                             )
                             .shadow(color: selectedCategory == category ? AppTheme.accent.opacity(0.25) : .clear, radius: 8, x: 0, y: 4)
@@ -1831,7 +1831,7 @@ struct FeaturedNewsCard: View {
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(Color(white: 0.11))
+                .fill(Color(white: 0.14))
                 .overlay(
                     RoundedRectangle(cornerRadius: 28, style: .continuous)
                         .fill(
@@ -1906,7 +1906,7 @@ struct NewsRowCard: View {
         HStack(spacing: 14) {
             ZStack {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(Color(white: 0.11))
+                    .fill(Color(white: 0.14))
                     .overlay(
                         RoundedRectangle(cornerRadius: 18, style: .continuous)
                             .fill(AppTheme.accent.opacity(0.12))
@@ -1968,7 +1968,7 @@ struct NewsDetailView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     ZStack(alignment: .bottomLeading) {
                         RoundedRectangle(cornerRadius: 28, style: .continuous)
-                            .fill(Color(white: 0.11))
+                            .fill(Color(white: 0.14))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 28, style: .continuous)
                                     .fill(
@@ -2302,7 +2302,7 @@ struct MyDataSheet: View {
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 10)
                                 .background(
-                                    copied ? Color.green.opacity(0.15) : Color(white: 0.18),
+                                    copied ? Color.green.opacity(0.15) : Color(white: 0.22),
                                     in: Capsule()
                                 )
                             }
@@ -2317,7 +2317,7 @@ struct MyDataSheet: View {
             .navigationTitle("Мои данные")
             .navigationBarTitleDisplayMode(.inline)
             .scrollContentBackground(.hidden)
-            .background(.ultraThinMaterial)
+            .background(.clear)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -2334,7 +2334,7 @@ struct MyDataSheet: View {
         }
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
-        .presentationBackground(.ultraThinMaterial)
+        .presentationBackground(.thinMaterial)
     }
 }
 
@@ -2366,7 +2366,7 @@ struct MyFilesSheet: View {
             .navigationTitle("Мои файлы")
             .navigationBarTitleDisplayMode(.inline)
             .scrollContentBackground(.hidden)
-            .background(.ultraThinMaterial)
+            .background(.clear)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -2383,7 +2383,7 @@ struct MyFilesSheet: View {
         }
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
-        .presentationBackground(.ultraThinMaterial)
+        .presentationBackground(.thinMaterial)
         .quickLookPreview($previewURL)
     }
 }
@@ -2476,10 +2476,10 @@ struct SettingsView: View {
                                 .padding(14)
                                 .background {
                                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                        .fill(Color(white: 0.11))
+                                        .fill(Color(white: 0.14))
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                                .fill(Color.white.opacity(0.04))
+                                                .fill(Color.white.opacity(0.06))
                                         )
                                 }
                                 .overlay(
@@ -2497,7 +2497,7 @@ struct SettingsView: View {
 
                         // Divider
                         Rectangle()
-                            .fill(Color.white.opacity(0.08))
+                            .fill(Color.white.opacity(0.10))
                             .frame(height: 1)
                             .padding(.vertical, 4)
 
@@ -2514,7 +2514,7 @@ struct SettingsView: View {
 
                         // Divider
                         Rectangle()
-                            .fill(Color.white.opacity(0.08))
+                            .fill(Color.white.opacity(0.10))
                             .frame(height: 1)
                             .padding(.vertical, 4)
 
@@ -2669,7 +2669,7 @@ struct SettingsView: View {
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.red.opacity(0.7))
                         .frame(width: 34, height: 34)
-                        .background(Color(white: 0.2), in: Circle())
+                        .background(Color(white: 0.24), in: Circle())
                         .overlay(Circle().strokeBorder(Color.red.opacity(0.15), lineWidth: 0.6))
                 }
                 .buttonStyle(.plain)
@@ -2681,7 +2681,7 @@ struct SettingsView: View {
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.white.opacity(0.6))
                         .frame(width: 34, height: 34)
-                        .background(Color(white: 0.2), in: Circle())
+                        .background(Color(white: 0.24), in: Circle())
                 }
                 .buttonStyle(.plain)
             } else {
@@ -2781,7 +2781,7 @@ struct DocumentsListView: View {
 
                             if index < docsSection1.count - 1 {
                                 Divider()
-                                    .background(Color.white.opacity(0.08))
+                                    .background(Color.white.opacity(0.10))
                                     .padding(.leading, 66)
                             }
                         }
@@ -2800,7 +2800,7 @@ struct DocumentsListView: View {
 
                             if index < docsSectionObmer.count - 1 {
                                 Divider()
-                                    .background(Color.white.opacity(0.08))
+                                    .background(Color.white.opacity(0.10))
                                     .padding(.leading, 66)
                             }
                         }
@@ -2912,7 +2912,7 @@ struct LinksListView: View {
 
                             if index < linksTelegramSection.count - 1 {
                                 Divider()
-                                    .background(Color.white.opacity(0.08))
+                                    .background(Color.white.opacity(0.10))
                                     .padding(.leading, 66)
                             }
                         }
