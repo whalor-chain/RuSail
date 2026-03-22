@@ -89,6 +89,7 @@ enum RuSailTab: Hashable {
     case home
     case calendar
     case profile
+    case search
 }
 
 import SwiftUI
@@ -120,7 +121,7 @@ struct RootTabView: View {
                     ProfileView()
                 }
 
-                Tab(role: .search) {
+                Tab("Поиск", systemImage: "magnifyingglass", value: RuSailTab.search, role: .search) {
                     NavigationStack {
                         BrowseView()
                     }
