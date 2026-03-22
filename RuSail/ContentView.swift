@@ -1231,7 +1231,7 @@ struct SearchView: View {
     @EnvironmentObject private var toast: FavoriteToastState
     @State private var q = ""
     @State private var selectedFilter: YachtFilter = yachtFilters[0]
-
+    @State private var showFavoritesOnly = false
 
     private var filteredEvents: [RaceEvent] {
         let term = q.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -1268,8 +1268,15 @@ struct SearchView: View {
         }
     }
 
+    private var displayedEvents: [RaceEvent] {
+        if showFavoritesOnly {
+            return filteredEvents.filter { favoritesStore.contains($0) }
+        }
+        return filteredEvents
+    }
+
     private var groupedEvents: [(key: Int, value: [RaceEvent])] {
-        Dictionary(grouping: filteredEvents, by: { $0.month })
+        Dictionary(grouping: displayedEvents, by: { $0.month })
             .sorted { $0.key < $1.key }
     }
 
@@ -1281,6 +1288,7 @@ struct SearchView: View {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         filters
+                        favoritesToggleCard
                         statsCard
 
                         ForEach(groupedEvents, id: \.key) { month, events in
@@ -1296,8 +1304,8 @@ struct SearchView: View {
                             .glassCard(.thinMaterial, cornerRadius: 28)
                         }
 
-                        if filteredEvents.isEmpty {
-                            Text("По выбранному фильтру ничего не найдено")
+                        if displayedEvents.isEmpty {
+                            Text(showFavoritesOnly ? "Нет избранных регат по этому фильтру" : "По выбранному фильтру ничего не найдено")
                                 .font(.headline)
                                 .foregroundStyle(.white.opacity(0.65))
                                 .padding(.top, 24)
@@ -1352,7 +1360,7 @@ struct SearchView: View {
                 Text("Событий")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.65))
-                Text("\(filteredEvents.count)")
+                Text("\(displayedEvents.count)")
                     .font(.system(size: 24, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
             }
@@ -1367,6 +1375,22 @@ struct SearchView: View {
                     .font(.headline)
                     .foregroundStyle(.white)
             }
+        }
+        .padding(14)
+        .glassPane(cornerRadius: 24)
+    }
+
+    private var favoritesToggleCard: some View {
+        HStack {
+            Text("Избранные регаты")
+                .font(.headline)
+                .foregroundStyle(.white)
+
+            Spacer()
+
+            Toggle("", isOn: $showFavoritesOnly.animation(.easeInOut(duration: 0.25)))
+                .labelsHidden()
+                .tint(AppTheme.accent)
         }
         .padding(14)
         .glassPane(cornerRadius: 24)
