@@ -387,38 +387,59 @@ struct FavoriteToastOverlay: View {
 // MARK: - Shared UI
 
 struct GlassBackground: View {
-    var showGradient: Bool = true
-
     var body: some View {
         ZStack {
-            Color.black
+            LinearGradient(
+                colors: [
+                    Color(red: 0.03, green: 0.03, blue: 0.07),
+                    Color(red: 0.06, green: 0.07, blue: 0.13),
+                    Color(red: 0.04, green: 0.04, blue: 0.09)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
 
-            if showGradient {
-                // Accent gradient at top
-                LinearGradient(
-                    colors: [
-                        AppTheme.accent.opacity(0.50),
-                        AppTheme.secondary.opacity(0.25),
-                        Color.clear
-                    ],
-                    startPoint: .top,
-                    endPoint: .center
-                )
-
-                // Accent orb — top right
-                Circle()
-                    .fill(
-                        RadialGradient(
-                            colors: [AppTheme.accent.opacity(0.25), .clear],
-                            center: .center,
-                            startRadius: 20,
-                            endRadius: 200
-                        )
+            // Primary accent orb — top right
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [AppTheme.accent.opacity(0.30), AppTheme.accent.opacity(0.08), .clear],
+                        center: .center,
+                        startRadius: 20,
+                        endRadius: 220
                     )
-                    .frame(width: 400, height: 400)
-                    .offset(x: 140, y: -180)
-                    .blur(radius: 80)
-            }
+                )
+                .frame(width: 440, height: 440)
+                .offset(x: 140, y: -200)
+                .blur(radius: 60)
+
+            // Secondary orb — bottom left
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [AppTheme.secondary.opacity(0.18), Color.purple.opacity(0.06), .clear],
+                        center: .center,
+                        startRadius: 10,
+                        endRadius: 200
+                    )
+                )
+                .frame(width: 380, height: 380)
+                .offset(x: -120, y: 300)
+                .blur(radius: 50)
+
+            // Subtle warm orb — center
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [Color.cyan.opacity(0.08), .clear],
+                        center: .center,
+                        startRadius: 10,
+                        endRadius: 160
+                    )
+                )
+                .frame(width: 300, height: 300)
+                .offset(x: 40, y: 80)
+                .blur(radius: 70)
         }
         .ignoresSafeArea()
     }
@@ -894,7 +915,7 @@ struct FavoritesEventsSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                GlassBackground(showGradient: false)
+                GlassBackground()
 
                 ScrollView(showsIndicators: false) {
                     LazyVStack(alignment: .leading, spacing: 16) {
@@ -937,7 +958,7 @@ struct LiveNowEventsSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                GlassBackground(showGradient: false)
+                GlassBackground()
 
                 ScrollView(showsIndicators: false) {
                     LazyVStack(alignment: .leading, spacing: 16) {
@@ -1485,7 +1506,6 @@ struct BrowseCategory: Identifiable {
 }
 
 struct BrowseView: View {
-    @Environment(\.dismiss) private var dismiss
     @State private var searchText = ""
 
     private let categories: [BrowseCategory] = [
@@ -1502,7 +1522,7 @@ struct BrowseView: View {
 
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            GlassBackground()
 
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
@@ -1550,19 +1570,6 @@ struct BrowseView: View {
         .navigationTitle("Поиск")
         .navigationBarTitleDisplayMode(.large)
         .searchable(text: $searchText, prompt: "Поиск")
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .frame(width: 30, height: 30)
-                }
-                .buttonStyle(.plain)
-            }
-        }
     }
 
     @ViewBuilder
@@ -1696,7 +1703,7 @@ struct NewsView: View {
 
     var body: some View {
         ZStack {
-            GlassBackground(showGradient: false)
+            GlassBackground()
 
             ScrollView(showsIndicators: false) {
                 LazyVStack(alignment: .leading, spacing: 20) {
@@ -1955,7 +1962,7 @@ struct NewsDetailView: View {
 
     var body: some View {
         ZStack {
-            GlassBackground(showGradient: false)
+            GlassBackground()
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 18) {
@@ -2251,14 +2258,11 @@ struct MyDataSheet: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                GlassBackground(showGradient: false)
-
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 12) {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("ВФПС ID")
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 12) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("ВФПС ID")
                                     .font(.caption)
                                     .foregroundStyle(.white.opacity(0.55))
 
@@ -2310,9 +2314,10 @@ struct MyDataSheet: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 16)
                 }
-            }
             .navigationTitle("Мои данные")
             .navigationBarTitleDisplayMode(.inline)
+            .scrollContentBackground(.hidden)
+            .background(.ultraThinMaterial)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -2329,6 +2334,7 @@ struct MyDataSheet: View {
         }
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
+        .presentationBackground(.ultraThinMaterial)
     }
 }
 
@@ -2339,30 +2345,28 @@ struct MyFilesSheet: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                GlassBackground(showGradient: false)
-
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 10) {
-                        ForEach(DocKind.allCases) { kind in
-                            FileRowButton(
-                                icon: kind.icon,
-                                title: kind.title,
-                                tint: kind.tint,
-                                hasFile: docStore.hasFile(kind)
-                            ) {
-                                if let url = docStore.url(for: kind) {
-                                    previewURL = url
-                                }
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 10) {
+                    ForEach(DocKind.allCases) { kind in
+                        FileRowButton(
+                            icon: kind.icon,
+                            title: kind.title,
+                            tint: kind.tint,
+                            hasFile: docStore.hasFile(kind)
+                        ) {
+                            if let url = docStore.url(for: kind) {
+                                previewURL = url
                             }
                         }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 16)
                 }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 16)
             }
             .navigationTitle("Мои файлы")
             .navigationBarTitleDisplayMode(.inline)
+            .scrollContentBackground(.hidden)
+            .background(.ultraThinMaterial)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -2379,6 +2383,7 @@ struct MyFilesSheet: View {
         }
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
+        .presentationBackground(.ultraThinMaterial)
         .quickLookPreview($previewURL)
     }
 }
@@ -2454,7 +2459,7 @@ struct SettingsView: View {
 
     var body: some View {
         ZStack {
-            GlassBackground(showGradient: false)
+            GlassBackground()
 
             VStack(spacing: 0) {
                 ScrollView {
@@ -2765,7 +2770,7 @@ struct DocumentsListView: View {
 
     var body: some View {
         ZStack {
-            GlassBackground(showGradient: false)
+            GlassBackground()
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
@@ -2883,7 +2888,7 @@ struct LinksListView: View {
 
     var body: some View {
         ZStack {
-            GlassBackground(showGradient: false)
+            GlassBackground()
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
