@@ -88,7 +88,6 @@ struct ContentView: View {
 enum RuSailTab: Hashable {
     case home
     case calendar
-    case browse
     case profile
 }
 
@@ -100,6 +99,8 @@ struct RootTabView: View {
     @StateObject private var toast = FavoriteToastState()
     @StateObject private var settingsToast = SettingsToastState()
     @State private var selectedTab: RuSailTab = .home
+
+    @State private var showBrowse = false
 
     private var calendarIcon: String {
         let day = Calendar.current.component(.day, from: Date())
@@ -122,15 +123,6 @@ struct RootTabView: View {
                         Image(systemName: calendarIcon)
                         Text("Календарь")
                     }
-
-                NavigationStack {
-                    BrowseView()
-                }
-                .tag(RuSailTab.browse)
-                .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Поиск")
-                }
 
                 ProfileView()
                     .tag(RuSailTab.profile)
@@ -160,6 +152,26 @@ struct RootTabView: View {
                 UINavigationBar.appearance().compactAppearance = navAppearance
             }
 
+            // Floating search button — bottom right
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Button {
+                        showBrowse = true
+                    } label: {
+                        Image(systemName: "magnifyingglass")
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 52, height: 52)
+                            .background(Color(white: 0.15), in: Circle())
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.trailing, 20)
+                    .padding(.bottom, 58)
+                }
+            }
+
             FavoriteToastOverlay()
             SettingsToastOverlay()
         }
@@ -168,6 +180,11 @@ struct RootTabView: View {
         .onChange(of: deepLink.showFavorites) { newValue in
             if newValue {
                 selectedTab = .home
+            }
+        }
+        .fullScreenCover(isPresented: $showBrowse) {
+            NavigationStack {
+                BrowseView()
             }
         }
     }
@@ -414,22 +431,22 @@ struct GlassBackground: View {
             Color.black
 
             if showGradient {
-                // Warm gradient at top — Apple Health style
+                // Accent gradient at top
                 LinearGradient(
                     colors: [
-                        Color(red: 0.85, green: 0.35, blue: 0.15).opacity(0.60),
-                        Color(red: 0.90, green: 0.25, blue: 0.10).opacity(0.35),
+                        AppTheme.accent.opacity(0.50),
+                        AppTheme.secondary.opacity(0.25),
                         Color.clear
                     ],
                     startPoint: .top,
                     endPoint: .center
                 )
 
-                // Subtle blue accent orb — top right
+                // Accent orb — top right
                 Circle()
                     .fill(
                         RadialGradient(
-                            colors: [AppTheme.accent.opacity(0.15), .clear],
+                            colors: [AppTheme.accent.opacity(0.25), .clear],
                             center: .center,
                             startRadius: 20,
                             endRadius: 200
@@ -577,7 +594,7 @@ struct FavoriteEventCard: View {
         }
         .padding(18)
         .background {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
                 .fill(Color(white: 0.11))
         }
     }
@@ -1061,7 +1078,7 @@ struct LiveEventCard: View {
         .padding(18)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
                 .fill(Color(white: 0.11))
         }
     }
@@ -1505,6 +1522,7 @@ struct BrowseCategory: Identifiable {
 }
 
 struct BrowseView: View {
+    @Environment(\.dismiss) private var dismiss
     @State private var searchText = ""
 
     private let categories: [BrowseCategory] = [
@@ -1524,60 +1542,64 @@ struct BrowseView: View {
             Color.black.ignoresSafeArea()
 
             ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Категории")
-                        .font(.title3.weight(.bold))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 20)
-                        .padding(.top, 8)
-                        .padding(.bottom, 4)
+                VStack(spacing: 0) {
+                    ForEach(Array(filteredCategories.enumerated()), id: \.element.id) { index, cat in
+                        NavigationLink {
+                            destinationView(for: cat.title)
+                        } label: {
+                            HStack(spacing: 14) {
+                                Image(systemName: cat.icon)
+                                    .font(.system(size: 18))
+                                    .foregroundStyle(cat.tint)
+                                    .frame(width: 32, height: 32)
 
-                    VStack(spacing: 0) {
-                        ForEach(Array(filteredCategories.enumerated()), id: \.element.id) { index, cat in
-                            NavigationLink {
-                                destinationView(for: cat.title)
-                            } label: {
-                                HStack(spacing: 14) {
-                                    Image(systemName: cat.icon)
-                                        .font(.system(size: 18))
-                                        .foregroundStyle(cat.tint)
-                                        .frame(width: 32, height: 32)
+                                Text(cat.title)
+                                    .font(.body)
+                                    .foregroundStyle(.white)
 
-                                    Text(cat.title)
-                                        .font(.body)
-                                        .foregroundStyle(.white)
+                                Spacer()
 
-                                    Spacer()
-
-                                    Image(systemName: "chevron.right")
-                                        .font(.system(size: 13, weight: .semibold))
-                                        .foregroundStyle(.white.opacity(0.3))
-                                }
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 14)
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundStyle(.white.opacity(0.3))
                             }
-                            .buttonStyle(.plain)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 14)
+                        }
+                        .buttonStyle(.plain)
 
-                            if index < filteredCategories.count - 1 {
-                                Divider()
-                                    .background(Color.white.opacity(0.1))
-                                    .padding(.leading, 62)
-                            }
+                        if index < filteredCategories.count - 1 {
+                            Divider()
+                                .background(Color.white.opacity(0.1))
+                                .padding(.leading, 62)
                         }
                     }
-                    .background(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color(white: 0.11))
-                    )
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
                 }
+                .background(
+                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        .fill(Color(white: 0.11))
+                )
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
                 .padding(.bottom, 32)
             }
         }
         .navigationTitle("Поиск")
         .navigationBarTitleDisplayMode(.large)
         .searchable(text: $searchText, prompt: "Поиск")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: 30, height: 30)
+                }
+                .buttonStyle(.plain)
+            }
+        }
     }
 
     @ViewBuilder
