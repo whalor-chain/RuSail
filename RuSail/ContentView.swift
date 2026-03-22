@@ -152,7 +152,7 @@ struct RootTabView: View {
                 UINavigationBar.appearance().compactAppearance = navAppearance
             }
 
-            // Floating glass search button — bottom right, tab bar level
+            // Floating glass search button — Telegram-style FAB above tab bar
             VStack {
                 Spacer()
                 HStack {
@@ -161,14 +161,23 @@ struct RootTabView: View {
                         showBrowse = true
                     } label: {
                         Image(systemName: "magnifyingglass")
-                            .font(.system(size: 20, weight: .semibold))
+                            .font(.system(size: 22, weight: .semibold))
                             .foregroundStyle(.white)
-                            .frame(width: 48, height: 48)
-                            .background(.ultraThinMaterial, in: Circle())
+                            .frame(width: 54, height: 54)
+                            .background {
+                                Circle()
+                                    .fill(.ultraThinMaterial)
+                                    .environment(\.colorScheme, .dark)
+                            }
+                            .overlay(
+                                Circle()
+                                    .strokeBorder(Color.white.opacity(0.15), lineWidth: 0.5)
+                            )
+                            .shadow(color: .black.opacity(0.25), radius: 12, x: 0, y: 4)
                     }
                     .buttonStyle(.plain)
-                    .padding(.trailing, 16)
-                    .padding(.bottom, 2)
+                    .padding(.trailing, 20)
+                    .padding(.bottom, 62)
                 }
             }
             .ignoresSafeArea(.keyboard)
