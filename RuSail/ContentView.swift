@@ -152,7 +152,7 @@ struct RootTabView: View {
                 UINavigationBar.appearance().compactAppearance = navAppearance
             }
 
-            // Floating search button — bottom right
+            // Floating glass search button — bottom right, tab bar level
             VStack {
                 Spacer()
                 HStack {
@@ -163,14 +163,15 @@ struct RootTabView: View {
                         Image(systemName: "magnifyingglass")
                             .font(.system(size: 20, weight: .semibold))
                             .foregroundStyle(.white)
-                            .frame(width: 52, height: 52)
-                            .background(Color(white: 0.15), in: Circle())
+                            .frame(width: 48, height: 48)
+                            .background(.ultraThinMaterial, in: Circle())
                     }
                     .buttonStyle(.plain)
-                    .padding(.trailing, 20)
-                    .padding(.bottom, 58)
+                    .padding(.trailing, 16)
+                    .padding(.bottom, 2)
                 }
             }
+            .ignoresSafeArea(.keyboard)
 
             FavoriteToastOverlay()
             SettingsToastOverlay()
