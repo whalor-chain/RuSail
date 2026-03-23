@@ -27,6 +27,7 @@ extension Color {
 enum AppTheme {
     static let accent = Color(hex: "#5272FF")
     static let secondary = Color(hex: "#7F8CFF")
+    static let cardBackground = Color(hex: "#1C1C1E")
     static let logoAssetName = "AppLogo"
 }
 
@@ -454,7 +455,7 @@ struct GlassCardModifier: ViewModifier {
             .padding(14)
             .background {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(Color(white: 0.14))
+                    .fill(AppTheme.cardBackground)
             }
     }
 }
@@ -468,7 +469,7 @@ extension View {
         self
             .background {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(Color(white: 0.14))
+                    .fill(AppTheme.cardBackground)
             }
     }
 }
@@ -504,21 +505,24 @@ struct PrimaryButton: View {
 struct RowChevron: View {
     let icon: String
     let title: String
+    var tint: Color = .white
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 14) {
             Image(systemName: icon)
-                .frame(width: 26, height: 26)
-                .foregroundStyle(.white.opacity(0.90))
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(tint)
+                .frame(width: 30, height: 30)
 
             Text(title)
-                .font(.headline)
+                .font(.body)
                 .foregroundStyle(.white)
 
             Spacer()
 
             Image(systemName: "chevron.right")
-                .foregroundStyle(.white.opacity(0.55))
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.3))
         }
     }
 }
@@ -547,7 +551,7 @@ struct FavoriteEventCard: View {
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundStyle(favoritesStore.contains(event) ? .red : .white)
                         .frame(width: 36, height: 36)
-                        .background(Color(white: 0.24), in: Circle())
+                        .background(AppTheme.cardBackground, in: Circle())
                 }
                 .buttonStyle(.plain)
                 .animation(.spring(response: 0.28, dampingFraction: 0.75), value: favoritesStore.contains(event))
@@ -569,7 +573,7 @@ struct FavoriteEventCard: View {
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 8)
-                                .background(Color(white: 0.22), in: Capsule())
+                                .background(AppTheme.cardBackground, in: Capsule())
                         }
                     }
                 }
@@ -579,7 +583,7 @@ struct FavoriteEventCard: View {
         .padding(18)
         .background {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(Color(white: 0.14))
+                .fill(AppTheme.cardBackground)
         }
     }
 
@@ -779,7 +783,7 @@ struct LiveNowCarouselSection: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
-                        .background(Color(white: 0.22), in: Capsule())
+                        .background(AppTheme.cardBackground, in: Capsule())
                     }
                     .buttonStyle(.plain)
                 }
@@ -858,7 +862,7 @@ struct FavoritesSection: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 8)
-                        .background(Color(white: 0.22), in: Capsule())
+                        .background(AppTheme.cardBackground, in: Capsule())
                     }
                     .buttonStyle(.plain)
                 }
@@ -1050,7 +1054,7 @@ struct LiveEventCard: View {
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 8)
-                                .background(Color(white: 0.22), in: Capsule())
+                                .background(AppTheme.cardBackground, in: Capsule())
                         }
                     }
                 }
@@ -1063,7 +1067,7 @@ struct LiveEventCard: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(Color(white: 0.14))
+                .fill(AppTheme.cardBackground)
         }
     }
 
@@ -1418,7 +1422,7 @@ struct SearchView: View {
                         .foregroundStyle(isFavorite ? .red : .white)
                         .scaleEffect(isFavorite ? 1.0 : 0.92)
                         .frame(width: 34, height: 34)
-                        .background(Color(white: 0.24), in: Circle())
+                        .background(AppTheme.cardBackground, in: Circle())
                 }
                 .buttonStyle(.plain)
                 .animation(.spring(response: 0.28, dampingFraction: 0.75), value: isFavorite)
@@ -1444,7 +1448,7 @@ struct SearchView: View {
                             .foregroundStyle(.white)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
-                            .background(Color(white: 0.22), in: Capsule())
+                            .background(AppTheme.cardBackground, in: Capsule())
                             .overlay(
                                 Capsule()
                                     .strokeBorder(
@@ -1463,7 +1467,7 @@ struct SearchView: View {
         .padding(12)
         .background {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color(white: 0.14))
+                .fill(AppTheme.cardBackground)
                 .overlay(
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .fill(Color.white.opacity(0.06))
@@ -1554,38 +1558,20 @@ struct BrowseView: View {
                         NavigationLink {
                             destinationView(for: cat.title)
                         } label: {
-                            HStack(spacing: 14) {
-                                Image(systemName: cat.icon)
-                                    .font(.system(size: 18))
-                                    .foregroundStyle(cat.tint)
-                                    .frame(width: 32, height: 32)
-
-                                Text(cat.title)
-                                    .font(.body)
-                                    .foregroundStyle(.white)
-
-                                Spacer()
-
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 13, weight: .semibold))
-                                    .foregroundStyle(.white.opacity(0.3))
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 14)
+                            RowChevron(icon: cat.icon, title: cat.title, tint: cat.tint)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 14)
                         }
                         .buttonStyle(.plain)
 
                         if index < filteredCategories.count - 1 {
                             Divider()
-                                .background(Color.white.opacity(0.1))
-                                .padding(.leading, 62)
+                                .background(Color.white.opacity(0.10))
+                                .padding(.leading, 60)
                         }
                     }
                 }
-                .background(
-                    RoundedRectangle(cornerRadius: 22, style: .continuous)
-                        .fill(Color(white: 0.14))
-                )
+                .glassPane(cornerRadius: 16)
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
                 .padding(.bottom, 32)
@@ -1855,7 +1841,7 @@ struct FeaturedNewsCard: View {
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(Color(white: 0.14))
+                .fill(AppTheme.cardBackground)
                 .overlay(
                     RoundedRectangle(cornerRadius: 28, style: .continuous)
                         .fill(
@@ -1930,7 +1916,7 @@ struct NewsRowCard: View {
         HStack(spacing: 14) {
             ZStack {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(Color(white: 0.14))
+                    .fill(AppTheme.cardBackground)
                     .overlay(
                         RoundedRectangle(cornerRadius: 18, style: .continuous)
                             .fill(AppTheme.accent.opacity(0.12))
@@ -1992,7 +1978,7 @@ struct NewsDetailView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     ZStack(alignment: .bottomLeading) {
                         RoundedRectangle(cornerRadius: 28, style: .continuous)
-                            .fill(Color(white: 0.14))
+                            .fill(AppTheme.cardBackground)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 28, style: .continuous)
                                     .fill(
@@ -2211,39 +2197,50 @@ struct ProfileView: View {
                 GlassBackground()
 
                 ScrollView {
-                    LazyVStack(spacing: 12) {
+                    VStack(spacing: 0) {
                         Button {
                             vm.showMyDataSheet = true
                         } label: {
-                            RowChevron(icon: "person.text.rectangle", title: "Мои данные")
-                                .glassCard(.thinMaterial, cornerRadius: 24)
+                            RowChevron(icon: "person.text.rectangle", title: "Мои данные", tint: .blue)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 14)
                         }
                         .buttonStyle(.plain)
+
+                        Divider().background(Color.white.opacity(0.10)).padding(.leading, 60)
 
                         Button {
                             vm.showMyFilesSheet = true
                         } label: {
-                            RowChevron(icon: "folder", title: "Мои файлы")
-                                .glassCard(.thinMaterial, cornerRadius: 24)
+                            RowChevron(icon: "folder", title: "Мои файлы", tint: .cyan)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 14)
                         }
                         .buttonStyle(.plain)
+
+                        Divider().background(Color.white.opacity(0.10)).padding(.leading, 60)
 
                         NavigationLink {
                             DocumentsListView()
                         } label: {
-                            RowChevron(icon: "doc.text", title: "Документы")
-                                .glassCard(.thinMaterial, cornerRadius: 24)
+                            RowChevron(icon: "doc.text", title: "Документы", tint: .orange)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 14)
                         }
                         .buttonStyle(.plain)
+
+                        Divider().background(Color.white.opacity(0.10)).padding(.leading, 60)
 
                         NavigationLink {
                             LinksListView()
                         } label: {
-                            RowChevron(icon: "link", title: "Ссылки")
-                                .glassCard(.thinMaterial, cornerRadius: 24)
+                            RowChevron(icon: "link", title: "Ссылки", tint: .green)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 14)
                         }
                         .buttonStyle(.plain)
                     }
+                    .glassPane(cornerRadius: 16)
                     .padding(.horizontal, 16)
                     .padding(.top, 12)
                     .padding(.bottom, 26)
@@ -2326,7 +2323,7 @@ struct MyDataSheet: View {
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 10)
                                 .background(
-                                    copied ? Color.green.opacity(0.15) : Color(white: 0.22),
+                                    copied ? Color.green.opacity(0.15) : AppTheme.cardBackground,
                                     in: Capsule()
                                 )
                             }
@@ -2500,7 +2497,7 @@ struct SettingsView: View {
                                 .padding(14)
                                 .background {
                                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                        .fill(Color(white: 0.14))
+                                        .fill(AppTheme.cardBackground)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 18, style: .continuous)
                                                 .fill(Color.white.opacity(0.06))
@@ -2693,7 +2690,7 @@ struct SettingsView: View {
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.red.opacity(0.7))
                         .frame(width: 34, height: 34)
-                        .background(Color(white: 0.24), in: Circle())
+                        .background(AppTheme.cardBackground, in: Circle())
                         .overlay(Circle().strokeBorder(Color.red.opacity(0.15), lineWidth: 0.6))
                 }
                 .buttonStyle(.plain)
@@ -2705,7 +2702,7 @@ struct SettingsView: View {
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.white.opacity(0.6))
                         .frame(width: 34, height: 34)
-                        .background(Color(white: 0.24), in: Circle())
+                        .background(AppTheme.cardBackground, in: Circle())
                 }
                 .buttonStyle(.plain)
             } else {
