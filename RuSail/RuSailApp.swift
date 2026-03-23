@@ -4,6 +4,7 @@ import SwiftUI
 struct RuSailApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var favoritesStore = FavoritesStore()
+    @StateObject private var themeManager = ThemeManager()
     @State private var showSplash = true
 
     var body: some Scene {
@@ -12,6 +13,7 @@ struct RuSailApp: App {
                 ContentView()
                     .environmentObject(favoritesStore)
                     .environmentObject(appDelegate.deepLink)
+                    .environmentObject(themeManager)
                     .onOpenURL { url in
                         print("Opened from URL: \(url)")
                     }
@@ -114,58 +116,17 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
 struct SplashView: View {
     @State private var logoScale: CGFloat = 0.8
     @State private var logoOpacity: Double = 0
-    @State private var ringScale: CGFloat = 0.6
-    @State private var ringOpacity: Double = 0
 
     var body: some View {
         ZStack {
-            Color(red: 0.03, green: 0.03, blue: 0.07)
+            Color.black
                 .ignoresSafeArea()
-
-            // Ambient glow behind logo
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [Color(hex: "#5272FF").opacity(0.30), .clear],
-                        center: .center,
-                        startRadius: 20,
-                        endRadius: 180
-                    )
-                )
-                .frame(width: 360, height: 360)
-                .scaleEffect(ringScale)
-                .opacity(ringOpacity)
-
-            // Glass ring around logo
-            Circle()
-                .strokeBorder(
-                    LinearGradient(
-                        colors: [Color.white.opacity(0.18), Color.white.opacity(0.04)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 1.2
-                )
-                .frame(width: 160, height: 160)
-                .scaleEffect(ringScale)
-                .opacity(ringOpacity)
 
             Image("AppLogo")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 120, height: 120)
                 .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 28, style: .continuous)
-                        .strokeBorder(
-                            LinearGradient(
-                                colors: [Color.white.opacity(0.22), Color.white.opacity(0.06)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 0.8
-                        )
-                )
                 .shadow(color: Color(hex: "#5272FF").opacity(0.35), radius: 30, x: 0, y: 10)
                 .scaleEffect(logoScale)
                 .opacity(logoOpacity)
@@ -173,10 +134,6 @@ struct SplashView: View {
                     withAnimation(.easeOut(duration: 0.7)) {
                         logoScale = 1.0
                         logoOpacity = 1.0
-                    }
-                    withAnimation(.easeOut(duration: 1.0).delay(0.15)) {
-                        ringScale = 1.0
-                        ringOpacity = 1.0
                     }
                 }
         }

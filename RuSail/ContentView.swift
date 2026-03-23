@@ -31,6 +31,27 @@ enum AppTheme {
     static let logoAssetName = "AppLogo"
 }
 
+// MARK: - Theme Mode
+
+enum AppThemeMode: String, CaseIterable, Identifiable {
+    case dark = "dark"
+    case rusail = "rusail"
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .dark: return "Тёмная"
+        case .rusail: return "RuSail"
+        }
+    }
+}
+
+@MainActor
+final class ThemeManager: ObservableObject {
+    @AppStorage("app.themeMode") var mode: AppThemeMode = .dark
+}
+
 // MARK: - Session
 
 enum SessionKeys {
@@ -388,9 +409,72 @@ struct FavoriteToastOverlay: View {
 // MARK: - Shared UI
 
 struct GlassBackground: View {
+    @EnvironmentObject private var themeManager: ThemeManager
+
     var body: some View {
-        Color.black
-            .ignoresSafeArea()
+        ZStack {
+            Color.black.ignoresSafeArea()
+
+            if themeManager.mode == .rusail {
+                // Blue-toned gradient orbs
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            colors: [AppTheme.accent.opacity(0.30), AppTheme.accent.opacity(0.08), .clear],
+                            center: .center,
+                            startRadius: 20,
+                            endRadius: 220
+                        )
+                    )
+                    .frame(width: 440, height: 440)
+                    .offset(x: 140, y: -200)
+                    .blur(radius: 60)
+
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            colors: [AppTheme.secondary.opacity(0.18), Color.purple.opacity(0.06), .clear],
+                            center: .center,
+                            startRadius: 10,
+                            endRadius: 200
+                        )
+                    )
+                    .frame(width: 380, height: 380)
+                    .offset(x: -120, y: 300)
+                    .blur(radius: 50)
+
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            colors: [Color.cyan.opacity(0.08), .clear],
+                            center: .center,
+                            startRadius: 10,
+                            endRadius: 160
+                        )
+                    )
+                    .frame(width: 300, height: 300)
+                    .offset(x: 40, y: 80)
+                    .blur(radius: 70)
+            }
+        }
+        .ignoresSafeArea()
+    }
+}
+
+struct SheetCloseButton: View {
+    var action: () -> Void
+
+    var body: some View {
+        Button {
+            action()
+        } label: {
+            Image(systemName: "xmark")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundStyle(.white.opacity(0.6))
+                .frame(width: 30, height: 30)
+                .background(Color.white.opacity(0.10), in: Circle())
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -678,7 +762,7 @@ struct HomeView: View {
         .sheet(isPresented: $showFavoritesFromShortcut) {
             FavoritesEventsSheet(events: favoriteEvents)
                 .environmentObject(favoritesStore)
-                .presentationBackground(.ultraThinMaterial)
+                .presentationBackground(Color.black)
         }
         .onChange(of: deepLink.showFavorites) { newValue in
             if newValue {
@@ -777,7 +861,7 @@ struct LiveNowCarouselSection: View {
         }
         .sheet(isPresented: $showAllLiveEvents) {
             LiveNowEventsSheet(events: events)
-                .presentationBackground(.ultraThinMaterial)
+                .presentationBackground(Color.black)
         }
     }
 }
@@ -858,7 +942,7 @@ struct FavoritesSection: View {
         }
         .sheet(isPresented: $showAllFavorites) {
             FavoritesEventsSheet(events: events)
-                .presentationBackground(.ultraThinMaterial)
+                .presentationBackground(Color.black)
         }
     }
 }
@@ -871,29 +955,21 @@ struct FavoritesEventsSheet: View {
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
-                    LazyVStack(alignment: .leading, spacing: 16) {
-                        ForEach(events) { event in
-                            FavoriteEventCard(event: event, favoritesStore: favoritesStore)
-                        }
+                LazyVStack(alignment: .leading, spacing: 16) {
+                    ForEach(events) { event in
+                        FavoriteEventCard(event: event, favoritesStore: favoritesStore)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 16)
                 }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 16)
+            }
             .scrollContentBackground(.hidden)
-            .background(.clear)
+            .background(Color.black)
             .navigationTitle("Избранное")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 30, height: 30)
-                    }
-                    .buttonStyle(.plain)
+                    SheetCloseButton { dismiss() }
                 }
             }
         }
@@ -920,20 +996,12 @@ struct LiveNowEventsSheet: View {
                 .padding(.vertical, 16)
             }
             .scrollContentBackground(.hidden)
-            .background(.clear)
+            .background(Color.black)
             .navigationTitle("Проходят сейчас")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 30, height: 30)
-                    }
-                    .buttonStyle(.plain)
+                    SheetCloseButton { dismiss() }
                 }
             }
         }
@@ -2259,26 +2327,18 @@ struct MyDataSheet: View {
                     .padding(.vertical, 16)
                 }
             .navigationTitle("Мои данные")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
             .scrollContentBackground(.hidden)
-            .background(.clear)
+            .background(Color.black)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 30, height: 30)
-                    }
-                    .buttonStyle(.plain)
+                    SheetCloseButton { dismiss() }
                 }
             }
         }
-        .presentationDetents([.medium])
+        .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground(.thinMaterial)
+        .presentationBackground(Color.black)
     }
 }
 
@@ -2308,26 +2368,18 @@ struct MyFilesSheet: View {
                 .padding(.vertical, 16)
             }
             .navigationTitle("Мои файлы")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
             .scrollContentBackground(.hidden)
-            .background(.clear)
+            .background(Color.black)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 30, height: 30)
-                    }
-                    .buttonStyle(.plain)
+                    SheetCloseButton { dismiss() }
                 }
             }
         }
-        .presentationDetents([.medium])
+        .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground(.thinMaterial)
+        .presentationBackground(Color.black)
         .quickLookPreview($previewURL)
     }
 }
@@ -2394,6 +2446,7 @@ struct SettingsView: View {
     @ObservedObject var docStore: DocumentStore
     @EnvironmentObject private var session: SessionStore
     @EnvironmentObject private var settingsToast: SettingsToastState
+    @EnvironmentObject private var themeManager: ThemeManager
     @Environment(\.dismiss) private var dismiss
     @StateObject private var s = SettingsVM()
     @State private var showSignOutAlert = false
@@ -2408,6 +2461,76 @@ struct SettingsView: View {
             VStack(spacing: 0) {
                 ScrollView {
                     VStack(spacing: 16) {
+                        // MARK: Theme picker
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Тема оформления")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.white.opacity(0.72))
+
+                            HStack(spacing: 12) {
+                                ForEach(AppThemeMode.allCases) { mode in
+                                    let isSelected = themeManager.mode == mode
+                                    Button {
+                                        withAnimation(.easeInOut(duration: 0.25)) {
+                                            themeManager.mode = mode
+                                        }
+                                    } label: {
+                                        VStack(spacing: 10) {
+                                            ZStack {
+                                                if mode == .rusail {
+                                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                                        .fill(
+                                                            LinearGradient(
+                                                                colors: [
+                                                                    Color(red: 0.03, green: 0.03, blue: 0.12),
+                                                                    Color(red: 0.06, green: 0.07, blue: 0.18)
+                                                                ],
+                                                                startPoint: .topLeading,
+                                                                endPoint: .bottomTrailing
+                                                            )
+                                                        )
+                                                } else {
+                                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                                        .fill(Color.black)
+                                                }
+                                            }
+                                            .frame(height: 70)
+                                                .overlay(
+                                                    Group {
+                                                        if mode == .rusail {
+                                                            Circle()
+                                                                .fill(AppTheme.accent.opacity(0.4))
+                                                                .frame(width: 40, height: 40)
+                                                                .blur(radius: 12)
+                                                                .offset(x: 15, y: -10)
+                                                        }
+                                                    }
+                                                )
+                                                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                                        .strokeBorder(
+                                                            isSelected ? AppTheme.accent : Color.white.opacity(0.10),
+                                                            lineWidth: isSelected ? 2 : 1
+                                                        )
+                                                )
+
+                                            Text(mode.title)
+                                                .font(.caption.weight(.semibold))
+                                                .foregroundStyle(isSelected ? AppTheme.accent : .white.opacity(0.7))
+                                        }
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                        }
+
+                        // Divider
+                        Rectangle()
+                            .fill(Color.white.opacity(0.10))
+                            .frame(height: 1)
+                            .padding(.vertical, 4)
+
                         // VFPS ID field
                         VStack(alignment: .leading, spacing: 8) {
                             Text("ВФПС ID")
