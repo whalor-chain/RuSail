@@ -470,6 +470,27 @@ struct GlassBackground: View {
     }
 }
 
+struct SheetGlassBackground: View {
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.55)
+
+            LinearGradient(
+                colors: [
+                    Color(red: 0.08, green: 0.08, blue: 0.14).opacity(0.6),
+                    Color(red: 0.05, green: 0.05, blue: 0.10).opacity(0.8)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .opacity(0.4)
+        }
+    }
+}
+
 struct GlassCardModifier: ViewModifier {
     var material: Material = .ultraThinMaterial
     var cornerRadius: CGFloat = 16
@@ -765,7 +786,7 @@ struct HomeView: View {
         .sheet(isPresented: $showFavoritesFromShortcut) {
             FavoritesEventsSheet(events: favoriteEvents)
                 .environmentObject(favoritesStore)
-                .presentationBackground(.ultraThinMaterial)
+                .presentationBackground(SheetGlassBackground())
                 .presentationCornerRadius(20)
         }
         .onChange(of: deepLink.showFavorites) { newValue in
@@ -865,7 +886,7 @@ struct LiveNowCarouselSection: View {
         }
         .sheet(isPresented: $showAllLiveEvents) {
             LiveNowEventsSheet(events: events)
-                .presentationBackground(.ultraThinMaterial)
+                .presentationBackground(SheetGlassBackground())
                 .presentationCornerRadius(20)
         }
     }
@@ -947,7 +968,7 @@ struct FavoritesSection: View {
         }
         .sheet(isPresented: $showAllFavorites) {
             FavoritesEventsSheet(events: events)
-                .presentationBackground(.ultraThinMaterial)
+                .presentationBackground(SheetGlassBackground())
                 .presentationCornerRadius(20)
         }
     }
@@ -2376,7 +2397,7 @@ struct MyDataSheet: View {
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground(.ultraThinMaterial)
+        .presentationBackground(SheetGlassBackground())
         .presentationCornerRadius(20)
     }
 }
@@ -2425,7 +2446,7 @@ struct MyFilesSheet: View {
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground(.ultraThinMaterial)
+        .presentationBackground(SheetGlassBackground())
         .presentationCornerRadius(20)
         .quickLookPreview($previewURL)
     }
@@ -2681,14 +2702,16 @@ struct SettingsView: View {
                 } label: {
                     Text("Сохранить")
                         .font(.headline.weight(.semibold))
-                        .foregroundStyle(AppTheme.accent)
+                        .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
+                        .background(AppTheme.accent, in: Capsule())
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
             }
+            .background(.clear)
         }
         .navigationTitle("Настройки")
         .navigationBarTitleDisplayMode(.inline)
