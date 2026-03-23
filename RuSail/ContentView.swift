@@ -389,60 +389,8 @@ struct FavoriteToastOverlay: View {
 
 struct GlassBackground: View {
     var body: some View {
-        ZStack {
-            LinearGradient(
-                colors: [
-                    Color(red: 0.03, green: 0.03, blue: 0.07),
-                    Color(red: 0.06, green: 0.07, blue: 0.13),
-                    Color(red: 0.04, green: 0.04, blue: 0.09)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-
-            // Primary accent orb — top right
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [AppTheme.accent.opacity(0.30), AppTheme.accent.opacity(0.08), .clear],
-                        center: .center,
-                        startRadius: 20,
-                        endRadius: 220
-                    )
-                )
-                .frame(width: 440, height: 440)
-                .offset(x: 140, y: -200)
-                .blur(radius: 60)
-
-            // Secondary orb — bottom left
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [AppTheme.secondary.opacity(0.18), Color.purple.opacity(0.06), .clear],
-                        center: .center,
-                        startRadius: 10,
-                        endRadius: 200
-                    )
-                )
-                .frame(width: 380, height: 380)
-                .offset(x: -120, y: 300)
-                .blur(radius: 50)
-
-            // Subtle warm orb — center
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [Color.cyan.opacity(0.08), .clear],
-                        center: .center,
-                        startRadius: 10,
-                        endRadius: 160
-                    )
-                )
-                .frame(width: 300, height: 300)
-                .offset(x: 40, y: 80)
-                .blur(radius: 70)
-        }
-        .ignoresSafeArea()
+        Color.black
+            .ignoresSafeArea()
     }
 }
 
@@ -730,6 +678,7 @@ struct HomeView: View {
         .sheet(isPresented: $showFavoritesFromShortcut) {
             FavoritesEventsSheet(events: favoriteEvents)
                 .environmentObject(favoritesStore)
+                .presentationBackground(.ultraThinMaterial)
         }
         .onChange(of: deepLink.showFavorites) { newValue in
             if newValue {
@@ -828,6 +777,7 @@ struct LiveNowCarouselSection: View {
         }
         .sheet(isPresented: $showAllLiveEvents) {
             LiveNowEventsSheet(events: events)
+                .presentationBackground(.ultraThinMaterial)
         }
     }
 }
@@ -908,6 +858,7 @@ struct FavoritesSection: View {
         }
         .sheet(isPresented: $showAllFavorites) {
             FavoritesEventsSheet(events: events)
+                .presentationBackground(.ultraThinMaterial)
         }
     }
 }
@@ -919,10 +870,7 @@ struct FavoritesEventsSheet: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                GlassBackground()
-
-                ScrollView(showsIndicators: false) {
+            ScrollView(showsIndicators: false) {
                     LazyVStack(alignment: .leading, spacing: 16) {
                         ForEach(events) { event in
                             FavoriteEventCard(event: event, favoritesStore: favoritesStore)
@@ -931,7 +879,8 @@ struct FavoritesEventsSheet: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 16)
                 }
-            }
+            .scrollContentBackground(.hidden)
+            .background(.clear)
             .navigationTitle("Избранное")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -952,8 +901,6 @@ struct FavoritesEventsSheet: View {
 }
 
 
-
-
 // MARK: - Live now modal sheet
 
 struct LiveNowEventsSheet: View {
@@ -962,20 +909,18 @@ struct LiveNowEventsSheet: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                GlassBackground()
-
-                ScrollView(showsIndicators: false) {
-                    LazyVStack(alignment: .leading, spacing: 16) {
-                        ForEach(events) { event in
-                            LiveEventCard(event: event)
-                                .frame(height: 290)
-                        }
+            ScrollView(showsIndicators: false) {
+                LazyVStack(alignment: .leading, spacing: 16) {
+                    ForEach(events) { event in
+                        LiveEventCard(event: event)
+                            .frame(height: 290)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 16)
                 }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 16)
             }
+            .scrollContentBackground(.hidden)
+            .background(.clear)
             .navigationTitle("Проходят сейчас")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

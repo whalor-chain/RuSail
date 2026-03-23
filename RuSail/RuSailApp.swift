@@ -42,9 +42,8 @@ struct RuSailApp: App {
 
     private func setupNavigationBarAppearance() {
         let navAppearance = UINavigationBarAppearance()
-        navAppearance.configureWithDefaultBackground()
-        navAppearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
-        navAppearance.backgroundColor = UIColor.white.withAlphaComponent(0.03)
+        navAppearance.configureWithTransparentBackground()
+        navAppearance.backgroundColor = .clear
         navAppearance.shadowColor = .clear
         navAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         navAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
