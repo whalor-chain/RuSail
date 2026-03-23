@@ -510,12 +510,13 @@ struct RowChevron: View {
     var body: some View {
         HStack(spacing: 14) {
             Image(systemName: icon)
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(tint)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(.white)
                 .frame(width: 30, height: 30)
+                .background(tint, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
 
             Text(title)
-                .font(.body)
+                .font(.body.weight(.semibold))
                 .foregroundStyle(.white)
 
             Spacer()
@@ -2197,50 +2198,47 @@ struct ProfileView: View {
                 GlassBackground()
 
                 ScrollView {
-                    VStack(spacing: 0) {
+                    VStack(spacing: 10) {
                         Button {
                             vm.showMyDataSheet = true
                         } label: {
                             RowChevron(icon: "person.text.rectangle", title: "Мои данные", tint: .blue)
                                 .padding(.horizontal, 16)
-                                .padding(.vertical, 14)
+                                .padding(.vertical, 12)
+                                .glassPane(cornerRadius: 14)
                         }
                         .buttonStyle(.plain)
-
-                        Divider().background(Color.white.opacity(0.10)).padding(.leading, 60)
 
                         Button {
                             vm.showMyFilesSheet = true
                         } label: {
                             RowChevron(icon: "folder", title: "Мои файлы", tint: .cyan)
                                 .padding(.horizontal, 16)
-                                .padding(.vertical, 14)
+                                .padding(.vertical, 12)
+                                .glassPane(cornerRadius: 14)
                         }
                         .buttonStyle(.plain)
-
-                        Divider().background(Color.white.opacity(0.10)).padding(.leading, 60)
 
                         NavigationLink {
                             DocumentsListView()
                         } label: {
                             RowChevron(icon: "doc.text", title: "Документы", tint: .orange)
                                 .padding(.horizontal, 16)
-                                .padding(.vertical, 14)
+                                .padding(.vertical, 12)
+                                .glassPane(cornerRadius: 14)
                         }
                         .buttonStyle(.plain)
-
-                        Divider().background(Color.white.opacity(0.10)).padding(.leading, 60)
 
                         NavigationLink {
                             LinksListView()
                         } label: {
                             RowChevron(icon: "link", title: "Ссылки", tint: .green)
                                 .padding(.horizontal, 16)
-                                .padding(.vertical, 14)
+                                .padding(.vertical, 12)
+                                .glassPane(cornerRadius: 14)
                         }
                         .buttonStyle(.plain)
                     }
-                    .glassPane(cornerRadius: 16)
                     .padding(.horizontal, 16)
                     .padding(.top, 12)
                     .padding(.bottom, 26)
