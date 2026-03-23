@@ -786,7 +786,7 @@ struct HomeView: View {
         .sheet(isPresented: $showFavoritesFromShortcut) {
             FavoritesEventsSheet(events: favoriteEvents)
                 .environmentObject(favoritesStore)
-                .presentationBackground(SheetGlassBackground())
+                .presentationBackground { SheetGlassBackground() }
                 .presentationCornerRadius(20)
         }
         .onChange(of: deepLink.showFavorites) { newValue in
@@ -886,7 +886,7 @@ struct LiveNowCarouselSection: View {
         }
         .sheet(isPresented: $showAllLiveEvents) {
             LiveNowEventsSheet(events: events)
-                .presentationBackground(SheetGlassBackground())
+                .presentationBackground { SheetGlassBackground() }
                 .presentationCornerRadius(20)
         }
     }
@@ -968,7 +968,7 @@ struct FavoritesSection: View {
         }
         .sheet(isPresented: $showAllFavorites) {
             FavoritesEventsSheet(events: events)
-                .presentationBackground(SheetGlassBackground())
+                .presentationBackground { SheetGlassBackground() }
                 .presentationCornerRadius(20)
         }
     }
@@ -2397,7 +2397,7 @@ struct MyDataSheet: View {
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground(SheetGlassBackground())
+        .presentationBackground { SheetGlassBackground() }
         .presentationCornerRadius(20)
     }
 }
@@ -2446,7 +2446,7 @@ struct MyFilesSheet: View {
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground(SheetGlassBackground())
+        .presentationBackground { SheetGlassBackground() }
         .presentationCornerRadius(20)
         .quickLookPreview($previewURL)
     }
