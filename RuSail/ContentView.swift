@@ -594,11 +594,22 @@ struct FavoriteEventCard: View {
                     HStack(spacing: 8) {
                         ForEach(event.classes, id: \.self) { yachtClass in
                             Text(yachtClass)
-                                .font(.caption.weight(.medium))
+                                .font(.caption.weight(.semibold))
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 10)
-                                .padding(.vertical, 8)
+                                .padding(.vertical, 6)
                                 .background(AppTheme.cardBackground, in: Capsule())
+                                .overlay(
+                                    Capsule()
+                                        .strokeBorder(
+                                            LinearGradient(
+                                                colors: [Color.white.opacity(0.14), Color.white.opacity(0.06)],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            ),
+                                            lineWidth: 0.6
+                                        )
+                                )
                         }
                     }
                 }
@@ -754,7 +765,8 @@ struct HomeView: View {
         .sheet(isPresented: $showFavoritesFromShortcut) {
             FavoritesEventsSheet(events: favoriteEvents)
                 .environmentObject(favoritesStore)
-                .presentationBackground(Color.black)
+                .presentationBackground(.ultraThinMaterial)
+                .presentationCornerRadius(20)
         }
         .onChange(of: deepLink.showFavorites) { newValue in
             if newValue {
@@ -853,7 +865,8 @@ struct LiveNowCarouselSection: View {
         }
         .sheet(isPresented: $showAllLiveEvents) {
             LiveNowEventsSheet(events: events)
-                .presentationBackground(Color.black)
+                .presentationBackground(.ultraThinMaterial)
+                .presentationCornerRadius(20)
         }
     }
 }
@@ -934,7 +947,8 @@ struct FavoritesSection: View {
         }
         .sheet(isPresented: $showAllFavorites) {
             FavoritesEventsSheet(events: events)
-                .presentationBackground(Color.black)
+                .presentationBackground(.ultraThinMaterial)
+                .presentationCornerRadius(20)
         }
     }
 }
@@ -956,7 +970,6 @@ struct FavoritesEventsSheet: View {
                 .padding(.vertical, 16)
             }
             .scrollContentBackground(.hidden)
-            .background(Color.black)
             .navigationTitle("Избранное")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
@@ -996,7 +1009,6 @@ struct LiveNowEventsSheet: View {
                 .padding(.vertical, 16)
             }
             .scrollContentBackground(.hidden)
-            .background(Color.black)
             .navigationTitle("Проходят сейчас")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
@@ -1072,11 +1084,22 @@ struct LiveEventCard: View {
                     HStack(spacing: 8) {
                         ForEach(event.classes, id: \.self) { yachtClass in
                             Text(yachtClass)
-                                .font(.caption.weight(.medium))
+                                .font(.caption.weight(.semibold))
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 10)
-                                .padding(.vertical, 8)
+                                .padding(.vertical, 6)
                                 .background(AppTheme.cardBackground, in: Capsule())
+                                .overlay(
+                                    Capsule()
+                                        .strokeBorder(
+                                            LinearGradient(
+                                                colors: [Color.white.opacity(0.14), Color.white.opacity(0.06)],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            ),
+                                            lineWidth: 0.6
+                                        )
+                                )
                         }
                     }
                 }
@@ -2337,7 +2360,6 @@ struct MyDataSheet: View {
             .navigationTitle("Мои данные")
             .navigationBarTitleDisplayMode(.large)
             .scrollContentBackground(.hidden)
-            .background(Color.black)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -2354,7 +2376,8 @@ struct MyDataSheet: View {
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground(Color.black)
+        .presentationBackground(.ultraThinMaterial)
+        .presentationCornerRadius(20)
     }
 }
 
@@ -2386,7 +2409,6 @@ struct MyFilesSheet: View {
             .navigationTitle("Мои файлы")
             .navigationBarTitleDisplayMode(.large)
             .scrollContentBackground(.hidden)
-            .background(Color.black)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -2403,7 +2425,8 @@ struct MyFilesSheet: View {
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground(Color.black)
+        .presentationBackground(.ultraThinMaterial)
+        .presentationCornerRadius(20)
         .quickLookPreview($previewURL)
     }
 }
@@ -2658,22 +2681,9 @@ struct SettingsView: View {
                 } label: {
                     Text("Сохранить")
                         .font(.headline.weight(.semibold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(AppTheme.accent)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(AppTheme.accent.opacity(0.55), in: Capsule())
-                        .overlay(
-                            Capsule()
-                                .strokeBorder(
-                                    LinearGradient(
-                                        colors: [Color.white.opacity(0.22), Color.white.opacity(0.06)],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 0.8
-                                )
-                        )
-                        .shadow(color: AppTheme.accent.opacity(0.30), radius: 14, x: 0, y: 8)
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal, 16)
