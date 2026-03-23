@@ -510,10 +510,9 @@ struct RowChevron: View {
     var body: some View {
         HStack(spacing: 14) {
             Image(systemName: icon)
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(.white)
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundStyle(tint)
                 .frame(width: 30, height: 30)
-                .background(tint, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
 
             Text(title)
                 .font(.body.weight(.semibold))
@@ -525,6 +524,7 @@ struct RowChevron: View {
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(.white.opacity(0.3))
         }
+        .contentShape(Rectangle())
     }
 }
 // MARK: - Favourit
@@ -1538,10 +1538,12 @@ struct BrowseView: View {
     @State private var searchText = ""
 
     private let categories: [BrowseCategory] = [
+        BrowseCategory(icon: "doc.text.fill", title: "Документы", tint: .orange),
+        BrowseCategory(icon: "link", title: "Ссылки", tint: .green),
         BrowseCategory(icon: "newspaper.fill", title: "Новости", tint: .blue),
-        BrowseCategory(icon: "person.3.fill", title: "Отбор в Сборную", tint: .orange),
+        BrowseCategory(icon: "person.3.fill", title: "Отбор в Сборную", tint: .purple),
         BrowseCategory(icon: "trophy.fill", title: "Результаты", tint: .yellow),
-        BrowseCategory(icon: "cart.fill", title: "Магазин", tint: .green),
+        BrowseCategory(icon: "cart.fill", title: "Магазин", tint: .mint),
     ]
 
     private var filteredCategories: [BrowseCategory] {
@@ -1554,25 +1556,19 @@ struct BrowseView: View {
             GlassBackground()
 
             ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-                    ForEach(Array(filteredCategories.enumerated()), id: \.element.id) { index, cat in
+                VStack(spacing: 10) {
+                    ForEach(filteredCategories) { cat in
                         NavigationLink {
                             destinationView(for: cat.title)
                         } label: {
                             RowChevron(icon: cat.icon, title: cat.title, tint: cat.tint)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 14)
+                                .glassPane(cornerRadius: 20)
                         }
                         .buttonStyle(.plain)
-
-                        if index < filteredCategories.count - 1 {
-                            Divider()
-                                .background(Color.white.opacity(0.10))
-                                .padding(.leading, 60)
-                        }
                     }
                 }
-                .glassPane(cornerRadius: 16)
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
                 .padding(.bottom, 32)
@@ -1586,14 +1582,18 @@ struct BrowseView: View {
     @ViewBuilder
     private func destinationView(for title: String) -> some View {
         switch title {
+        case "Документы":
+            DocumentsListView()
+        case "Ссылки":
+            LinksListView()
         case "Новости":
             NewsView()
         case "Отбор в Сборную":
-            placeholderPage(title: "Отбор в Сборную", icon: "person.3.fill", color: .orange)
+            placeholderPage(title: "Отбор в Сборную", icon: "person.3.fill", color: .purple)
         case "Результаты":
             placeholderPage(title: "Результаты", icon: "trophy.fill", color: .yellow)
         case "Магазин":
-            placeholderPage(title: "Магазин", icon: "cart.fill", color: .green)
+            placeholderPage(title: "Магазин", icon: "cart.fill", color: .mint)
         default:
             EmptyView()
         }
@@ -2204,8 +2204,8 @@ struct ProfileView: View {
                         } label: {
                             RowChevron(icon: "person.text.rectangle", title: "Мои данные", tint: .blue)
                                 .padding(.horizontal, 16)
-                                .padding(.vertical, 12)
-                                .glassPane(cornerRadius: 14)
+                                .padding(.vertical, 14)
+                                .glassPane(cornerRadius: 20)
                         }
                         .buttonStyle(.plain)
 
@@ -2214,28 +2214,8 @@ struct ProfileView: View {
                         } label: {
                             RowChevron(icon: "folder", title: "Мои файлы", tint: .cyan)
                                 .padding(.horizontal, 16)
-                                .padding(.vertical, 12)
-                                .glassPane(cornerRadius: 14)
-                        }
-                        .buttonStyle(.plain)
-
-                        NavigationLink {
-                            DocumentsListView()
-                        } label: {
-                            RowChevron(icon: "doc.text", title: "Документы", tint: .orange)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 12)
-                                .glassPane(cornerRadius: 14)
-                        }
-                        .buttonStyle(.plain)
-
-                        NavigationLink {
-                            LinksListView()
-                        } label: {
-                            RowChevron(icon: "link", title: "Ссылки", tint: .green)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 12)
-                                .glassPane(cornerRadius: 14)
+                                .padding(.vertical, 14)
+                                .glassPane(cornerRadius: 20)
                         }
                         .buttonStyle(.plain)
                     }
