@@ -413,14 +413,21 @@ struct GlassBackground: View {
 
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
-
             if themeManager.mode == .rusail {
-                // Blue-toned gradient orbs
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.03, green: 0.03, blue: 0.07),
+                        Color(red: 0.06, green: 0.07, blue: 0.13),
+                        Color(red: 0.04, green: 0.04, blue: 0.09)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+
                 Circle()
                     .fill(
                         RadialGradient(
-                            colors: [AppTheme.accent.opacity(0.30), AppTheme.accent.opacity(0.08), .clear],
+                            colors: [AppTheme.accent.opacity(0.40), AppTheme.accent.opacity(0.12), .clear],
                             center: .center,
                             startRadius: 20,
                             endRadius: 220
@@ -433,7 +440,7 @@ struct GlassBackground: View {
                 Circle()
                     .fill(
                         RadialGradient(
-                            colors: [AppTheme.secondary.opacity(0.18), Color.purple.opacity(0.06), .clear],
+                            colors: [AppTheme.secondary.opacity(0.25), Color.purple.opacity(0.10), .clear],
                             center: .center,
                             startRadius: 10,
                             endRadius: 200
@@ -446,7 +453,7 @@ struct GlassBackground: View {
                 Circle()
                     .fill(
                         RadialGradient(
-                            colors: [Color.cyan.opacity(0.08), .clear],
+                            colors: [Color.cyan.opacity(0.12), .clear],
                             center: .center,
                             startRadius: 10,
                             endRadius: 160
@@ -455,26 +462,11 @@ struct GlassBackground: View {
                     .frame(width: 300, height: 300)
                     .offset(x: 40, y: 80)
                     .blur(radius: 70)
+            } else {
+                Color.black
             }
         }
         .ignoresSafeArea()
-    }
-}
-
-struct SheetCloseButton: View {
-    var action: () -> Void
-
-    var body: some View {
-        Button {
-            action()
-        } label: {
-            Image(systemName: "xmark")
-                .font(.system(size: 14, weight: .bold))
-                .foregroundStyle(.white.opacity(0.6))
-                .frame(width: 30, height: 30)
-                .background(Color.white.opacity(0.10), in: Circle())
-        }
-        .buttonStyle(.plain)
     }
 }
 
@@ -969,7 +961,15 @@ struct FavoritesEventsSheet: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    SheetCloseButton { dismiss() }
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 30, height: 30)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         }
@@ -1001,7 +1001,15 @@ struct LiveNowEventsSheet: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    SheetCloseButton { dismiss() }
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 30, height: 30)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         }
@@ -2332,7 +2340,15 @@ struct MyDataSheet: View {
             .background(Color.black)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    SheetCloseButton { dismiss() }
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 30, height: 30)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         }
@@ -2373,7 +2389,15 @@ struct MyFilesSheet: View {
             .background(Color.black)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    SheetCloseButton { dismiss() }
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 30, height: 30)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         }
