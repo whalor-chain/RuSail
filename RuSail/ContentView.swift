@@ -470,27 +470,6 @@ struct GlassBackground: View {
     }
 }
 
-struct SheetGlassBackground: View {
-    var body: some View {
-        ZStack {
-            Color.black.opacity(0.55)
-
-            LinearGradient(
-                colors: [
-                    Color(red: 0.08, green: 0.08, blue: 0.14).opacity(0.6),
-                    Color(red: 0.05, green: 0.05, blue: 0.10).opacity(0.8)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-
-            Rectangle()
-                .fill(.ultraThinMaterial)
-                .opacity(0.4)
-        }
-    }
-}
-
 struct GlassCardModifier: ViewModifier {
     var material: Material = .ultraThinMaterial
     var cornerRadius: CGFloat = 16
@@ -786,8 +765,6 @@ struct HomeView: View {
         .sheet(isPresented: $showFavoritesFromShortcut) {
             FavoritesEventsSheet(events: favoriteEvents)
                 .environmentObject(favoritesStore)
-                .presentationBackground { SheetGlassBackground() }
-                .presentationCornerRadius(20)
         }
         .onChange(of: deepLink.showFavorites) { newValue in
             if newValue {
@@ -886,8 +863,6 @@ struct LiveNowCarouselSection: View {
         }
         .sheet(isPresented: $showAllLiveEvents) {
             LiveNowEventsSheet(events: events)
-                .presentationBackground { SheetGlassBackground() }
-                .presentationCornerRadius(20)
         }
     }
 }
@@ -968,8 +943,6 @@ struct FavoritesSection: View {
         }
         .sheet(isPresented: $showAllFavorites) {
             FavoritesEventsSheet(events: events)
-                .presentationBackground { SheetGlassBackground() }
-                .presentationCornerRadius(20)
         }
     }
 }
@@ -981,18 +954,21 @@ struct FavoritesEventsSheet: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView(showsIndicators: false) {
-                LazyVStack(alignment: .leading, spacing: 16) {
-                    ForEach(events) { event in
-                        FavoriteEventCard(event: event, favoritesStore: favoritesStore)
+            ZStack {
+                GlassBackground()
+
+                ScrollView(showsIndicators: false) {
+                    LazyVStack(alignment: .leading, spacing: 16) {
+                        ForEach(events) { event in
+                            FavoriteEventCard(event: event, favoritesStore: favoritesStore)
+                        }
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 16)
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 16)
             }
-            .scrollContentBackground(.hidden)
             .navigationTitle("Избранное")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -1019,19 +995,22 @@ struct LiveNowEventsSheet: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView(showsIndicators: false) {
-                LazyVStack(alignment: .leading, spacing: 16) {
-                    ForEach(events) { event in
-                        LiveEventCard(event: event)
-                            .frame(height: 290)
+            ZStack {
+                GlassBackground()
+
+                ScrollView(showsIndicators: false) {
+                    LazyVStack(alignment: .leading, spacing: 16) {
+                        ForEach(events) { event in
+                            LiveEventCard(event: event)
+                                .frame(height: 290)
+                        }
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 16)
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 16)
             }
-            .scrollContentBackground(.hidden)
             .navigationTitle("Проходят сейчас")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -2397,8 +2376,8 @@ struct MyDataSheet: View {
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground { SheetGlassBackground() }
-        .presentationCornerRadius(20)
+        .presentationBackground(.ultraThinMaterial)
+        .presentationCornerRadius(30)
     }
 }
 
@@ -2446,8 +2425,8 @@ struct MyFilesSheet: View {
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground { SheetGlassBackground() }
-        .presentationCornerRadius(20)
+        .presentationBackground(.ultraThinMaterial)
+        .presentationCornerRadius(30)
         .quickLookPreview($previewURL)
     }
 }
