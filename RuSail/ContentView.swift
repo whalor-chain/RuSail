@@ -1430,7 +1430,11 @@ struct SearchView: View {
     }
 
     private var favoritesToggleCard: some View {
-        HStack {
+        HStack(spacing: 8) {
+            Image(systemName: "heart.fill")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(.red)
+
             Text("Избранные регаты")
                 .font(.headline)
                 .foregroundStyle(.white)
@@ -1439,7 +1443,7 @@ struct SearchView: View {
 
             Toggle("", isOn: $showFavoritesOnly.animation(.easeInOut(duration: 0.25)))
                 .labelsHidden()
-                .tint(AppTheme.accent)
+                .tint(.red)
         }
         .padding(14)
         .glassPane(cornerRadius: 24)
@@ -2311,9 +2315,11 @@ struct MyDataSheet: View {
 
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 17, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.7))
-                        .frame(width: 32, height: 32)
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.65))
+                        .frame(width: 30, height: 30)
+                        .background(.ultraThinMaterial, in: Circle())
+                        .overlay(Circle().strokeBorder(.white.opacity(0.1), lineWidth: 0.5))
                 }
                 .buttonStyle(.plain)
             }
@@ -2381,7 +2387,7 @@ struct MyDataSheet: View {
         .contentShape(Rectangle())
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground(.thinMaterial)
+        .presentationBackground(.ultraThinMaterial)
         .presentationCornerRadius(44)
     }
 }
@@ -2403,9 +2409,11 @@ struct MyFilesSheet: View {
 
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 17, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.7))
-                        .frame(width: 32, height: 32)
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.65))
+                        .frame(width: 30, height: 30)
+                        .background(.ultraThinMaterial, in: Circle())
+                        .overlay(Circle().strokeBorder(.white.opacity(0.1), lineWidth: 0.5))
                 }
                 .buttonStyle(.plain)
             }
@@ -2436,7 +2444,7 @@ struct MyFilesSheet: View {
         .contentShape(Rectangle())
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground(.thinMaterial)
+        .presentationBackground(.ultraThinMaterial)
         .presentationCornerRadius(44)
         .quickLookPreview($previewURL)
     }
