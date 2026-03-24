@@ -2301,7 +2301,7 @@ struct MyDataSheet: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Header
+            // iOS 26 Header
             HStack {
                 Text("Мои данные")
                     .font(.title2.weight(.bold))
@@ -2311,15 +2311,15 @@ struct MyDataSheet: View {
 
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .frame(width: 30, height: 30)
+                        .font(.system(size: 17, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.7))
+                        .frame(width: 32, height: 32)
                 }
                 .buttonStyle(.plain)
             }
             .padding(.horizontal, 20)
-            .padding(.top, 24)
-            .padding(.bottom, 16)
+            .padding(.top, 22)
+            .padding(.bottom, 18)
 
             // Content
             ScrollView(showsIndicators: false) {
@@ -2378,10 +2378,11 @@ struct MyDataSheet: View {
                 .padding(.horizontal, 16)
             }
         }
+        .contentShape(Rectangle())
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground(.ultraThinMaterial)
-        .presentationCornerRadius(30)
+        .presentationBackground(.thinMaterial)
+        .presentationCornerRadius(44)
     }
 }
 
@@ -2392,7 +2393,7 @@ struct MyFilesSheet: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Header
+            // iOS 26 Header
             HStack {
                 Text("Мои файлы")
                     .font(.title2.weight(.bold))
@@ -2402,15 +2403,15 @@ struct MyFilesSheet: View {
 
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .frame(width: 30, height: 30)
+                        .font(.system(size: 17, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.7))
+                        .frame(width: 32, height: 32)
                 }
                 .buttonStyle(.plain)
             }
             .padding(.horizontal, 20)
-            .padding(.top, 24)
-            .padding(.bottom, 16)
+            .padding(.top, 22)
+            .padding(.bottom, 18)
 
             // Content
             ScrollView(showsIndicators: false) {
@@ -2432,10 +2433,11 @@ struct MyFilesSheet: View {
                 .padding(.vertical, 16)
             }
         }
+        .contentShape(Rectangle())
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .presentationBackground(.ultraThinMaterial)
-        .presentationCornerRadius(30)
+        .presentationBackground(.thinMaterial)
+        .presentationCornerRadius(44)
         .quickLookPreview($previewURL)
     }
 }
