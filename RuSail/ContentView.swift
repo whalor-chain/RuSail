@@ -414,54 +414,59 @@ struct GlassBackground: View {
     var body: some View {
         ZStack {
             if themeManager.mode == .rusail {
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.03, green: 0.03, blue: 0.07),
-                        Color(red: 0.06, green: 0.07, blue: 0.13),
-                        Color(red: 0.04, green: 0.04, blue: 0.09)
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
+                GeometryReader { geo in
+                    let w = geo.size.width
+                    let h = geo.size.height
 
-                Circle()
-                    .fill(
-                        RadialGradient(
-                            colors: [AppTheme.accent.opacity(0.40), AppTheme.accent.opacity(0.12), .clear],
-                            center: .center,
-                            startRadius: 20,
-                            endRadius: 220
-                        )
+                    LinearGradient(
+                        colors: [
+                            Color(red: 0.03, green: 0.03, blue: 0.07),
+                            Color(red: 0.06, green: 0.07, blue: 0.13),
+                            Color(red: 0.04, green: 0.04, blue: 0.09)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
                     )
-                    .frame(width: 440, height: 440)
-                    .offset(x: 140, y: -200)
-                    .blur(radius: 60)
 
-                Circle()
-                    .fill(
-                        RadialGradient(
-                            colors: [AppTheme.secondary.opacity(0.25), Color.purple.opacity(0.10), .clear],
-                            center: .center,
-                            startRadius: 10,
-                            endRadius: 200
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                colors: [AppTheme.accent.opacity(0.40), AppTheme.accent.opacity(0.12), .clear],
+                                center: .center,
+                                startRadius: w * 0.05,
+                                endRadius: w * 0.55
+                            )
                         )
-                    )
-                    .frame(width: 380, height: 380)
-                    .offset(x: -120, y: 300)
-                    .blur(radius: 50)
+                        .frame(width: w * 1.1, height: w * 1.1)
+                        .offset(x: w * 0.35, y: -h * 0.25)
+                        .blur(radius: 60)
 
-                Circle()
-                    .fill(
-                        RadialGradient(
-                            colors: [Color.cyan.opacity(0.12), .clear],
-                            center: .center,
-                            startRadius: 10,
-                            endRadius: 160
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                colors: [AppTheme.secondary.opacity(0.25), Color.purple.opacity(0.10), .clear],
+                                center: .center,
+                                startRadius: w * 0.03,
+                                endRadius: w * 0.50
+                            )
                         )
-                    )
-                    .frame(width: 300, height: 300)
-                    .offset(x: 40, y: 80)
-                    .blur(radius: 70)
+                        .frame(width: w * 0.95, height: w * 0.95)
+                        .offset(x: -w * 0.30, y: h * 0.35)
+                        .blur(radius: 50)
+
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                colors: [Color.cyan.opacity(0.12), .clear],
+                                center: .center,
+                                startRadius: w * 0.03,
+                                endRadius: w * 0.40
+                            )
+                        )
+                        .frame(width: w * 0.75, height: w * 0.75)
+                        .offset(x: w * 0.10, y: h * 0.10)
+                        .blur(radius: 70)
+                }
             } else {
                 Color.black
             }
