@@ -621,10 +621,9 @@ struct FavoriteEventCard: View {
                 .frame(height: 38)
             }
 
-            Spacer(minLength: 0)
         }
         .padding(18)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
         .background {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
                 .fill(AppTheme.cardBackground)
@@ -838,7 +837,7 @@ struct LiveNowCarouselSection: View {
                         }
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
-                    .frame(height: 290)
+                    .frame(height: 235)
                     .onReceive(timer) { _ in
                         guard events.count > 1 else { return }
                         withAnimation(.easeInOut(duration: 0.45)) {
@@ -928,7 +927,7 @@ struct FavoritesSection: View {
                         }
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
-                    .frame(height: 290)
+                    .frame(height: 235)
 
                     HStack(spacing: 8) {
                         ForEach(0..<events.count, id: \.self) { index in
@@ -1105,11 +1104,9 @@ struct LiveEventCard: View {
                 }
                 .frame(height: 38)
             }
-
-            Spacer(minLength: 0)
         }
         .padding(18)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
         .background {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
                 .fill(AppTheme.cardBackground)
@@ -3190,7 +3187,22 @@ struct DocumentsListView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 12)
-                .padding(.bottom, 32)
+
+                    // Tip
+                    HStack(spacing: 8) {
+                        Image(systemName: "hand.draw")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(.white.opacity(0.4))
+                        Text("Для закрытия документа, свайпни пальцем вниз")
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.4))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 4)
+                    .padding(.bottom, 16)
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 16)
             }
         }
         .navigationTitle("Документы")
