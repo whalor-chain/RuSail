@@ -14,6 +14,14 @@ final class FavoritesStore: ObservableObject {
 
     init() {
         self.ids = FavoritesStorage.all()
+
+        // Подписка на обновления избранного из iCloud (другое устройство)
+        CloudSyncManager.shared.onFavoritesChanged = { [weak self] cloudIds in
+            guard let self else { return }
+            self.ids = cloudIds
+            // Обновляем локальный кеш для виджета
+            FavoritesStorage.save(cloudIds)
+        }
     }
 
     func contains(_ event: RaceEvent) -> Bool {

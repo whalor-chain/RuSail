@@ -2175,12 +2175,25 @@ final class DocumentStore: ObservableObject {
 
     init() { loadAll() }
 
+    // MARK: — iCloud Documents folder
+
+    /// Возвращает iCloud Documents папку, если доступна; иначе — локальную
+    private var docsFolder: URL {
+        if let iCloud = FileManager.default.url(forUbiquityContainerIdentifier: nil)?
+            .appendingPathComponent("Documents/RuSailDocs", isDirectory: true) {
+            try? FileManager.default.createDirectory(at: iCloud, withIntermediateDirectories: true)
+            return iCloud
+        }
+        // Фоллбэк на локальное хранилище
+        let local = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("RuSailDocs", isDirectory: true)
+        try? FileManager.default.createDirectory(at: local, withIntermediateDirectories: true)
+        return local
+    }
+
     // MARK: — Save
     func save(_ kind: DocKind, from sourceURL: URL) {
-        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let folder = docs.appendingPathComponent("RuSailDocs", isDirectory: true)
-        try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-
+        let folder = docsFolder
         let ext = sourceURL.pathExtension.isEmpty ? "pdf" : sourceURL.pathExtension
         let dest = folder.appendingPathComponent("\(kind.rawValue).\(ext)")
 
@@ -2191,9 +2204,8 @@ final class DocumentStore: ObservableObject {
         try? FileManager.default.removeItem(at: dest)
         try? FileManager.default.copyItem(at: sourceURL, to: dest)
 
-        if let bookmark = try? dest.bookmarkData(options: .minimalBookmark) {
-            UserDefaults.standard.set(bookmark, forKey: kind.storageKey)
-        }
+        // Сохраняем расширение файла для восстановления при загрузке
+        UserDefaults.standard.set(ext, forKey: kind.storageKey)
         urls[kind] = dest
     }
 
@@ -2208,12 +2220,13 @@ final class DocumentStore: ObservableObject {
 
     // MARK: — Load
     private func loadAll() {
+        let folder = docsFolder
         for kind in DocKind.allCases {
-            guard let data = UserDefaults.standard.data(forKey: kind.storageKey) else { continue }
-            var stale = false
-            if let url = try? URL(resolvingBookmarkData: data, bookmarkDataIsStale: &stale),
-               FileManager.default.fileExists(atPath: url.path) {
-                urls[kind] = url
+            // Ищем файл по имени kind.rawValue с любым расширением
+            let ext = UserDefaults.standard.string(forKey: kind.storageKey) ?? "pdf"
+            let file = folder.appendingPathComponent("\(kind.rawValue).\(ext)")
+            if FileManager.default.fileExists(atPath: file.path) {
+                urls[kind] = file
             }
         }
     }
@@ -2259,14 +2272,61 @@ struct DocumentPickerView: UIViewControllerRepresentable {
 
 @MainActor
 final class ProfileVM: ObservableObject {
-    @Published var vfpsID: String = "12222"
-    @Published var username: String = "@whalor"
-    @Published var ruSailID: String = "#866858352"
-    @Published var joinedAt: String = "14.02.2026 18:49:08"
+    @Published var vfpsID: String {
+        didSet { persistProfile() }
+    }
+    @Published var username: String {
+        didSet { persistProfile() }
+    }
+    @Published var ruSailID: String {
+        didSet { persistProfile() }
+    }
+    @Published var joinedAt: String {
+        didSet { persistProfile() }
+    }
 
     @Published var showMyDataSheet = false
     @Published var showMyFilesSheet = false
     @Published var showAboutSheet = false
+
+    private let defaults = UserDefaults.standard
+    private let sync = CloudSyncManager.shared
+
+    init() {
+        // Загрузка из локального хранилища, затем из iCloud (приоритет iCloud)
+        self.vfpsID = Self.loadValue(key: CloudSyncManager.Key.vfpsID, fallback: "")
+        self.username = Self.loadValue(key: CloudSyncManager.Key.username, fallback: "")
+        self.ruSailID = Self.loadValue(key: CloudSyncManager.Key.ruSailID, fallback: "")
+        self.joinedAt = Self.loadValue(key: CloudSyncManager.Key.joinedAt, fallback: "")
+
+        // Подписка на обновления из iCloud (с другого устройства)
+        sync.onProfileChanged = { [weak self] key, value in
+            guard let self else { return }
+            switch key {
+            case CloudSyncManager.Key.vfpsID:   self.vfpsID = value
+            case CloudSyncManager.Key.username:  self.username = value
+            case CloudSyncManager.Key.ruSailID:  self.ruSailID = value
+            case CloudSyncManager.Key.joinedAt:  self.joinedAt = value
+            default: break
+            }
+        }
+    }
+
+    private func persistProfile() {
+        defaults.set(vfpsID, forKey: CloudSyncManager.Key.vfpsID)
+        defaults.set(username, forKey: CloudSyncManager.Key.username)
+        defaults.set(ruSailID, forKey: CloudSyncManager.Key.ruSailID)
+        defaults.set(joinedAt, forKey: CloudSyncManager.Key.joinedAt)
+        sync.saveProfile(vfpsID: vfpsID, username: username, ruSailID: ruSailID, joinedAt: joinedAt)
+    }
+
+    private static func loadValue(key: String, fallback: String) -> String {
+        // Приоритет: iCloud → локальный UserDefaults → fallback
+        if let cloud = CloudSyncManager.shared.loadProfileValue(for: key), !cloud.isEmpty {
+            return cloud
+        }
+        return UserDefaults.standard.string(forKey: key) ?? fallback
+    }
 }
 
 struct ProfileView: View {

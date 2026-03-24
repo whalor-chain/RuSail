@@ -18,11 +18,19 @@ struct FavoritesStorage {
     }
 
     static func all() -> Set<String> {
-        Set(sharedDefaults.stringArray(forKey: key) ?? [])
+        // Приоритет: iCloud → локальный App Group
+        if let cloudIds = CloudSyncManager.shared.loadFavorites(), !cloudIds.isEmpty {
+            // Обновляем локальный кеш для виджета
+            sharedDefaults.set(Array(cloudIds), forKey: key)
+            return cloudIds
+        }
+        return Set(sharedDefaults.stringArray(forKey: key) ?? [])
     }
 
     static func save(_ ids: Set<String>) {
         sharedDefaults.set(Array(ids), forKey: key)
         WidgetCenter.shared.reloadAllTimelines()
+        // Синхронизируем в iCloud
+        CloudSyncManager.shared.saveFavorites(ids)
     }
 }
