@@ -1263,6 +1263,13 @@ extension RaceEvent {
         return today >= start && today <= end
     }
 
+    var isUpcomingOrOngoing: Bool {
+        guard let endDateValue else { return false }
+        let today = Calendar.current.startOfDay(for: Date())
+        let end = Calendar.current.startOfDay(for: endDateValue)
+        return end >= today
+    }
+
     private static let homeDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ru_RU")
@@ -1281,6 +1288,7 @@ struct SearchView: View {
     @State private var q = ""
     @State private var selectedFilter: YachtFilter = yachtFilters[0]
     @State private var showFavoritesOnly = false
+    @State private var showUpcomingOnly = false
 
     private var filteredEvents: [RaceEvent] {
         let term = q.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -1318,10 +1326,14 @@ struct SearchView: View {
     }
 
     private var displayedEvents: [RaceEvent] {
+        var result = filteredEvents
         if showFavoritesOnly {
-            return filteredEvents.filter { favoritesStore.contains($0) }
+            result = result.filter { favoritesStore.contains($0) }
         }
-        return filteredEvents
+        if showUpcomingOnly {
+            result = result.filter { $0.isUpcomingOrOngoing }
+        }
+        return result
     }
 
     private var groupedEvents: [(key: Int, value: [RaceEvent])] {
@@ -1338,6 +1350,7 @@ struct SearchView: View {
                     LazyVStack(spacing: 16) {
                         filters
                         favoritesToggleCard
+                        upcomingToggleCard
                         statsCard
 
                         ForEach(groupedEvents, id: \.key) { month, events in
@@ -1354,7 +1367,7 @@ struct SearchView: View {
                         }
 
                         if displayedEvents.isEmpty {
-                            Text(showFavoritesOnly ? "Нет избранных регат по этому фильтру" : "По выбранному фильтру ничего не найдено")
+                            Text(showFavoritesOnly || showUpcomingOnly ? "Нет регат по выбранным фильтрам" : "По выбранному фильтру ничего не найдено")
                                 .font(.headline)
                                 .foregroundStyle(.white.opacity(0.65))
                                 .padding(.top, 24)
@@ -1432,7 +1445,7 @@ struct SearchView: View {
     private var favoritesToggleCard: some View {
         HStack(spacing: 8) {
             Image(systemName: "heart.fill")
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: 20, weight: .semibold))
                 .foregroundStyle(.red)
 
             Text("Избранные регаты")
@@ -1444,6 +1457,26 @@ struct SearchView: View {
             Toggle("", isOn: $showFavoritesOnly.animation(.easeInOut(duration: 0.25)))
                 .labelsHidden()
                 .tint(.red)
+        }
+        .padding(14)
+        .glassPane(cornerRadius: 24)
+    }
+
+    private var upcomingToggleCard: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "calendar.day.timeline.left")
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(.green)
+
+            Text("Предстоящие регаты")
+                .font(.headline)
+                .foregroundStyle(.white)
+
+            Spacer()
+
+            Toggle("", isOn: $showUpcomingOnly.animation(.easeInOut(duration: 0.25)))
+                .labelsHidden()
+                .tint(.green)
         }
         .padding(14)
         .glassPane(cornerRadius: 24)
@@ -2233,6 +2266,7 @@ final class ProfileVM: ObservableObject {
 
     @Published var showMyDataSheet = false
     @Published var showMyFilesSheet = false
+    @Published var showAboutSheet = false
 }
 
 struct ProfileView: View {
@@ -2275,6 +2309,16 @@ struct ProfileView: View {
             .navigationTitle("Профиль")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { vm.showAboutSheet = true } label: {
+                        Image(systemName: "info.circle")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 30, height: 30)
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
                         SettingsView(vm: vm, docStore: docStore)
@@ -2294,6 +2338,9 @@ struct ProfileView: View {
         }
         .sheet(isPresented: $vm.showMyFilesSheet) {
             MyFilesSheet(docStore: docStore)
+        }
+        .sheet(isPresented: $vm.showAboutSheet) {
+            AboutSheet()
         }
     }
 }
@@ -2447,6 +2494,96 @@ struct MyFilesSheet: View {
         .presentationBackground(.ultraThinMaterial)
         .presentationCornerRadius(44)
         .quickLookPreview($previewURL)
+    }
+}
+
+struct AboutSheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    private var appVersion: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        return "RuSail v\(version) (\(build))"
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text("О приложении")
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.65))
+                        .frame(width: 30, height: 30)
+                        .background(.ultraThinMaterial, in: Circle())
+                        .overlay(Circle().strokeBorder(.white.opacity(0.1), lineWidth: 0.5))
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 22)
+            .padding(.bottom, 18)
+
+            VStack(spacing: 12) {
+                Text(appVersion)
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.55))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 4)
+
+                if let privacyURL = URL(string: "https://rusail.app/privacy") {
+                    Link(destination: privacyURL) {
+                        HStack(spacing: 14) {
+                            Image(systemName: "arrow.up.forward.square")
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundStyle(.white.opacity(0.55))
+
+                            Text("Политика конфиденциальности")
+                                .font(.body.weight(.medium))
+                                .foregroundStyle(.white)
+
+                            Spacer()
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 14)
+                        .glassPane(cornerRadius: 20)
+                    }
+                }
+
+                if let termsURL = URL(string: "https://rusail.app/terms") {
+                    Link(destination: termsURL) {
+                        HStack(spacing: 14) {
+                            Image(systemName: "arrow.up.forward.square")
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundStyle(.white.opacity(0.55))
+
+                            Text("Условия пользования")
+                                .font(.body.weight(.medium))
+                                .foregroundStyle(.white)
+
+                            Spacer()
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 14)
+                        .glassPane(cornerRadius: 20)
+                    }
+                }
+            }
+            .padding(.horizontal, 16)
+
+            Spacer()
+        }
+        .contentShape(Rectangle())
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.visible)
+        .presentationBackground(.ultraThinMaterial)
+        .presentationCornerRadius(44)
     }
 }
 
