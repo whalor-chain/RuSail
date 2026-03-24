@@ -671,7 +671,15 @@ let yachtFilters: [YachtFilter] = [
     .init(title: "SB20", aliases: ["SB20"], color: .blue),
     .init(title: "ЭМ-КА", aliases: ["ЭМ-КА", "эМ-Ка"], color: .brown),
     .init(title: "ORC", aliases: ["Крейсерская яхта ORC", "ORC"], color: .gray),
-    .init(title: "Техно/iQF", aliases: ["Парусная доска Техно", "Парусная доска IQF", "Парусная доска iQF"], color: .yellow)
+    .init(title: "Техно/iQF", aliases: ["Парусная доска Техно", "Парусная доска IQF", "Парусная доска iQF"], color: .yellow),
+    .init(title: "49er", aliases: ["49er", "49-й"], color: .orange),
+    .init(title: "Накра 17", aliases: ["Накра 17", "Nacra 17"], color: .pink),
+    .init(title: "iQFoiL", aliases: ["iQFoiL", "IQFoiL"], color: .green),
+    .init(title: "Кадет", aliases: ["Кадет"], color: .red),
+    .init(title: "Луч", aliases: ["Луч"], color: .teal),
+    .init(title: "Zoom8", aliases: ["Zoom8", "Зум8"], color: .indigo),
+    .init(title: "Ракета", aliases: ["Ракета"], color: .purple),
+    .init(title: "Дракон", aliases: ["Дракон"], color: .mint),
 ]
 
 
@@ -1001,7 +1009,6 @@ struct LiveNowEventsSheet: View {
                     LazyVStack(alignment: .leading, spacing: 16) {
                         ForEach(events) { event in
                             LiveEventCard(event: event)
-                                .frame(height: 290)
                         }
                     }
                     .padding(.horizontal, 16)
@@ -3196,7 +3203,7 @@ struct DocumentsListView: View {
             }
         }
         .navigationTitle("Документы")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(.inline)
         .sheet(item: Binding(
             get: { selectedDocURL.map { IdentifiableURL(url: $0) } },
             set: { selectedDocURL = $0?.url }
@@ -3302,7 +3309,7 @@ struct LinksListView: View {
             }
         }
         .navigationTitle("Ссылки")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     @ViewBuilder
