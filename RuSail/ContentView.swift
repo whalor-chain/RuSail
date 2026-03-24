@@ -2284,7 +2284,7 @@ struct ProfileView: View {
                         Button {
                             vm.showMyDataSheet = true
                         } label: {
-                            RowChevron(icon: "person.text.rectangle", title: "Мои данные", tint: .blue)
+                            RowChevron(icon: "person.text.rectangle", title: "Мои данные", tint: AppTheme.accent)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 14)
                                 .glassPane(cornerRadius: 20)
@@ -2294,7 +2294,7 @@ struct ProfileView: View {
                         Button {
                             vm.showMyFilesSheet = true
                         } label: {
-                            RowChevron(icon: "folder", title: "Мои файлы", tint: .cyan)
+                            RowChevron(icon: "folder", title: "Мои файлы", tint: AppTheme.accent)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 14)
                                 .glassPane(cornerRadius: 20)
@@ -2310,13 +2310,17 @@ struct ProfileView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button { vm.showAboutSheet = true } label: {
+                    Button { vm.showAboutSheet.toggle() } label: {
                         Image(systemName: "info.circle")
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundStyle(.white)
                             .frame(width: 30, height: 30)
                     }
                     .buttonStyle(.plain)
+                    .popover(isPresented: $vm.showAboutSheet, arrowEdge: .top) {
+                        AboutPopover()
+                            .presentationCompactAdaptation(.popover)
+                    }
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -2338,9 +2342,6 @@ struct ProfileView: View {
         }
         .sheet(isPresented: $vm.showMyFilesSheet) {
             MyFilesSheet(docStore: docStore)
-        }
-        .sheet(isPresented: $vm.showAboutSheet) {
-            AboutSheet()
         }
     }
 }
@@ -2497,8 +2498,9 @@ struct MyFilesSheet: View {
     }
 }
 
-struct AboutSheet: View {
+struct AboutPopover: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
 
     private var appVersion: String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -2507,83 +2509,47 @@ struct AboutSheet: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Text("О приложении")
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(.white)
+        VStack(alignment: .leading, spacing: 0) {
+            Text(appVersion)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 16)
+                .padding(.top, 14)
+                .padding(.bottom, 10)
+
+            Divider()
+
+            aboutLink("Политика конфиденциальности", url: "https://rusail.app/privacy")
+            aboutLink("Условия пользования", url: "https://rusail.app/terms")
+        }
+        .frame(width: 260)
+        .padding(.bottom, 6)
+    }
+
+    @ViewBuilder
+    private func aboutLink(_ title: String, url: String) -> some View {
+        Button {
+            if let link = URL(string: url) {
+                openURL(link)
+            }
+            dismiss()
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "arrow.up.forward.square")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(.secondary)
+
+                Text(title)
+                    .font(.body)
+                    .foregroundStyle(.primary)
 
                 Spacer()
-
-                Button { dismiss() } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.65))
-                        .frame(width: 30, height: 30)
-                        .background(.ultraThinMaterial, in: Circle())
-                        .overlay(Circle().strokeBorder(.white.opacity(0.1), lineWidth: 0.5))
-                }
-                .buttonStyle(.plain)
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 22)
-            .padding(.bottom, 18)
-
-            VStack(spacing: 12) {
-                Text(appVersion)
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.55))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 4)
-
-                if let privacyURL = URL(string: "https://rusail.app/privacy") {
-                    Link(destination: privacyURL) {
-                        HStack(spacing: 14) {
-                            Image(systemName: "arrow.up.forward.square")
-                                .font(.system(size: 18, weight: .semibold))
-                                .foregroundStyle(.white.opacity(0.55))
-
-                            Text("Политика конфиденциальности")
-                                .font(.body.weight(.medium))
-                                .foregroundStyle(.white)
-
-                            Spacer()
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 14)
-                        .glassPane(cornerRadius: 20)
-                    }
-                }
-
-                if let termsURL = URL(string: "https://rusail.app/terms") {
-                    Link(destination: termsURL) {
-                        HStack(spacing: 14) {
-                            Image(systemName: "arrow.up.forward.square")
-                                .font(.system(size: 18, weight: .semibold))
-                                .foregroundStyle(.white.opacity(0.55))
-
-                            Text("Условия пользования")
-                                .font(.body.weight(.medium))
-                                .foregroundStyle(.white)
-
-                            Spacer()
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 14)
-                        .glassPane(cornerRadius: 20)
-                    }
-                }
             }
             .padding(.horizontal, 16)
-
-            Spacer()
+            .padding(.vertical, 12)
+            .contentShape(Rectangle())
         }
-        .contentShape(Rectangle())
-        .presentationDetents([.medium])
-        .presentationDragIndicator(.visible)
-        .presentationBackground(.ultraThinMaterial)
-        .presentationCornerRadius(44)
+        .buttonStyle(.plain)
     }
 }
 
