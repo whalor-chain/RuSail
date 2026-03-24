@@ -661,23 +661,23 @@ struct YachtFilter: Identifiable, Hashable {
 
 let yachtFilters: [YachtFilter] = [
     .init(title: "Все", aliases: [], color: AppTheme.accent),
-    .init(title: "Оптимист", aliases: ["Оптимист"], color: .orange),
-    .init(title: "ILCA", aliases: ["Лазер 4.7", "Лазер-радиал", "Лазер-стандарт"], color: .pink),
-    .init(title: "420", aliases: ["420"], color: .purple),
-    .init(title: "470", aliases: ["470"], color: .purple),
-    .init(title: "29er", aliases: ["29-й"], color: .teal),
-    .init(title: "49er", aliases: ["49er", "49-й"], color: .orange),
-    .init(title: "Финн", aliases: ["Финн"], color: .mint),
-    .init(title: "MX700", aliases: ["MX700", "МХ700"], color: .cyan),
-    .init(title: "J/70", aliases: ["J/70"], color: .indigo),
-    .init(title: "SB20", aliases: ["SB20"], color: .blue),
-    .init(title: "ЭМ-КА", aliases: ["ЭМ-КА", "эМ-Ка"], color: .brown),
-    .init(title: "ORC", aliases: ["Крейсерская яхта ORC", "ORC"], color: .gray),
-    .init(title: "Техно/iQF", aliases: ["Парусная доска Техно", "Парусная доска IQF", "Парусная доска iQF", "iQF"], color: .yellow),
-    .init(title: "Накра 17", aliases: ["Накра 17", "Nacra 17"], color: .pink),
-    .init(title: "Кадет", aliases: ["Кадет"], color: .red),
-    .init(title: "Луч", aliases: ["Луч", "Луч-мини"], color: .teal),
-    .init(title: "Ракета", aliases: ["Ракета"], color: .purple),
+    .init(title: "Оптимист", aliases: ["Оптимист"], color: Color(hue: 0.0, saturation: 0.7, brightness: 0.9)),
+    .init(title: "ILCA", aliases: ["Лазер 4.7", "Лазер-радиал", "Лазер-стандарт"], color: Color(hue: 0.03, saturation: 0.65, brightness: 0.9)),
+    .init(title: "420", aliases: ["420"], color: Color(hue: 0.06, saturation: 0.6, brightness: 0.9)),
+    .init(title: "470", aliases: ["470"], color: Color(hue: 0.09, saturation: 0.6, brightness: 0.9)),
+    .init(title: "29er", aliases: ["29-й"], color: Color(hue: 0.12, saturation: 0.6, brightness: 0.85)),
+    .init(title: "49er", aliases: ["49er", "49-й"], color: Color(hue: 0.15, saturation: 0.55, brightness: 0.85)),
+    .init(title: "Финн", aliases: ["Финн"], color: Color(hue: 0.2, saturation: 0.55, brightness: 0.8)),
+    .init(title: "MX700", aliases: ["MX700", "МХ700"], color: Color(hue: 0.28, saturation: 0.5, brightness: 0.75)),
+    .init(title: "J/70", aliases: ["J/70"], color: Color(hue: 0.36, saturation: 0.5, brightness: 0.75)),
+    .init(title: "SB20", aliases: ["SB20"], color: Color(hue: 0.45, saturation: 0.5, brightness: 0.7)),
+    .init(title: "ЭМ-КА", aliases: ["ЭМ-КА", "эМ-Ка"], color: Color(hue: 0.52, saturation: 0.5, brightness: 0.7)),
+    .init(title: "ORC", aliases: ["Крейсерская яхта ORC", "ORC"], color: Color(hue: 0.58, saturation: 0.5, brightness: 0.7)),
+    .init(title: "Техно/iQF", aliases: ["Парусная доска Техно", "Парусная доска IQF", "Парусная доска iQF", "iQF"], color: Color(hue: 0.64, saturation: 0.5, brightness: 0.7)),
+    .init(title: "Накра 17", aliases: ["Накра 17", "Nacra 17"], color: Color(hue: 0.72, saturation: 0.5, brightness: 0.7)),
+    .init(title: "Кадет", aliases: ["Кадет"], color: Color(hue: 0.8, saturation: 0.5, brightness: 0.7)),
+    .init(title: "Луч", aliases: ["Луч", "Луч-мини"], color: Color(hue: 0.88, saturation: 0.5, brightness: 0.75)),
+    .init(title: "Ракета", aliases: ["Ракета"], color: Color(hue: 0.95, saturation: 0.55, brightness: 0.8)),
 ]
 
 
@@ -1619,6 +1619,7 @@ struct BrowseCategory: Identifiable {
 
 struct BrowseView: View {
     @State private var searchText = ""
+    @State private var selectedDocURL: URL?
 
     private let activeCategories: [BrowseCategory] = [
         BrowseCategory(icon: "link", title: "Ссылки", tint: .red),
@@ -1632,6 +1633,14 @@ struct BrowseView: View {
         BrowseCategory(icon: "cart.fill", title: "Магазин", tint: .purple),
     ]
 
+    private var allLinks: [LinkItem] {
+        linksTopSection + linksTelegramSection
+    }
+
+    private var allDocs: [BundleDocItem] {
+        docsSection1 + docsSectionObmer
+    }
+
     private var filteredActive: [BrowseCategory] {
         if searchText.isEmpty { return activeCategories }
         return activeCategories.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
@@ -1640,6 +1649,16 @@ struct BrowseView: View {
     private var filteredDev: [BrowseCategory] {
         if searchText.isEmpty { return devCategories }
         return devCategories.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+    }
+
+    private var filteredLinks: [LinkItem] {
+        guard !searchText.isEmpty else { return [] }
+        return allLinks.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+    }
+
+    private var filteredDocs: [BundleDocItem] {
+        guard !searchText.isEmpty else { return [] }
+        return allDocs.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
     }
 
     var body: some View {
@@ -1658,6 +1677,58 @@ struct BrowseView: View {
                                 .glassPane(cornerRadius: 20)
                         }
                         .buttonStyle(.plain)
+                    }
+
+                    // Search results from Links
+                    if !filteredLinks.isEmpty {
+                        HStack {
+                            Text("Ссылки")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.white.opacity(0.45))
+                            Spacer()
+                        }
+                        .padding(.top, 16)
+                        .padding(.bottom, 2)
+
+                        ForEach(filteredLinks) { item in
+                            Button {
+                                if let url = URL(string: item.url) {
+                                    UIApplication.shared.open(url)
+                                }
+                            } label: {
+                                RowChevron(icon: item.sfSymbol, title: item.title, tint: .red)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 14)
+                                    .glassPane(cornerRadius: 20)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+
+                    // Search results from Documents
+                    if !filteredDocs.isEmpty {
+                        HStack {
+                            Text("Документы")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.white.opacity(0.45))
+                            Spacer()
+                        }
+                        .padding(.top, 16)
+                        .padding(.bottom, 2)
+
+                        ForEach(filteredDocs) { item in
+                            Button {
+                                if let url = Bundle.main.url(forResource: item.fileName, withExtension: item.fileExtension) {
+                                    selectedDocURL = url
+                                }
+                            } label: {
+                                RowChevron(icon: item.sfSymbol, title: item.title, tint: .orange)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 14)
+                                    .glassPane(cornerRadius: 20)
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
 
                     if !filteredDev.isEmpty {
@@ -1705,6 +1776,13 @@ struct BrowseView: View {
         .navigationTitle("Поиск")
         .navigationBarTitleDisplayMode(.large)
         .searchable(text: $searchText, prompt: "Поиск")
+        .sheet(item: Binding(
+            get: { selectedDocURL.map { IdentifiableURL(url: $0) } },
+            set: { selectedDocURL = $0?.url }
+        )) { item in
+            QLPreviewSheet(url: item.url)
+                .ignoresSafeArea()
+        }
     }
 
     @ViewBuilder
