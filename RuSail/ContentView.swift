@@ -3184,10 +3184,6 @@ struct DocumentsListView: View {
                         }
                     }
                     .glassPane(cornerRadius: 20)
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 12)
-
                     // Tip
                     HStack(spacing: 8) {
                         Image(systemName: "hand.draw")
@@ -3199,10 +3195,10 @@ struct DocumentsListView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.top, 4)
-                    .padding(.bottom, 16)
                 }
                 .padding(.horizontal, 16)
-                .padding(.bottom, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 32)
             }
         }
         .navigationTitle("Документы")
