@@ -620,8 +620,11 @@ struct FavoriteEventCard: View {
                 }
                 .frame(height: 38)
             }
+
+            Spacer(minLength: 0)
         }
         .padding(18)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
                 .fill(AppTheme.cardBackground)
@@ -641,13 +644,6 @@ struct FavoriteEventCard: View {
 
             Spacer(minLength: 0)
         }
-    }
-
-    private func shortDiscipline(_ text: String) -> String {
-        if text.count > 22 {
-            return String(text.prefix(22)) + "…"
-        }
-        return text
     }
 }
 
@@ -929,11 +925,10 @@ struct FavoritesSection: View {
                             FavoriteEventCard(event: event, favoritesStore: favoritesStore)
                                 .tag(index)
                                 .padding(.horizontal, 2)
-                                .padding(.vertical, 6)
                         }
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
-                    .frame(height: 260)
+                    .frame(height: 290)
 
                     HStack(spacing: 8) {
                         ForEach(0..<events.count, id: \.self) { index in
@@ -1624,15 +1619,15 @@ struct BrowseView: View {
     @State private var searchText = ""
 
     private let activeCategories: [BrowseCategory] = [
-        BrowseCategory(icon: "link", title: "Ссылки", tint: .green),
+        BrowseCategory(icon: "link", title: "Ссылки", tint: .red),
         BrowseCategory(icon: "doc.text.fill", title: "Документы", tint: .orange),
     ]
 
     private let devCategories: [BrowseCategory] = [
-        BrowseCategory(icon: "newspaper.fill", title: "Новости", tint: .blue),
-        BrowseCategory(icon: "person.3.fill", title: "Отбор в Сборную", tint: .purple),
-        BrowseCategory(icon: "trophy.fill", title: "Результаты", tint: .yellow),
-        BrowseCategory(icon: "cart.fill", title: "Магазин", tint: .mint),
+        BrowseCategory(icon: "newspaper.fill", title: "Новости", tint: .yellow),
+        BrowseCategory(icon: "person.3.fill", title: "Отбор в Сборную", tint: .green),
+        BrowseCategory(icon: "trophy.fill", title: "Результаты", tint: .cyan),
+        BrowseCategory(icon: "cart.fill", title: "Магазин", tint: .purple),
     ]
 
     private var filteredActive: [BrowseCategory] {
