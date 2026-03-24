@@ -3131,8 +3131,8 @@ struct BundleDocItem: Identifiable {
 }
 
 private let docsSection1: [BundleDocItem] = [
-    BundleDocItem(sfSymbol: "hand.raised", title: "ППГ 2025–2028", fileName: "PPG-2025-2028-2", fileExtension: "pdf", tint: .pink),
-    BundleDocItem(sfSymbol: "signature", title: "Согласие на обработку персональных данных", fileName: "Soglasie-na-obrabotku-personalnykh-dannykh", fileExtension: "docx", tint: .blue),
+    BundleDocItem(sfSymbol: "hand.raised", title: "ППГ 2025–2028", fileName: "PPG-2025-2028-2", fileExtension: "pdf", tint: .orange),
+    BundleDocItem(sfSymbol: "signature", title: "Согласие на обработку персональных данных", fileName: "Soglasie-na-obrabotku-personalnykh-dannykh", fileExtension: "docx", tint: .orange),
 ]
 
 private let docsSectionObmer: [BundleDocItem] = [
@@ -3165,12 +3165,6 @@ struct DocumentsListView: View {
                         }
                     }
                     .glassPane(cornerRadius: 20)
-
-                    // Obmer section
-                    Text("ОБМЕР")
-                        .font(.footnote.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.5))
-                        .padding(.leading, 4)
 
                     VStack(spacing: 0) {
                         ForEach(Array(docsSectionObmer.enumerated()), id: \.element.id) { index, item in
@@ -3261,15 +3255,15 @@ struct LinkItem: Identifiable {
 }
 
 private let linksTopSection: [LinkItem] = [
-    LinkItem(sfSymbol: "pills.fill", title: "Антидопинг 2026 (РУСАДА)", url: "https://course.rusada.ru/course/53", tint: .pink),
+    LinkItem(sfSymbol: "pills.fill", title: "Антидопинг 2026 (РУСАДА)", url: "https://course.rusada.ru/course/53", tint: .red),
 ]
 
 private let linksTelegramSection: [LinkItem] = [
-    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в Тольятти", url: "https://t.me/togliattiregattas", tint: .blue),
-    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в Геленджике", url: "https://t.me/gelendzhik_regattas", tint: .blue),
-    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в Сочи", url: "https://t.me/RusSailChamp2022", tint: .blue),
-    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в Таганроге", url: "https://t.me/parusataganrog2023", tint: .blue),
-    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в СПб", url: "https://t.me/pervenstvo", tint: .blue),
+    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в Тольятти", url: "https://t.me/togliattiregattas", tint: .red),
+    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в Геленджике", url: "https://t.me/gelendzhik_regattas", tint: .red),
+    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в Сочи", url: "https://t.me/RusSailChamp2022", tint: .red),
+    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в Таганроге", url: "https://t.me/parusataganrog2023", tint: .red),
+    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в СПб", url: "https://t.me/pervenstvo", tint: .red),
 ]
 
 struct LinksListView: View {
@@ -3288,12 +3282,6 @@ struct LinksListView: View {
                         }
                     }
                     .glassPane(cornerRadius: 20)
-
-                    // Telegram section
-                    Text("ТЕЛЕГРАМ КАНАЛЫ")
-                        .font(.footnote.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.5))
-                        .padding(.leading, 4)
 
                     VStack(spacing: 0) {
                         ForEach(Array(linksTelegramSection.enumerated()), id: \.element.id) { index, item in
