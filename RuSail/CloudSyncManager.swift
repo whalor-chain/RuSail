@@ -61,6 +61,24 @@ final class CloudSyncManager {
         cloud.string(forKey: key)
     }
 
+    // MARK: - Document extensions
+
+    private func docExtKey(_ kind: String) -> String { "sync.doc.\(kind).ext" }
+
+    func saveDocExtension(_ ext: String, for kind: DocKind) {
+        cloud.set(ext, forKey: docExtKey(kind.rawValue))
+        cloud.synchronize()
+    }
+
+    func loadDocExtension(for kind: DocKind) -> String? {
+        cloud.string(forKey: docExtKey(kind.rawValue))
+    }
+
+    func removeDocExtension(for kind: DocKind) {
+        cloud.removeObject(forKey: docExtKey(kind.rawValue))
+        cloud.synchronize()
+    }
+
     // MARK: - Change handler
 
     /// Колбэк для уведомления UI об изменениях из облака

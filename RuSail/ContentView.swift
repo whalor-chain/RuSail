@@ -2178,60 +2178,115 @@ enum DocKind: String, CaseIterable, Identifiable {
 final class DocumentStore: ObservableObject {
     @Published private(set) var urls: [DocKind: URL] = [:]
 
+    private let fm = FileManager.default
+
     init() { loadAll() }
 
-    // MARK: — iCloud Documents folder
+    // MARK: — Local folder (always available)
 
-    /// Возвращает iCloud Documents папку, если доступна; иначе — локальную
-    private var docsFolder: URL {
-        if let iCloud = FileManager.default.url(forUbiquityContainerIdentifier: nil)?
-            .appendingPathComponent("Documents/RuSailDocs", isDirectory: true) {
-            try? FileManager.default.createDirectory(at: iCloud, withIntermediateDirectories: true)
-            return iCloud
-        }
-        // Фоллбэк на локальное хранилище
-        let local = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("RuSailDocs", isDirectory: true)
-        try? FileManager.default.createDirectory(at: local, withIntermediateDirectories: true)
-        return local
+    private var localFolder: URL {
+        let docs = fm.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let folder = docs.appendingPathComponent("RuSailDocs", isDirectory: true)
+        try? fm.createDirectory(at: folder, withIntermediateDirectories: true)
+        return folder
+    }
+
+    // MARK: — iCloud folder (may be nil)
+
+    private var iCloudFolder: URL? {
+        guard let container = fm.url(forUbiquityContainerIdentifier: nil) else { return nil }
+        let folder = container.appendingPathComponent("Documents/RuSailDocs", isDirectory: true)
+        try? fm.createDirectory(at: folder, withIntermediateDirectories: true)
+        return folder
     }
 
     // MARK: — Save
+
     func save(_ kind: DocKind, from sourceURL: URL) {
-        let folder = docsFolder
         let ext = sourceURL.pathExtension.isEmpty ? "pdf" : sourceURL.pathExtension
-        let dest = folder.appendingPathComponent("\(kind.rawValue).\(ext)")
+        let fileName = "\(kind.rawValue).\(ext)"
 
         // Access security‑scoped resource
         let accessed = sourceURL.startAccessingSecurityScopedResource()
         defer { if accessed { sourceURL.stopAccessingSecurityScopedResource() } }
 
-        try? FileManager.default.removeItem(at: dest)
-        try? FileManager.default.copyItem(at: sourceURL, to: dest)
+        // 1. Сохраняем локально (всегда работает)
+        let localDest = localFolder.appendingPathComponent(fileName)
+        try? fm.removeItem(at: localDest)
+        try? fm.copyItem(at: sourceURL, to: localDest)
 
-        // Сохраняем расширение файла для восстановления при загрузке
+        // 2. Копируем в iCloud (если доступен)
+        if let cloud = iCloudFolder {
+            let cloudDest = cloud.appendingPathComponent(fileName)
+            try? fm.removeItem(at: cloudDest)
+            try? fm.copyItem(at: localDest, to: cloudDest)
+        }
+
+        // 3. Запоминаем расширение для загрузки
         UserDefaults.standard.set(ext, forKey: kind.storageKey)
-        urls[kind] = dest
+        #if !WIDGET_EXTENSION
+        CloudSyncManager.shared.saveDocExtension(ext, for: kind)
+        #endif
+
+        urls[kind] = localDest
     }
 
     // MARK: — Delete
+
     func remove(_ kind: DocKind) {
         if let url = urls[kind] {
-            try? FileManager.default.removeItem(at: url)
+            try? fm.removeItem(at: url)
         }
+        // Удаляем и из iCloud
+        let ext = UserDefaults.standard.string(forKey: kind.storageKey) ?? "pdf"
+        if let cloud = iCloudFolder {
+            let cloudFile = cloud.appendingPathComponent("\(kind.rawValue).\(ext)")
+            try? fm.removeItem(at: cloudFile)
+        }
+
         UserDefaults.standard.removeObject(forKey: kind.storageKey)
+        #if !WIDGET_EXTENSION
+        CloudSyncManager.shared.removeDocExtension(for: kind)
+        #endif
+
         urls.removeValue(forKey: kind)
     }
 
     // MARK: — Load
+
     private func loadAll() {
-        let folder = docsFolder
+        let local = localFolder
+        let cloud = iCloudFolder
+
         for kind in DocKind.allCases {
-            // Ищем файл по имени kind.rawValue с любым расширением
-            let ext = UserDefaults.standard.string(forKey: kind.storageKey) ?? "pdf"
-            let file = folder.appendingPathComponent("\(kind.rawValue).\(ext)")
-            if FileManager.default.fileExists(atPath: file.path) {
-                urls[kind] = file
+            // Получаем расширение: iCloud KV → UserDefaults → pdf
+            var ext = UserDefaults.standard.string(forKey: kind.storageKey)
+            #if !WIDGET_EXTENSION
+            if ext == nil || ext?.isEmpty == true {
+                ext = CloudSyncManager.shared.loadDocExtension(for: kind)
+            }
+            #endif
+            let fileExt = ext ?? "pdf"
+            let fileName = "\(kind.rawValue).\(fileExt)"
+
+            let localFile = local.appendingPathComponent(fileName)
+
+            // Если файл есть локально — используем
+            if fm.fileExists(atPath: localFile.path) {
+                urls[kind] = localFile
+                continue
+            }
+
+            // Если нет локально — пробуем скачать из iCloud
+            if let cloud, fm.fileExists(atPath: cloud.appendingPathComponent(fileName).path) {
+                let cloudFile = cloud.appendingPathComponent(fileName)
+                // Запускаем скачивание если файл ещё в облаке
+                try? fm.startDownloadingUbiquitousItem(at: cloudFile)
+                try? fm.copyItem(at: cloudFile, to: localFile)
+                if fm.fileExists(atPath: localFile.path) {
+                    urls[kind] = localFile
+                    UserDefaults.standard.set(fileExt, forKey: kind.storageKey)
+                }
             }
         }
     }
