@@ -1449,7 +1449,7 @@ struct SearchView: View {
 
     private var favoritesToggleCard: some View {
         HStack(spacing: 8) {
-            Image(systemName: "heart.fill")
+            Image(systemName: "heart.text.square")
                 .font(.system(size: 20, weight: .semibold))
                 .foregroundStyle(.red)
 
@@ -1623,18 +1623,26 @@ struct BrowseCategory: Identifiable {
 struct BrowseView: View {
     @State private var searchText = ""
 
-    private let categories: [BrowseCategory] = [
-        BrowseCategory(icon: "doc.text.fill", title: "Документы", tint: .orange),
+    private let activeCategories: [BrowseCategory] = [
         BrowseCategory(icon: "link", title: "Ссылки", tint: .green),
+        BrowseCategory(icon: "doc.text.fill", title: "Документы", tint: .orange),
+    ]
+
+    private let devCategories: [BrowseCategory] = [
         BrowseCategory(icon: "newspaper.fill", title: "Новости", tint: .blue),
         BrowseCategory(icon: "person.3.fill", title: "Отбор в Сборную", tint: .purple),
         BrowseCategory(icon: "trophy.fill", title: "Результаты", tint: .yellow),
         BrowseCategory(icon: "cart.fill", title: "Магазин", tint: .mint),
     ]
 
-    private var filteredCategories: [BrowseCategory] {
-        if searchText.isEmpty { return categories }
-        return categories.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+    private var filteredActive: [BrowseCategory] {
+        if searchText.isEmpty { return activeCategories }
+        return activeCategories.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+    }
+
+    private var filteredDev: [BrowseCategory] {
+        if searchText.isEmpty { return devCategories }
+        return devCategories.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
     }
 
     var body: some View {
@@ -1643,7 +1651,7 @@ struct BrowseView: View {
 
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 10) {
-                    ForEach(filteredCategories) { cat in
+                    ForEach(filteredActive) { cat in
                         NavigationLink {
                             destinationView(for: cat.title)
                         } label: {
@@ -1653,6 +1661,43 @@ struct BrowseView: View {
                                 .glassPane(cornerRadius: 20)
                         }
                         .buttonStyle(.plain)
+                    }
+
+                    if !filteredDev.isEmpty {
+                        HStack {
+                            Text("В разработке")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.white.opacity(0.45))
+                            Spacer()
+                        }
+                        .padding(.top, 16)
+                        .padding(.bottom, 2)
+
+                        ForEach(filteredDev) { cat in
+                            HStack(spacing: 14) {
+                                Image(systemName: cat.icon)
+                                    .font(.system(size: 18, weight: .semibold))
+                                    .foregroundStyle(cat.tint.opacity(0.45))
+                                    .frame(width: 40, height: 40)
+                                    .background(cat.tint.opacity(0.08), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+
+                                Text(cat.title)
+                                    .font(.headline)
+                                    .foregroundStyle(.white.opacity(0.40))
+
+                                Spacer()
+
+                                Text("Скоро")
+                                    .font(.caption.weight(.medium))
+                                    .foregroundStyle(.white.opacity(0.30))
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 4)
+                                    .background(.white.opacity(0.06), in: Capsule())
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 14)
+                            .glassPane(cornerRadius: 20)
+                        }
                     }
                 }
                 .padding(.horizontal, 16)
@@ -1668,18 +1713,10 @@ struct BrowseView: View {
     @ViewBuilder
     private func destinationView(for title: String) -> some View {
         switch title {
-        case "Документы":
-            DocumentsListView()
         case "Ссылки":
             LinksListView()
-        case "Новости":
-            NewsView()
-        case "Отбор в Сборную":
-            placeholderPage(title: "Отбор в Сборную", icon: "person.3.fill", color: .purple)
-        case "Результаты":
-            placeholderPage(title: "Результаты", icon: "trophy.fill", color: .yellow)
-        case "Магазин":
-            placeholderPage(title: "Магазин", icon: "cart.fill", color: .mint)
+        case "Документы":
+            DocumentsListView()
         default:
             EmptyView()
         }
@@ -2915,23 +2952,27 @@ struct SettingsView: View {
                     .padding(.bottom, 100)
                 }
 
-                // Bottom Save button pinned
-                Button {
-                    vm.vfpsID = s.vfpsInput
-                    settingsToast.show("Настройки сохранены")
-                    dismiss()
-                } label: {
-                    Text("Сохранить")
-                        .font(.headline.weight(.semibold))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(AppTheme.accent, in: Capsule())
+                // Bottom Save button pinned — only visible when changes exist
+                if s.vfpsInput != vm.vfpsID {
+                    Button {
+                        vm.vfpsID = s.vfpsInput
+                        settingsToast.show("Настройки сохранены")
+                        dismiss()
+                    } label: {
+                        Text("Сохранить")
+                            .font(.headline.weight(.semibold))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(AppTheme.accent, in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 16)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
-                .buttonStyle(.plain)
-                .padding(.horizontal, 16)
-                .padding(.bottom, 16)
             }
+            .animation(.easeInOut(duration: 0.25), value: s.vfpsInput != vm.vfpsID)
             .background(.clear)
         }
         .navigationTitle("Настройки")
