@@ -2748,85 +2748,91 @@ struct MyDataSheet: View {
     @State private var copied = false
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                GlassBackground()
+        VStack(spacing: 0) {
+            // Header — like native Sign in with Apple
+            HStack {
+                Text("Мои данные")
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(.white)
 
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 12) {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("ВФПС ID")
-                                    .font(.caption)
-                                    .foregroundStyle(.white.opacity(0.55))
+                Spacer()
 
-                                if vm.vfpsID.isEmpty {
-                                    Text("Не добавлено")
-                                        .font(.system(size: 18, weight: .semibold))
-                                        .foregroundStyle(.white.opacity(0.35))
-                                } else {
-                                    Text(vm.vfpsID)
-                                        .font(.system(size: 22, weight: .bold, design: .monospaced))
-                                        .foregroundStyle(.white)
-                                }
-                            }
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.5))
+                        .frame(width: 30, height: 30)
+                        .background(.white.opacity(0.1), in: Circle())
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
+            .padding(.bottom, 16)
 
-                            Spacer()
-                        }
+            // Content
+            VStack(spacing: 12) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("ВФПС ID")
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.55))
 
-                        if !vm.vfpsID.isEmpty {
-                            Button {
-                                UIPasteboard.general.string = vm.vfpsID
-                                UINotificationFeedbackGenerator().notificationOccurred(.warning)
-                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                    copied = true
-                                }
-                                Task {
-                                    try? await Task.sleep(nanoseconds: 1_500_000_000)
-                                    withAnimation { copied = false }
-                                }
-                            } label: {
-                                HStack(spacing: 6) {
-                                    Image(systemName: copied ? "checkmark" : "doc.on.doc")
-                                        .font(.system(size: 13, weight: .semibold))
-
-                                    Text(copied ? "Скопировано" : "Скопировать")
-                                        .font(.subheadline.weight(.semibold))
-                                }
-                                .foregroundStyle(copied ? .green : .white)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 10)
-                                .background(
-                                    copied ? Color.green.opacity(0.15) : AppTheme.cardBackground,
-                                    in: Capsule()
-                                )
-                            }
-                            .buttonStyle(.plain)
+                        if vm.vfpsID.isEmpty {
+                            Text("Не добавлено")
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundStyle(.white.opacity(0.35))
+                        } else {
+                            Text(vm.vfpsID)
+                                .font(.system(size: 22, weight: .bold, design: .monospaced))
+                                .foregroundStyle(.white)
                         }
                     }
-                    .padding(16)
-                    .glassPane(cornerRadius: 20)
-                    .padding(.horizontal, 16)
-                    .padding(.top, 12)
-                    .padding(.bottom, 32)
+
+                    Spacer()
                 }
-            }
-            .navigationTitle("Мои данные")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                .padding(16)
+                .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+
+                if !vm.vfpsID.isEmpty {
                     Button {
-                        dismiss()
+                        UIPasteboard.general.string = vm.vfpsID
+                        UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            copied = true
+                        }
+                        Task {
+                            try? await Task.sleep(nanoseconds: 1_500_000_000)
+                            withAnimation { copied = false }
+                        }
                     } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 30, height: 30)
+                        HStack(spacing: 6) {
+                            Image(systemName: copied ? "checkmark" : "doc.on.doc")
+                                .font(.system(size: 13, weight: .semibold))
+
+                            Text(copied ? "Скопировано" : "Скопировать")
+                                .font(.subheadline.weight(.semibold))
+                        }
+                        .foregroundStyle(copied ? .green : .white)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 24)
+                        .background(
+                            copied ? Color.green.opacity(0.15) : Color.white.opacity(0.12),
+                            in: Capsule()
+                        )
                     }
                     .buttonStyle(.plain)
+                    .padding(.top, 4)
                 }
             }
+            .padding(.horizontal, 20)
+
+            Spacer(minLength: 16)
         }
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.hidden)
+        .presentationBackground(.ultraThinMaterial)
+        .presentationCornerRadius(38)
     }
 }
 
@@ -2836,46 +2842,51 @@ struct MyFilesSheet: View {
     @State private var previewURL: URL?
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                GlassBackground()
+        VStack(spacing: 0) {
+            // Header — like native Sign in with Apple
+            HStack {
+                Text("Мои файлы")
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(.white)
 
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 10) {
-                        ForEach(DocKind.allCases) { kind in
-                            FileRowButton(
-                                icon: kind.icon,
-                                title: kind.title,
-                                tint: kind.tint,
-                                hasFile: docStore.hasFile(kind)
-                            ) {
-                                if let url = docStore.url(for: kind) {
-                                    previewURL = url
-                                }
-                            }
+                Spacer()
+
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.5))
+                        .frame(width: 30, height: 30)
+                        .background(.white.opacity(0.1), in: Circle())
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
+            .padding(.bottom, 16)
+
+            // Content
+            VStack(spacing: 8) {
+                ForEach(DocKind.allCases) { kind in
+                    FileRowButton(
+                        icon: kind.icon,
+                        title: kind.title,
+                        tint: kind.tint,
+                        hasFile: docStore.hasFile(kind)
+                    ) {
+                        if let url = docStore.url(for: kind) {
+                            previewURL = url
                         }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 12)
-                    .padding(.bottom, 32)
                 }
             }
-            .navigationTitle("Мои файлы")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .frame(width: 30, height: 30)
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
+            .padding(.horizontal, 20)
+
+            Spacer(minLength: 16)
         }
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.hidden)
+        .presentationBackground(.ultraThinMaterial)
+        .presentationCornerRadius(38)
         .quickLookPreview($previewURL)
     }
 }
