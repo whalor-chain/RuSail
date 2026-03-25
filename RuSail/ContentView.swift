@@ -2757,10 +2757,10 @@ struct MyDataSheet: View {
                 Spacer()
 
                 Button { dismiss() } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .frame(width: 30, height: 30)
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 28))
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(.white.opacity(0.6), .white.opacity(0.15))
                 }
                 .buttonStyle(.plain)
             }
@@ -2820,7 +2820,7 @@ struct MyDataSheet: View {
                 }
             }
             .padding(16)
-            .glassPane(cornerRadius: 20)
+            .background(Color.gray.opacity(0.2), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .padding(.horizontal, 16)
 
             Spacer(minLength: 16)
@@ -2848,10 +2848,10 @@ struct MyFilesSheet: View {
                 Spacer()
 
                 Button { dismiss() } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .frame(width: 30, height: 30)
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 28))
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(.white.opacity(0.6), .white.opacity(0.15))
                 }
                 .buttonStyle(.plain)
             }
