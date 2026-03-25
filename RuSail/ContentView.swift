@@ -2460,6 +2460,8 @@ final class ProfileVM: ObservableObject {
     @Published var showMyDataSheet = false
     @Published var showMyFilesSheet = false
     @Published var showAboutSheet = false
+    @Published var showPrivacyPolicy = false
+    @Published var showTermsOfUse = false
 
     private let defaults = UserDefaults.standard
     private let sync = CloudSyncManager.shared
@@ -2550,7 +2552,7 @@ struct ProfileView: View {
                     }
                     .buttonStyle(.plain)
                     .popover(isPresented: $vm.showAboutSheet, arrowEdge: .top) {
-                        AboutPopover()
+                        AboutPopover(vm: vm)
                             .presentationCompactAdaptation(.popover)
                     }
                 }
@@ -2574,6 +2576,12 @@ struct ProfileView: View {
         }
         .sheet(isPresented: $vm.showMyFilesSheet) {
             MyFilesSheet(docStore: docStore)
+        }
+        .sheet(isPresented: $vm.showPrivacyPolicy) {
+            PrivacyPolicyView()
+        }
+        .sheet(isPresented: $vm.showTermsOfUse) {
+            TermsOfUseView()
         }
     }
 }
@@ -2731,8 +2739,8 @@ struct MyFilesSheet: View {
 }
 
 struct AboutPopover: View {
+    @ObservedObject var vm: ProfileVM
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.openURL) private var openURL
 
     private var appVersion: String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -2751,23 +2759,30 @@ struct AboutPopover: View {
 
             Divider()
 
-            aboutLink("Политика конфиденциальности", url: "https://rusail.app/privacy")
-            aboutLink("Условия пользования", url: "https://rusail.app/terms")
+            aboutButton("Политика конфиденциальности") {
+                vm.showAboutSheet = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    vm.showPrivacyPolicy = true
+                }
+            }
+            aboutButton("Условия пользования") {
+                vm.showAboutSheet = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    vm.showTermsOfUse = true
+                }
+            }
         }
         .frame(width: 260)
         .padding(.bottom, 6)
     }
 
     @ViewBuilder
-    private func aboutLink(_ title: String, url: String) -> some View {
+    private func aboutButton(_ title: String, action: @escaping () -> Void) -> some View {
         Button {
-            if let link = URL(string: url) {
-                openURL(link)
-            }
-            dismiss()
+            action()
         } label: {
             HStack(spacing: 12) {
-                Image(systemName: "arrow.up.forward.square")
+                Image(systemName: "doc.text")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(.secondary)
 
@@ -2782,6 +2797,166 @@ struct AboutPopover: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Privacy Policy
+
+struct PrivacyPolicyView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                GlassBackground()
+
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 20) {
+                        Text("Последнее обновление: 24 марта 2026 г.")
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.5))
+
+                        policySection("1. Общие положения",
+                            "Приложение RuSail (далее — «Приложение») предоставляет информацию о парусных регатах в России. Настоящая Политика конфиденциальности описывает, какие данные мы собираем, как их используем и защищаем.")
+
+                        policySection("2. Какие данные мы собираем",
+                            "Приложение собирает минимальный объём данных:\n\n• Идентификатор ВФПС — вводится вами добровольно для отображения персональной статистики.\n• Избранные регаты — список соревнований, добавленных вами в избранное, хранится локально на устройстве.\n• Настройки приложения — выбранная тема оформления и другие параметры хранятся локально.")
+
+                        policySection("3. Чего мы НЕ собираем",
+                            "• Мы не собираем персональные данные (имя, email, телефон).\n• Мы не отслеживаем геолокацию.\n• Мы не используем аналитику и трекеры.\n• Мы не передаём никакие данные третьим лицам.")
+
+                        policySection("4. Хранение данных",
+                            "Все данные хранятся исключительно на вашем устройстве с использованием стандартных механизмов iOS (UserDefaults). При удалении приложения все данные удаляются автоматически.")
+
+                        policySection("5. Сетевые запросы",
+                            "Приложение может обращаться к открытым источникам данных для получения актуального расписания регат. Эти запросы не содержат персональных данных пользователя.")
+
+                        policySection("6. Безопасность",
+                            "Мы заботимся о безопасности ваших данных. Поскольку данные хранятся только локально на устройстве, они защищены средствами безопасности iOS, включая шифрование устройства.")
+
+                        policySection("7. Права пользователя",
+                            "Вы можете в любой момент:\n\n• Удалить свой идентификатор ВФПС в настройках приложения.\n• Очистить список избранного.\n• Удалить приложение, что приведёт к полному удалению всех данных.")
+
+                        policySection("8. Изменения политики",
+                            "Мы оставляем за собой право обновлять настоящую Политику. При внесении существенных изменений мы уведомим вас через обновление приложения.")
+
+                        policySection("9. Контакты",
+                            "Если у вас есть вопросы относительно данной Политики конфиденциальности, свяжитесь с нами через раздел обратной связи в приложении.")
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+                    .padding(.bottom, 32)
+                }
+            }
+            .navigationTitle("Политика конфиденциальности")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 30, height: 30)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
+    private func policySection(_ title: String, _ body: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(.white)
+
+            Text(body)
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.75))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+// MARK: - Terms of Use
+
+struct TermsOfUseView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                GlassBackground()
+
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 20) {
+                        Text("Последнее обновление: 24 марта 2026 г.")
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.5))
+
+                        policySection("1. Принятие условий",
+                            "Используя приложение RuSail (далее — «Приложение»), вы соглашаетесь с настоящими Условиями пользования. Если вы не согласны с каким-либо пунктом, пожалуйста, прекратите использование Приложения.")
+
+                        policySection("2. Описание сервиса",
+                            "RuSail — информационное приложение, предоставляющее расписание и сведения о парусных соревнованиях в Российской Федерации. Приложение носит исключительно информационный характер.")
+
+                        policySection("3. Использование приложения",
+                            "Вы обязуетесь:\n\n• Использовать Приложение только в законных целях.\n• Не пытаться обойти технические ограничения Приложения.\n• Не копировать, модифицировать или распространять содержимое Приложения без разрешения.")
+
+                        policySection("4. Информационный контент",
+                            "Расписание регат, даты и места проведения соревнований предоставляются на основе открытых данных. Мы стремимся поддерживать актуальность информации, однако не гарантируем её полноту и точность. Рекомендуем проверять информацию в официальных источниках организаторов соревнований.")
+
+                        policySection("5. Документы",
+                            "Документы, доступные в Приложении (ППГ, формы обмера и др.), предоставляются для удобства пользователей. Юридически обязывающими являются оригиналы документов, опубликованные на официальных сайтах соответствующих организаций.")
+
+                        policySection("6. Интеллектуальная собственность",
+                            "Дизайн, код и структура Приложения являются интеллектуальной собственностью разработчика. Логотипы и названия спортивных организаций принадлежат их правообладателям.")
+
+                        policySection("7. Ограничение ответственности",
+                            "Приложение предоставляется «как есть». Разработчик не несёт ответственности за:\n\n• Неточности в расписании соревнований.\n• Перебои в работе Приложения.\n• Убытки, связанные с использованием информации из Приложения.")
+
+                        policySection("8. Изменения условий",
+                            "Мы оставляем за собой право изменять настоящие Условия. Продолжая использование Приложения после внесения изменений, вы принимаете обновлённые Условия.")
+
+                        policySection("9. Применимое право",
+                            "Настоящие Условия регулируются и толкуются в соответствии с законодательством Российской Федерации.")
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+                    .padding(.bottom, 32)
+                }
+            }
+            .navigationTitle("Условия пользования")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 30, height: 30)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
+    private func policySection(_ title: String, _ body: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(.white)
+
+            Text(body)
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.75))
+                .fixedSize(horizontal: false, vertical: true)
+        }
     }
 }
 
