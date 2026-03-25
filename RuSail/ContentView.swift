@@ -2797,6 +2797,7 @@ struct MyDataSheet: View {
                     if !vm.vfpsID.isEmpty {
                         Button {
                             UIPasteboard.general.string = vm.vfpsID
+                            UINotificationFeedbackGenerator().notificationOccurred(.warning)
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                                 copied = true
                             }
@@ -3465,6 +3466,11 @@ struct SettingsView: View {
 
             if attached {
                 Button {
+                    let gen = UINotificationFeedbackGenerator()
+                    gen.notificationOccurred(.success)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                        gen.notificationOccurred(.success)
+                    }
                     deletingDocKind = kind
                 } label: {
                     Image(systemName: "trash")
