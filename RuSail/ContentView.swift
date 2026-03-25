@@ -2749,7 +2749,6 @@ struct MyDataSheet: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Header — like native Sign in with Apple
             HStack {
                 Text("Мои данные")
                     .font(.title2.weight(.bold))
@@ -2760,9 +2759,10 @@ struct MyDataSheet: View {
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
                         .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.5))
+                        .foregroundStyle(.white.opacity(0.65))
                         .frame(width: 30, height: 30)
-                        .background(.white.opacity(0.1), in: Circle())
+                        .background(.ultraThinMaterial, in: Circle())
+                        .overlay(Circle().strokeBorder(.white.opacity(0.1), lineWidth: 0.5))
                 }
                 .buttonStyle(.plain)
             }
@@ -2770,7 +2770,6 @@ struct MyDataSheet: View {
             .padding(.top, 20)
             .padding(.bottom, 16)
 
-            // Content
             VStack(spacing: 12) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
@@ -2791,8 +2790,6 @@ struct MyDataSheet: View {
 
                     Spacer()
                 }
-                .padding(16)
-                .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
 
                 if !vm.vfpsID.isEmpty {
                     Button {
@@ -2814,24 +2811,25 @@ struct MyDataSheet: View {
                                 .font(.subheadline.weight(.semibold))
                         }
                         .foregroundStyle(copied ? .green : .white)
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 24)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
                         .background(
-                            copied ? Color.green.opacity(0.15) : Color.white.opacity(0.12),
+                            copied ? Color.green.opacity(0.15) : AppTheme.cardBackground,
                             in: Capsule()
                         )
                     }
                     .buttonStyle(.plain)
-                    .padding(.top, 4)
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(16)
+            .glassPane(cornerRadius: 20)
+            .padding(.horizontal, 16)
 
             Spacer(minLength: 16)
         }
         .presentationDetents([.medium])
         .presentationDragIndicator(.hidden)
-        .presentationBackground(.ultraThinMaterial)
+        .presentationBackground(.clear)
         .presentationCornerRadius(38)
     }
 }
@@ -2854,9 +2852,10 @@ struct MyFilesSheet: View {
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
                         .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.5))
+                        .foregroundStyle(.white.opacity(0.65))
                         .frame(width: 30, height: 30)
-                        .background(.white.opacity(0.1), in: Circle())
+                        .background(.ultraThinMaterial, in: Circle())
+                        .overlay(Circle().strokeBorder(.white.opacity(0.1), lineWidth: 0.5))
                 }
                 .buttonStyle(.plain)
             }
@@ -2864,8 +2863,7 @@ struct MyFilesSheet: View {
             .padding(.top, 20)
             .padding(.bottom, 16)
 
-            // Content
-            VStack(spacing: 8) {
+            VStack(spacing: 10) {
                 ForEach(DocKind.allCases) { kind in
                     FileRowButton(
                         icon: kind.icon,
@@ -2879,13 +2877,13 @@ struct MyFilesSheet: View {
                     }
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 16)
 
             Spacer(minLength: 16)
         }
         .presentationDetents([.medium])
         .presentationDragIndicator(.hidden)
-        .presentationBackground(.ultraThinMaterial)
+        .presentationBackground(.clear)
         .presentationCornerRadius(38)
         .quickLookPreview($previewURL)
     }
