@@ -2813,9 +2813,10 @@ struct MyDataSheet: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 10)
                         .background(
-                            copied ? Color.green.opacity(0.15) : Color.white.opacity(0.55),
+                            copied ? Color.green.opacity(0.15) : .clear,
                             in: Capsule()
                         )
+                        .background(.ultraThinMaterial, in: Capsule())
                     }
                     .buttonStyle(.plain)
                 }
