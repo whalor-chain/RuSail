@@ -1801,7 +1801,7 @@ struct BrowseView: View {
 
     private let activeCategories: [BrowseCategory] = [
         BrowseCategory(icon: "link", title: "Ссылки", tint: .red),
-        BrowseCategory(icon: "doc.text.fill", title: "Документы", tint: .orange),
+        BrowseCategory(icon: "text.document", title: "Документы", tint: .orange),
     ]
 
     private let devCategories: [BrowseCategory] = [
@@ -2456,7 +2456,7 @@ enum DocKind: String, CaseIterable, Identifiable {
     var tint: Color {
         switch self {
         case .certificate: return .green
-        case .license:     return AppTheme.accent
+        case .license:     return .teal
         case .insurance:   return .orange
         }
     }
@@ -2954,7 +2954,7 @@ struct AboutPopover: View {
             action()
         } label: {
             HStack(spacing: 12) {
-                Image(systemName: "doc.text")
+                Image(systemName: "text.page.badge.magnifyingglass")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(.secondary)
 
