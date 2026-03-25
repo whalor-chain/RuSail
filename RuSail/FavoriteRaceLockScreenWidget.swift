@@ -38,19 +38,40 @@ struct FavoriteRaceProvider: TimelineProvider {
         completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
     }
 
+    private static let dateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "dd.MM.yyyy"
+        f.locale = Locale(identifier: "ru_RU")
+        return f
+    }()
+
     private func loadEntry() -> FavoriteRaceEntry {
         let favoriteIDs = FavoritesStorage.all()
-
         let favorites = raceEvents2026.filter { favoriteIDs.contains($0.id) }
 
-        let sorted = favorites.sorted {
-            if $0.month == $1.month {
-                return $0.startDate < $1.startDate
-            }
-            return $0.month < $1.month
-        }
+        let now = Date()
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: now)
+        let fmt = Self.dateFormatter
 
-        guard let event = sorted.first else {
+        // Find nearest favorite: currently ongoing or nearest future
+        let nearest = favorites
+            .compactMap { event -> (RaceEvent, Date, Date)? in
+                guard let start = fmt.date(from: event.startDate),
+                      let end = fmt.date(from: event.endDate) else { return nil }
+                return (event, start, end)
+            }
+            .filter { _, _, end in
+                // Keep events that haven't ended yet (ongoing or future)
+                calendar.startOfDay(for: end) >= today
+            }
+            .sorted { a, b in
+                // Sort by start date; ongoing events (start <= today) come first
+                a.1 < b.1
+            }
+            .first
+
+        guard let (event, _, _) = nearest else {
             return FavoriteRaceEntry(
                 date: Date(),
                 title: "Нет избранных регат",

@@ -263,6 +263,9 @@ struct LoginView: View {
     /// Pending credentials waiting for animation to finish
     @State private var pendingCredentials: (userID: String, name: String?, email: String?)?
 
+    private let roleWords = ["спортсменов", "тренеров", "команд", "экипажей"]
+    @State private var currentRoleIndex = 0
+
     var body: some View {
         ZStack {
             GlassBackground()
@@ -297,9 +300,21 @@ struct LoginView: View {
                             .font(.system(size: 36, weight: .bold, design: .rounded))
                             .foregroundStyle(.white)
 
-                        Text("Парусное приложение")
-                            .font(.system(size: 17, weight: .medium))
-                            .foregroundStyle(.white.opacity(0.5))
+                        HStack(spacing: 0) {
+                            Text("Парусное приложение для ")
+                                .font(.system(size: 17, weight: .medium))
+                                .foregroundStyle(.white.opacity(0.5))
+
+                            Text(roleWords[currentRoleIndex])
+                                .font(.system(size: 17, weight: .semibold))
+                                .foregroundStyle(AppTheme.accent)
+                                .id("role_\(currentRoleIndex)")
+                                .transition(.asymmetric(
+                                    insertion: .move(edge: .bottom).combined(with: .opacity),
+                                    removal: .move(edge: .top).combined(with: .opacity)
+                                ))
+                        }
+                        .animation(.easeInOut(duration: 0.4), value: currentRoleIndex)
                     }
                     .opacity(exitingUI ? 0 : (logoAppeared ? 1 : 0))
                     .offset(y: exitingUI ? -10 : (logoAppeared ? 0 : 10))
@@ -393,6 +408,13 @@ struct LoginView: View {
             }
             withAnimation(.easeOut(duration: 0.6).delay(0.35)) {
                 contentAppeared = true
+            }
+        }
+        .onReceive(
+            Timer.publish(every: 2, on: .main, in: .common).autoconnect()
+        ) { _ in
+            withAnimation {
+                currentRoleIndex = (currentRoleIndex + 1) % roleWords.count
             }
         }
     }
@@ -1599,7 +1621,7 @@ struct SearchView: View {
         VStack(spacing: 0) {
             HStack(spacing: 8) {
                 Image(systemName: "heart.text.square")
-                    .font(.system(size: 20, weight: .semibold))
+                    .font(.system(size: 25, weight: .semibold))
                     .foregroundStyle(.red)
 
                 Text("Избранные регаты")
@@ -1619,7 +1641,7 @@ struct SearchView: View {
 
             HStack(spacing: 8) {
                 Image(systemName: "calendar.day.timeline.left")
-                    .font(.system(size: 20, weight: .semibold))
+                    .font(.system(size: 25, weight: .semibold))
                     .foregroundStyle(.green)
 
                 Text("Предстоящие регаты")
