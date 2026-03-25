@@ -158,7 +158,7 @@ struct ContentView: View {
                 let corner = logoLanded ? endCorner : startCorner
 
                 // Login logo sits above screen center (bottom button block pushes it up)
-                let bottomBlockHeight: CGFloat = 150
+                let bottomBlockHeight: CGFloat = 155
                 let startX = geo.size.width / 2
                 let startY = (geo.size.height - bottomBlockHeight) / 2
                 let endX = geo.size.width / 2
