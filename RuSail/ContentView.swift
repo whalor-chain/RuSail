@@ -2748,92 +2748,85 @@ struct MyDataSheet: View {
     @State private var copied = false
 
     var body: some View {
-        VStack(spacing: 0) {
-            // iOS 26 Header
-            HStack {
-                Text("Мои данные")
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(.white)
+        NavigationStack {
+            ZStack {
+                GlassBackground()
 
-                Spacer()
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 12) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("ВФПС ID")
+                                    .font(.caption)
+                                    .foregroundStyle(.white.opacity(0.55))
 
-                Button { dismiss() } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.65))
-                        .frame(width: 30, height: 30)
-                        .background(.ultraThinMaterial, in: Circle())
-                        .overlay(Circle().strokeBorder(.white.opacity(0.1), lineWidth: 0.5))
+                                if vm.vfpsID.isEmpty {
+                                    Text("Не добавлено")
+                                        .font(.system(size: 18, weight: .semibold))
+                                        .foregroundStyle(.white.opacity(0.35))
+                                } else {
+                                    Text(vm.vfpsID)
+                                        .font(.system(size: 22, weight: .bold, design: .monospaced))
+                                        .foregroundStyle(.white)
+                                }
+                            }
+
+                            Spacer()
+                        }
+
+                        if !vm.vfpsID.isEmpty {
+                            Button {
+                                UIPasteboard.general.string = vm.vfpsID
+                                UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                    copied = true
+                                }
+                                Task {
+                                    try? await Task.sleep(nanoseconds: 1_500_000_000)
+                                    withAnimation { copied = false }
+                                }
+                            } label: {
+                                HStack(spacing: 6) {
+                                    Image(systemName: copied ? "checkmark" : "doc.on.doc")
+                                        .font(.system(size: 13, weight: .semibold))
+
+                                    Text(copied ? "Скопировано" : "Скопировать")
+                                        .font(.subheadline.weight(.semibold))
+                                }
+                                .foregroundStyle(copied ? .green : .white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
+                                .background(
+                                    copied ? Color.green.opacity(0.15) : AppTheme.cardBackground,
+                                    in: Capsule()
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding(16)
+                    .glassPane(cornerRadius: 20)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+                    .padding(.bottom, 32)
                 }
-                .buttonStyle(.plain)
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 22)
-            .padding(.bottom, 18)
-
-            // Content
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 12) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("ВФПС ID")
-                                .font(.caption)
-                                .foregroundStyle(.white.opacity(0.55))
-
-                            if vm.vfpsID.isEmpty {
-                                Text("Не добавлено")
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .foregroundStyle(.white.opacity(0.35))
-                            } else {
-                                Text(vm.vfpsID)
-                                    .font(.system(size: 22, weight: .bold, design: .monospaced))
-                                    .foregroundStyle(.white)
-                            }
-                        }
-
-                        Spacer()
+            .navigationTitle("Мои данные")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 30, height: 30)
                     }
-
-                    if !vm.vfpsID.isEmpty {
-                        Button {
-                            UIPasteboard.general.string = vm.vfpsID
-                            UINotificationFeedbackGenerator().notificationOccurred(.warning)
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                copied = true
-                            }
-                            Task {
-                                try? await Task.sleep(nanoseconds: 1_500_000_000)
-                                withAnimation { copied = false }
-                            }
-                        } label: {
-                            HStack(spacing: 6) {
-                                Image(systemName: copied ? "checkmark" : "doc.on.doc")
-                                    .font(.system(size: 13, weight: .semibold))
-
-                                Text(copied ? "Скопировано" : "Скопировать")
-                                    .font(.subheadline.weight(.semibold))
-                            }
-                            .foregroundStyle(copied ? .green : .white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 10)
-                            .background(
-                                copied ? Color.green.opacity(0.15) : AppTheme.cardBackground,
-                                in: Capsule()
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
+                    .buttonStyle(.plain)
                 }
-                .padding(16)
-                .glassPane(cornerRadius: 20)
-                .padding(.horizontal, 16)
             }
         }
-        .contentShape(Rectangle())
-        .presentationDetents([.medium, .large])
-        .presentationDragIndicator(.visible)
-        .presentationBackground(.ultraThinMaterial)
-        .presentationCornerRadius(44)
     }
 }
 
@@ -2843,54 +2836,46 @@ struct MyFilesSheet: View {
     @State private var previewURL: URL?
 
     var body: some View {
-        VStack(spacing: 0) {
-            // iOS 26 Header
-            HStack {
-                Text("Мои файлы")
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(.white)
+        NavigationStack {
+            ZStack {
+                GlassBackground()
 
-                Spacer()
-
-                Button { dismiss() } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.65))
-                        .frame(width: 30, height: 30)
-                        .background(.ultraThinMaterial, in: Circle())
-                        .overlay(Circle().strokeBorder(.white.opacity(0.1), lineWidth: 0.5))
-                }
-                .buttonStyle(.plain)
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 22)
-            .padding(.bottom, 18)
-
-            // Content
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 10) {
-                    ForEach(DocKind.allCases) { kind in
-                        FileRowButton(
-                            icon: kind.icon,
-                            title: kind.title,
-                            tint: kind.tint,
-                            hasFile: docStore.hasFile(kind)
-                        ) {
-                            if let url = docStore.url(for: kind) {
-                                previewURL = url
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 10) {
+                        ForEach(DocKind.allCases) { kind in
+                            FileRowButton(
+                                icon: kind.icon,
+                                title: kind.title,
+                                tint: kind.tint,
+                                hasFile: docStore.hasFile(kind)
+                            ) {
+                                if let url = docStore.url(for: kind) {
+                                    previewURL = url
+                                }
                             }
                         }
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+                    .padding(.bottom, 32)
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 16)
+            }
+            .navigationTitle("Мои файлы")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 30, height: 30)
+                    }
+                    .buttonStyle(.plain)
+                }
             }
         }
-        .contentShape(Rectangle())
-        .presentationDetents([.medium, .large])
-        .presentationDragIndicator(.visible)
-        .presentationBackground(.ultraThinMaterial)
-        .presentationCornerRadius(44)
         .quickLookPreview($previewURL)
     }
 }
