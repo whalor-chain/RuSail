@@ -727,11 +727,7 @@ struct FavoriteEventCard: View {
                     favoritesStore.toggle(event)
                     toast.show(added: willAdd, title: event.title)
                     if willAdd {
-                        let gen = UINotificationFeedbackGenerator()
-                        gen.notificationOccurred(.success)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                            gen.notificationOccurred(.success)
-                        }
+                        UINotificationFeedbackGenerator().notificationOccurred(.warning)
                     }
                 } label: {
                     Image(systemName: favoritesStore.contains(event) ? "heart.fill" : "heart")
@@ -1658,11 +1654,7 @@ struct SearchView: View {
                     favoritesStore.toggle(event)
                     toast.show(added: willAdd, title: event.title)
                     if willAdd {
-                        let gen = UINotificationFeedbackGenerator()
-                        gen.notificationOccurred(.success)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                            gen.notificationOccurred(.success)
-                        }
+                        UINotificationFeedbackGenerator().notificationOccurred(.warning)
                     }
                 } label: {
                     Image(systemName: isFavorite ? "heart.fill" : "heart")
@@ -3327,7 +3319,11 @@ struct SettingsView: View {
 
                         // Delete VFPS ID button
                         Button {
-                            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                            let gen = UINotificationFeedbackGenerator()
+                            gen.notificationOccurred(.success)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                gen.notificationOccurred(.success)
+                            }
                             showDeleteVFPSAlert = true
                         } label: {
                             HStack(spacing: 10) {
@@ -3346,7 +3342,11 @@ struct SettingsView: View {
 
                         // Sign out button
                         Button {
-                            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+                            let gen = UINotificationFeedbackGenerator()
+                            gen.notificationOccurred(.success)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                gen.notificationOccurred(.success)
+                            }
                             showSignOutAlert = true
                         } label: {
                             HStack(spacing: 10) {
