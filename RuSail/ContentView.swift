@@ -544,7 +544,7 @@ struct FavoriteToastOverlay: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 14)
-                .background(Color(white: 0.15), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .background(Color(white: 0.15), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
                 .padding(.horizontal, 20)
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
@@ -726,6 +726,13 @@ struct FavoriteEventCard: View {
                     let willAdd = !favoritesStore.contains(event)
                     favoritesStore.toggle(event)
                     toast.show(added: willAdd, title: event.title)
+                    if willAdd {
+                        let gen = UINotificationFeedbackGenerator()
+                        gen.notificationOccurred(.success)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                            gen.notificationOccurred(.success)
+                        }
+                    }
                 } label: {
                     Image(systemName: favoritesStore.contains(event) ? "heart.fill" : "heart")
                         .font(.system(size: 18, weight: .semibold))
@@ -1650,6 +1657,13 @@ struct SearchView: View {
                     let willAdd = !favoritesStore.contains(event)
                     favoritesStore.toggle(event)
                     toast.show(added: willAdd, title: event.title)
+                    if willAdd {
+                        let gen = UINotificationFeedbackGenerator()
+                        gen.notificationOccurred(.success)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                            gen.notificationOccurred(.success)
+                        }
+                    }
                 } label: {
                     Image(systemName: isFavorite ? "heart.fill" : "heart")
                         .font(.system(size: 17, weight: .semibold))
@@ -3313,6 +3327,7 @@ struct SettingsView: View {
 
                         // Delete VFPS ID button
                         Button {
+                            UINotificationFeedbackGenerator().notificationOccurred(.warning)
                             showDeleteVFPSAlert = true
                         } label: {
                             HStack(spacing: 10) {
@@ -3331,6 +3346,7 @@ struct SettingsView: View {
 
                         // Sign out button
                         Button {
+                            UINotificationFeedbackGenerator().notificationOccurred(.warning)
                             showSignOutAlert = true
                         } label: {
                             HStack(spacing: 10) {
