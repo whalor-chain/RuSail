@@ -149,11 +149,14 @@ struct ContentView: View {
 
                 let size = logoLanded ? endSize : startSize
                 let corner = logoLanded ? endCorner : startCorner
-                // Center of screen → top-center (toolbar area)
+
+                // Login logo sits above screen center (bottom button block ≈110pt pushes it up)
+                let bottomBlockHeight: CGFloat = 110
                 let startX = geo.size.width / 2
-                let startY = geo.size.height / 2
+                let startY = (geo.size.height - bottomBlockHeight) / 2
                 let endX = geo.size.width / 2
-                let endY = geo.safeAreaInsets.top + 22
+                // Navigation bar center: safeArea top + half of 44pt bar
+                let endY = geo.safeAreaInsets.top + 44 / 2
 
                 Image(AppTheme.logoAssetName)
                     .resizable()
