@@ -2758,9 +2758,10 @@ struct MyDataSheet: View {
 
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.white)
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.65))
                         .frame(width: 30, height: 30)
+                        .background(.ultraThinMaterial, in: Circle())
                 }
                 .buttonStyle(.plain)
             }
@@ -2812,7 +2813,7 @@ struct MyDataSheet: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 10)
                         .background(
-                            copied ? Color.green.opacity(0.15) : AppTheme.cardBackground,
+                            copied ? Color.green.opacity(0.15) : Color.white.opacity(0.55),
                             in: Capsule()
                         )
                     }
@@ -2849,9 +2850,10 @@ struct MyFilesSheet: View {
 
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.white)
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.65))
                         .frame(width: 30, height: 30)
+                        .background(.ultraThinMaterial, in: Circle())
                 }
                 .buttonStyle(.plain)
             }
