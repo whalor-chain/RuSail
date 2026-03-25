@@ -2757,10 +2757,10 @@ struct MyDataSheet: View {
                 Spacer()
 
                 Button { dismiss() } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 28))
-                        .symbolRenderingMode(.palette)
-                        .foregroundStyle(.white.opacity(0.6), .white.opacity(0.15))
+                    Image(systemName: "xmark")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: 30, height: 30)
                 }
                 .buttonStyle(.plain)
             }
@@ -2848,10 +2848,10 @@ struct MyFilesSheet: View {
                 Spacer()
 
                 Button { dismiss() } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 28))
-                        .symbolRenderingMode(.palette)
-                        .foregroundStyle(.white.opacity(0.6), .white.opacity(0.15))
+                    Image(systemName: "xmark")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: 30, height: 30)
                 }
                 .buttonStyle(.plain)
             }
@@ -3144,7 +3144,7 @@ struct FileRowButton: View {
                 if hasFile {
                     Image(systemName: "eye")
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.55))
+                        .foregroundStyle(.gray)
                 } else {
                     Image(systemName: "chevron.right")
                         .font(.caption.weight(.bold))
@@ -3152,7 +3152,7 @@ struct FileRowButton: View {
                 }
             }
             .padding(14)
-            .glassPane(cornerRadius: 20)
+            .background(Color.gray.opacity(0.2), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         }
         .buttonStyle(.plain)
         .opacity(hasFile ? 1 : 0.55)
