@@ -29,19 +29,29 @@ struct RuSailApp: App {
                 setupNavigationBarAppearance()
                 setupQuickActions()
 
-                let soft   = UIImpactFeedbackGenerator(style: .soft)
-                let light  = UIImpactFeedbackGenerator(style: .light)
-                let medium = UIImpactFeedbackGenerator(style: .medium)
+                let rigid  = UIImpactFeedbackGenerator(style: .rigid)
                 let heavy  = UIImpactFeedbackGenerator(style: .heavy)
+                let medium = UIImpactFeedbackGenerator(style: .medium)
                 let notify = UINotificationFeedbackGenerator()
-                soft.prepare(); light.prepare(); medium.prepare(); heavy.prepare(); notify.prepare()
+                rigid.prepare(); heavy.prepare(); medium.prepare(); notify.prepare()
 
-                // Rising haptic pattern: soft → light → medium → heavy → success
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)  { soft.impactOccurred(intensity: 0.4) }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) { light.impactOccurred(intensity: 0.6) }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.26) { medium.impactOccurred(intensity: 0.8) }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.36) { heavy.impactOccurred(intensity: 1.0) }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.52) { notify.notificationOccurred(.success) }
+                // Вихрь вибраций — быстрая пулемётная очередь нарастающей силы
+                let burst: [(TimeInterval, CGFloat)] = [
+                    (0.05, 0.3), (0.10, 0.4), (0.14, 0.5), (0.18, 0.6),
+                    (0.21, 0.7), (0.24, 0.8), (0.27, 0.85), (0.30, 0.9),
+                    (0.33, 0.95), (0.36, 1.0), (0.39, 1.0), (0.42, 1.0),
+                ]
+                for (delay, intensity) in burst {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                        rigid.impactOccurred(intensity: intensity)
+                    }
+                }
+                // Тяжёлые удары на пике
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.46) { heavy.impactOccurred(intensity: 1.0) }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.52) { heavy.impactOccurred(intensity: 1.0) }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.58) { heavy.impactOccurred(intensity: 0.8) }
+                // Финальный аккорд
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.66) { notify.notificationOccurred(.success) }
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                     showSplash = false
