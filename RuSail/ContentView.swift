@@ -181,38 +181,58 @@ struct RootTabView: View {
 struct LoginView: View {
     @EnvironmentObject private var session: SessionStore
     @State private var errorText: String?
+    @State private var logoAppeared = false
+    @State private var contentAppeared = false
+    @State private var showPrivacy = false
+    @State private var showTerms = false
 
     var body: some View {
         ZStack {
             GlassBackground()
 
-            VStack(spacing: 18) {
+            VStack(spacing: 0) {
+                Spacer()
                 Spacer()
 
-                VStack(spacing: 14) {
+                // Logo + Title
+                VStack(spacing: 20) {
                     Image(AppTheme.logoAssetName)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 104, height: 104)
-                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                        .frame(width: 120, height: 120)
+                        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                                .strokeBorder(Color.white.opacity(0.16), lineWidth: 1)
+                            RoundedRectangle(cornerRadius: 30, style: .continuous)
+                                .strokeBorder(
+                                    LinearGradient(
+                                        colors: [.white.opacity(0.25), .white.opacity(0.05)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: 1
+                                )
                         )
-                        .shadow(color: .black.opacity(0.25), radius: 18, x: 0, y: 10)
+                        .shadow(color: AppTheme.accent.opacity(0.3), radius: 30, x: 0, y: 15)
+                        .scaleEffect(logoAppeared ? 1 : 0.8)
+                        .opacity(logoAppeared ? 1 : 0)
 
-                    Text("RuSail")
-                        .font(.system(size: 30, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
+                    VStack(spacing: 8) {
+                        Text("RuSail")
+                            .font(.system(size: 36, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white)
 
-                    Text("Войдите, чтобы пользоваться приложением")
-                        .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.72))
-                        .multilineTextAlignment(.center)
+                        Text("Парусные регаты России")
+                            .font(.system(size: 17, weight: .medium))
+                            .foregroundStyle(.white.opacity(0.5))
+                    }
+                    .opacity(logoAppeared ? 1 : 0)
+                    .offset(y: logoAppeared ? 0 : 10)
                 }
-                .glassCard(.ultraThinMaterial, cornerRadius: 30)
 
-                VStack(spacing: 12) {
+                Spacer()
+
+                // Sign In button + legal
+                VStack(spacing: 16) {
                     SignInWithAppleButton(.signIn) { request in
                         request.requestedScopes = [.fullName, .email]
                     } onCompletion: { result in
@@ -240,28 +260,62 @@ struct LoginView: View {
                         }
                     }
                     .signInWithAppleButtonStyle(.white)
-                    .frame(height: 54)
+                    .frame(height: 52)
                     .clipShape(Capsule())
-
+                    .shadow(color: .white.opacity(0.08), radius: 12, x: 0, y: 4)
 
                     if let errorText {
                         Text(errorText)
                             .font(.caption)
-                            .foregroundStyle(.white.opacity(0.72))
+                            .foregroundStyle(.red.opacity(0.85))
                             .multilineTextAlignment(.center)
+                            .transition(.opacity.combined(with: .move(edge: .top)))
                     }
+
+                    // Legal links
+                    HStack(spacing: 4) {
+                        Text("Продолжая, вы принимаете")
+                            .foregroundStyle(.white.opacity(0.35))
+
+                        Button { showTerms = true } label: {
+                            Text("Условия")
+                                .foregroundStyle(.white.opacity(0.55))
+                                .underline(color: .white.opacity(0.25))
+                        }
+                        .buttonStyle(.plain)
+
+                        Text("и")
+                            .foregroundStyle(.white.opacity(0.35))
+
+                        Button { showPrivacy = true } label: {
+                            Text("Политику")
+                                .foregroundStyle(.white.opacity(0.55))
+                                .underline(color: .white.opacity(0.25))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .font(.caption2)
                 }
-                .glassCard(.thinMaterial, cornerRadius: 28)
-
-                Spacer()
-
-                Text("Продолжая, вы соглашаетесь с обработкой данных")
-                    .font(.caption)
-                    .foregroundStyle(.white.opacity(0.55))
-                    .padding(.bottom, 10)
+                .padding(.horizontal, 24)
+                .padding(.bottom, 16)
+                .opacity(contentAppeared ? 1 : 0)
+                .offset(y: contentAppeared ? 0 : 20)
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+        }
+        .sheet(isPresented: $showPrivacy) {
+            PrivacyPolicyView()
+        }
+        .sheet(isPresented: $showTerms) {
+            TermsOfUseView()
+        }
+        .onAppear {
+            withAnimation(.easeOut(duration: 0.7)) {
+                logoAppeared = true
+            }
+            withAnimation(.easeOut(duration: 0.6).delay(0.35)) {
+                contentAppeared = true
+            }
         }
     }
 }
