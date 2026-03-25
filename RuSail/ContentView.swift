@@ -128,8 +128,8 @@ struct ContentView: View {
                 logoLanded = true
             }
 
-            // Fade out logo in the last part of flight
-            withAnimation(.easeIn(duration: 0.25).delay(0.4)) {
+            // Fade out logo earlier so it dissolves before reaching toolbar
+            withAnimation(.easeIn(duration: 0.3).delay(0.2)) {
                 logoFaded = true
             }
 
@@ -158,7 +158,7 @@ struct ContentView: View {
                 let corner = logoLanded ? endCorner : startCorner
 
                 // Login logo sits above screen center (bottom button block pushes it up)
-                let bottomBlockHeight: CGFloat = 140
+                let bottomBlockHeight: CGFloat = 150
                 let startX = geo.size.width / 2
                 let startY = (geo.size.height - bottomBlockHeight) / 2
                 let endX = geo.size.width / 2
