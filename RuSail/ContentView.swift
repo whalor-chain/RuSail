@@ -192,7 +192,6 @@ struct LoginView: View {
 
             VStack(spacing: 0) {
                 Spacer()
-                Spacer()
 
                 // Logo + Title
                 VStack(spacing: 20) {
@@ -221,7 +220,7 @@ struct LoginView: View {
                             .font(.system(size: 36, weight: .bold, design: .rounded))
                             .foregroundStyle(.white)
 
-                        Text("Парусные регаты России")
+                        Text("Парусное приложение")
                             .font(.system(size: 17, weight: .medium))
                             .foregroundStyle(.white.opacity(0.5))
                     }
