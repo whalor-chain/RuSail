@@ -1504,8 +1504,7 @@ struct SearchView: View {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         filters
-                        favoritesToggleCard
-                        upcomingToggleCard
+                        togglesCard
                         statsCard
 
                         ForEach(groupedEvents, id: \.key) { month, events in
@@ -1597,43 +1596,45 @@ struct SearchView: View {
         .glassPane(cornerRadius: 24)
     }
 
-    private var favoritesToggleCard: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "heart.text.square")
-                .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(.red)
+    private var togglesCard: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 8) {
+                Image(systemName: "heart.text.square")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(.red)
 
-            Text("Избранные регаты")
-                .font(.headline)
-                .foregroundStyle(.white)
+                Text("Избранные регаты")
+                    .font(.headline)
+                    .foregroundStyle(.white)
 
-            Spacer()
+                Spacer()
 
-            Toggle("", isOn: $showFavoritesOnly.animation(.easeInOut(duration: 0.25)))
-                .labelsHidden()
-                .tint(.red)
+                Toggle("", isOn: $showFavoritesOnly.animation(.easeInOut(duration: 0.25)))
+                    .labelsHidden()
+                    .tint(.red)
+            }
+            .padding(14)
+
+            Divider()
+                .overlay(.white.opacity(0.1))
+
+            HStack(spacing: 8) {
+                Image(systemName: "calendar.day.timeline.left")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(.green)
+
+                Text("Предстоящие регаты")
+                    .font(.headline)
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                Toggle("", isOn: $showUpcomingOnly.animation(.easeInOut(duration: 0.25)))
+                    .labelsHidden()
+                    .tint(.green)
+            }
+            .padding(14)
         }
-        .padding(14)
-        .glassPane(cornerRadius: 24)
-    }
-
-    private var upcomingToggleCard: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "calendar.day.timeline.left")
-                .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(.green)
-
-            Text("Предстоящие регаты")
-                .font(.headline)
-                .foregroundStyle(.white)
-
-            Spacer()
-
-            Toggle("", isOn: $showUpcomingOnly.animation(.easeInOut(duration: 0.25)))
-                .labelsHidden()
-                .tint(.green)
-        }
-        .padding(14)
         .glassPane(cornerRadius: 24)
     }
 
