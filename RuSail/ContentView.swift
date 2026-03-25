@@ -2813,7 +2813,7 @@ struct MyDataSheet: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 10)
                         .background(
-                            copied ? Color.green.opacity(0.15) : .clear,
+                            copied ? Color.green.opacity(0.15) : Color.black.opacity(0.3),
                             in: Capsule()
                         )
                         .background(.ultraThinMaterial, in: Capsule())
