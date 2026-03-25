@@ -29,11 +29,19 @@ struct RuSailApp: App {
                 setupNavigationBarAppearance()
                 setupQuickActions()
 
-                let impact = UIImpactFeedbackGenerator(style: .medium)
-                impact.prepare()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    impact.impactOccurred()
-                }
+                let soft   = UIImpactFeedbackGenerator(style: .soft)
+                let light  = UIImpactFeedbackGenerator(style: .light)
+                let medium = UIImpactFeedbackGenerator(style: .medium)
+                let heavy  = UIImpactFeedbackGenerator(style: .heavy)
+                let notify = UINotificationFeedbackGenerator()
+                soft.prepare(); light.prepare(); medium.prepare(); heavy.prepare(); notify.prepare()
+
+                // Rising haptic pattern: soft → light → medium → heavy → success
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)  { soft.impactOccurred(intensity: 0.4) }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) { light.impactOccurred(intensity: 0.6) }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.26) { medium.impactOccurred(intensity: 0.8) }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.36) { heavy.impactOccurred(intensity: 1.0) }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.52) { notify.notificationOccurred(.success) }
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                     showSplash = false
