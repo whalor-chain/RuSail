@@ -1549,16 +1549,15 @@ struct SearchView: View {
                     } label: {
                         Text(filter.title)
                             .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(selectedCategory(isSelected))
+                            .foregroundStyle(isSelected ? .white : .white.opacity(0.85))
                             .padding(.horizontal, 14)
                             .padding(.vertical, 10)
                             .background(
                                 isSelected
-                                ? filter.color.opacity(0.65)
+                                ? AppTheme.accent
                                 : Color.white.opacity(0.10),
                                 in: Capsule()
                             )
-                            .shadow(color: isSelected ? filter.color.opacity(0.25) : .clear, radius: 8, x: 0, y: 4)
                     }
                     .buttonStyle(.plain)
                 }
