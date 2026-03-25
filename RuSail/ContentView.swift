@@ -98,6 +98,7 @@ struct ContentView: View {
 
     /// Logo flying from center to toolbar position
     @State private var logoLanded = false
+    @State private var logoFaded = false
 
     var body: some View {
         ZStack {
@@ -120,10 +121,16 @@ struct ContentView: View {
         .onChange(of: session.isLoginTransitioning) { transitioning in
             guard transitioning else { return }
             logoLanded = false
+            logoFaded = false
 
             // Phase 2: logo flies to toolbar position
             withAnimation(.easeInOut(duration: 0.55).delay(0.1)) {
                 logoLanded = true
+            }
+
+            // Fade out logo in the last part of flight
+            withAnimation(.easeIn(duration: 0.25).delay(0.4)) {
+                logoFaded = true
             }
 
             // Phase 3: reveal main UI, end transition
@@ -150,12 +157,11 @@ struct ContentView: View {
                 let size = logoLanded ? endSize : startSize
                 let corner = logoLanded ? endCorner : startCorner
 
-                // Login logo sits above screen center (bottom button block ≈110pt pushes it up)
-                let bottomBlockHeight: CGFloat = 110
+                // Login logo sits above screen center (bottom button block pushes it up)
+                let bottomBlockHeight: CGFloat = 140
                 let startX = geo.size.width / 2
                 let startY = (geo.size.height - bottomBlockHeight) / 2
                 let endX = geo.size.width / 2
-                // Navigation bar center: safeArea top + half of 44pt bar
                 let endY = geo.safeAreaInsets.top + 44 / 2
 
                 Image(AppTheme.logoAssetName)
@@ -167,6 +173,7 @@ struct ContentView: View {
                         x: logoLanded ? endX : startX,
                         y: logoLanded ? endY : startY
                     )
+                    .opacity(logoFaded ? 0 : 1)
             }
         }
         .ignoresSafeArea()
