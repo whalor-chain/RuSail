@@ -263,7 +263,7 @@ struct LoginView: View {
     /// Pending credentials waiting for animation to finish
     @State private var pendingCredentials: (userID: String, name: String?, email: String?)?
 
-    private let roleWords = ["спортсменов", "тренеров", "команд", "экипажей", "судей"]
+    private let roleWords = ["тренеров", "спортсменов", "команд", "экипажей", "судей"]
     @State private var currentRoleIndex = 0
 
     var body: some View {
