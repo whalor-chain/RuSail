@@ -68,6 +68,9 @@ final class SessionStore: ObservableObject {
     @AppStorage(SessionKeys.displayName) var displayName: String = ""
     @AppStorage(SessionKeys.email) var email: String = ""
 
+    /// True while the login→home logo transition is playing.
+    @Published var isLoginTransitioning = false
+
     func signOut() {
         isSignedIn = false
         appleUserID = ""
@@ -93,17 +96,77 @@ struct ContentView: View {
     @StateObject private var session = SessionStore()
     @EnvironmentObject private var deepLink: DeepLinkState
 
+    /// Logo flying from center to toolbar position
+    @State private var logoLanded = false
+
     var body: some View {
-        Group {
+        ZStack {
             if session.isSignedIn {
                 RootTabView()
                     .environmentObject(session)
                     .environmentObject(deepLink)
+                    .opacity(session.isLoginTransitioning ? 0 : 1)
+                    .animation(.easeOut(duration: 0.4), value: session.isLoginTransitioning)
             } else {
                 LoginView()
                     .environmentObject(session)
             }
+
+            // Floating logo overlay during transition
+            if session.isLoginTransitioning {
+                loginTransitionOverlay
+            }
         }
+        .onChange(of: session.isLoginTransitioning) { transitioning in
+            guard transitioning else { return }
+            logoLanded = false
+
+            // Phase 2: logo flies to toolbar position
+            withAnimation(.easeInOut(duration: 0.55).delay(0.1)) {
+                logoLanded = true
+            }
+
+            // Phase 3: reveal main UI, end transition
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                withAnimation(.easeOut(duration: 0.3)) {
+                    session.isLoginTransitioning = false
+                }
+            }
+        }
+    }
+
+    private var loginTransitionOverlay: some View {
+        ZStack {
+            // Keep the background visible while logo flies
+            GlassBackground()
+                .opacity(logoLanded ? 0 : 1)
+
+            GeometryReader { geo in
+                let startSize: CGFloat = 120
+                let endSize: CGFloat = 36
+                let startCorner: CGFloat = 30
+                let endCorner: CGFloat = 8
+
+                let size = logoLanded ? endSize : startSize
+                let corner = logoLanded ? endCorner : startCorner
+                // Center of screen → top-center (toolbar area)
+                let startX = geo.size.width / 2
+                let startY = geo.size.height / 2
+                let endX = geo.size.width / 2
+                let endY = geo.safeAreaInsets.top + 22
+
+                Image(AppTheme.logoAssetName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: size, height: size)
+                    .clipShape(RoundedRectangle(cornerRadius: corner, style: .continuous))
+                    .position(
+                        x: logoLanded ? endX : startX,
+                        y: logoLanded ? endY : startY
+                    )
+            }
+        }
+        .ignoresSafeArea()
     }
 }
 
@@ -185,6 +248,10 @@ struct LoginView: View {
     @State private var contentAppeared = false
     @State private var showPrivacy = false
     @State private var showTerms = false
+    /// Phase 1 of exit: fade out everything except logo
+    @State private var exitingUI = false
+    /// Pending credentials waiting for animation to finish
+    @State private var pendingCredentials: (userID: String, name: String?, email: String?)?
 
     var body: some View {
         ZStack {
@@ -211,7 +278,7 @@ struct LoginView: View {
                                     lineWidth: 1
                                 )
                         )
-                        .shadow(color: AppTheme.accent.opacity(0.3), radius: 30, x: 0, y: 15)
+                        .shadow(color: AppTheme.accent.opacity(exitingUI ? 0 : 0.3), radius: 30, x: 0, y: 15)
                         .scaleEffect(logoAppeared ? 1 : 0.8)
                         .opacity(logoAppeared ? 1 : 0)
 
@@ -224,8 +291,8 @@ struct LoginView: View {
                             .font(.system(size: 17, weight: .medium))
                             .foregroundStyle(.white.opacity(0.5))
                     }
-                    .opacity(logoAppeared ? 1 : 0)
-                    .offset(y: logoAppeared ? 0 : 10)
+                    .opacity(exitingUI ? 0 : (logoAppeared ? 1 : 0))
+                    .offset(y: exitingUI ? -10 : (logoAppeared ? 0 : 10))
                 }
 
                 Spacer()
@@ -248,11 +315,13 @@ struct LoginView: View {
                                 .joined(separator: " ")
                             let email = cred.email
 
-                            session.signIn(
+                            // Store credentials, play exit animation, then sign in
+                            pendingCredentials = (
                                 userID: userID,
-                                displayName: name.isEmpty ? nil : name,
+                                name: name.isEmpty ? nil : name,
                                 email: email
                             )
+                            beginExitAnimation()
 
                         case .failure(let error):
                             errorText = error.localizedDescription
@@ -297,8 +366,8 @@ struct LoginView: View {
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 16)
-                .opacity(contentAppeared ? 1 : 0)
-                .offset(y: contentAppeared ? 0 : 20)
+                .opacity(exitingUI ? 0 : (contentAppeared ? 1 : 0))
+                .offset(y: exitingUI ? 30 : (contentAppeared ? 0 : 20))
             }
             .padding(.horizontal, 16)
         }
@@ -315,6 +384,24 @@ struct LoginView: View {
             withAnimation(.easeOut(duration: 0.6).delay(0.35)) {
                 contentAppeared = true
             }
+        }
+    }
+
+    private func beginExitAnimation() {
+        // Phase 1: fade out all UI except logo
+        withAnimation(.easeInOut(duration: 0.35)) {
+            exitingUI = true
+        }
+
+        // Phase 2: trigger transition in ContentView and sign in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            guard let creds = pendingCredentials else { return }
+            session.isLoginTransitioning = true
+            session.signIn(
+                userID: creds.userID,
+                displayName: creds.name,
+                email: creds.email
+            )
         }
     }
 }
