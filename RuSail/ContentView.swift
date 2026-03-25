@@ -711,7 +711,7 @@ struct RowChevron: View {
     var body: some View {
         HStack(spacing: 14) {
             Image(systemName: icon)
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 25, weight: .semibold))
                 .foregroundStyle(tint)
                 .frame(width: 30, height: 30)
 
