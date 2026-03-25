@@ -2758,11 +2758,9 @@ struct MyDataSheet: View {
 
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.65))
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
                         .frame(width: 30, height: 30)
-                        .background(.ultraThinMaterial, in: Circle())
-                        .overlay(Circle().strokeBorder(.white.opacity(0.1), lineWidth: 0.5))
                 }
                 .buttonStyle(.plain)
             }
@@ -2830,7 +2828,7 @@ struct MyDataSheet: View {
         .presentationDetents([.medium])
         .presentationDragIndicator(.hidden)
         .presentationBackground(.clear)
-        .presentationCornerRadius(38)
+        .presentationCornerRadius(48)
     }
 }
 
@@ -2851,11 +2849,9 @@ struct MyFilesSheet: View {
 
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.65))
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white)
                         .frame(width: 30, height: 30)
-                        .background(.ultraThinMaterial, in: Circle())
-                        .overlay(Circle().strokeBorder(.white.opacity(0.1), lineWidth: 0.5))
                 }
                 .buttonStyle(.plain)
             }
@@ -2884,7 +2880,7 @@ struct MyFilesSheet: View {
         .presentationDetents([.medium])
         .presentationDragIndicator(.hidden)
         .presentationBackground(.clear)
-        .presentationCornerRadius(38)
+        .presentationCornerRadius(48)
         .quickLookPreview($previewURL)
     }
 }
