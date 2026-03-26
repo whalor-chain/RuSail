@@ -3582,17 +3582,6 @@ struct SettingsView: View {
                         .overlay(Circle().strokeBorder(Color.red.opacity(0.15), lineWidth: 0.6))
                 }
                 .buttonStyle(.plain)
-
-                Button {
-                    pickingDocKind = kind
-                } label: {
-                    Image(systemName: "arrow.triangle.2.circlepath")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(.white.opacity(0.6))
-                        .frame(width: 34, height: 34)
-                        .background(AppTheme.cardBackground, in: Circle())
-                }
-                .buttonStyle(.plain)
             } else {
                 Button {
                     pickingDocKind = kind
