@@ -1399,22 +1399,49 @@ struct SmallStatCard: View {
     let tint: Color
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 10) {
+            ZStack {
+                Circle()
+                    .fill(tint.opacity(0.15))
+                    .frame(width: 44, height: 44)
+
+                Text(value)
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .foregroundStyle(tint)
+            }
+
             Text(title)
-                .font(.caption)
+                .font(.caption.weight(.medium))
                 .foregroundStyle(.white.opacity(0.68))
-
-            Text(value)
-                .font(.system(size: 24, weight: .bold, design: .rounded))
-                .foregroundStyle(.white)
-
-            Capsule()
-                .fill(tint.opacity(0.9))
-                .frame(width: 28, height: 6)
         }
         .frame(maxWidth: .infinity)
-        .padding(14)
-        .glassPane(cornerRadius: 22)
+        .padding(.vertical, 16)
+        .padding(.horizontal, 14)
+        .background {
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(AppTheme.cardBackground)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        .fill(
+                            LinearGradient(
+                                colors: [tint.opacity(0.08), .clear],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        .strokeBorder(
+                            LinearGradient(
+                                colors: [tint.opacity(0.25), tint.opacity(0.05)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 0.6
+                        )
+                )
+        }
     }
 }
 
