@@ -1691,7 +1691,7 @@ struct SearchView: View {
                 .overlay(.white.opacity(0.1))
 
             HStack(spacing: 8) {
-                Image(systemName: showUpcomingOnly ? "mappin.and.ellipse" : "mappin")
+                Image(systemName: showUpcomingOnly ? "mappin.slash" : "mappin")
                     .font(.system(size: 25, weight: .semibold))
                     .foregroundStyle(.green)
                     .contentTransition(.symbolEffect(.replace.magic(fallback: .downUp.byLayer), options: .nonRepeating))
