@@ -2853,12 +2853,12 @@ struct MyDataSheet: View {
                 Image(systemName: "lock.shield")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(.white.opacity(0.4))
-                Text("Все данные защищены.")
+                Text("Все данные защищены")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.4))
             }
             .frame(maxWidth: .infinity)
-            .padding(.top, 4)
+            .padding(.top, 12)
 
             Spacer(minLength: 16)
         }
@@ -2917,12 +2917,12 @@ struct MyFilesSheet: View {
                 Image(systemName: "lock.shield")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(.white.opacity(0.4))
-                Text("Все файлы защищены.")
+                Text("Все файлы защищены")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.4))
             }
             .frame(maxWidth: .infinity)
-            .padding(.top, 4)
+            .padding(.top, 12)
 
             Spacer(minLength: 16)
         }
