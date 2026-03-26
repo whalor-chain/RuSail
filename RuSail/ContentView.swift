@@ -965,7 +965,7 @@ struct HomeView: View {
 
     private var headerCards: some View {
         HStack(spacing: 10) {
-            SmallStatCard(title: "Сейчас идут", value: "\(currentEvents.count)", tint: .green)
+            SmallStatCard(title: "Сейчас идут", value: "\(currentEvents.count)", tint: .green, icon: "livephoto")
             SmallStatCard(title: "Избранное", value: "\(favoriteEvents.count)", tint: .red)
         }
     }
@@ -1402,13 +1402,22 @@ struct SmallStatCard: View {
     let title: String
     let value: String
     let tint: Color
+    var icon: String?
 
     var body: some View {
         VStack(spacing: 10) {
             ZStack {
-                Circle()
-                    .fill(tint.opacity(0.15))
-                    .frame(width: 44, height: 44)
+                if let icon {
+                    Image(systemName: icon)
+                        .font(.system(size: 28, weight: .semibold))
+                        .foregroundStyle(tint.opacity(0.15))
+                        .symbolEffect(.breathe)
+                        .frame(width: 44, height: 44)
+                } else {
+                    Circle()
+                        .fill(tint.opacity(0.15))
+                        .frame(width: 44, height: 44)
+                }
 
                 Text(value)
                     .font(.system(size: 20, weight: .bold, design: .rounded))
