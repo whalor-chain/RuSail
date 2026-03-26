@@ -194,6 +194,8 @@ struct RootTabView: View {
     @EnvironmentObject private var deepLink: DeepLinkState
     @StateObject private var toast = FavoriteToastState()
     @StateObject private var settingsToast = SettingsToastState()
+    @StateObject private var profileVM = ProfileVM()
+    @StateObject private var docStore = DocumentStore()
     @State private var selectedTab: RuSailTab = .home
 
     private var calendarIcon: String {
@@ -213,7 +215,7 @@ struct RootTabView: View {
                 }
 
                 Tab("Профиль", systemImage: "person.fill", value: .profile) {
-                    ProfileView()
+                    ProfileView(vm: profileVM, docStore: docStore)
                 }
 
                 Tab("Поиск", systemImage: "magnifyingglass", value: RuSailTab.search, role: .search) {
@@ -2715,8 +2717,8 @@ final class ProfileVM: ObservableObject {
 
 struct ProfileView: View {
     @EnvironmentObject private var session: SessionStore
-    @StateObject private var vm = ProfileVM()
-    @StateObject private var docStore = DocumentStore()
+    @ObservedObject var vm: ProfileVM
+    @ObservedObject var docStore: DocumentStore
 
     var body: some View {
         NavigationStack {
