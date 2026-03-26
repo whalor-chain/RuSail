@@ -2624,6 +2624,7 @@ struct DocumentPickerView: UIViewControllerRepresentable {
     let docKind: DocKind
     @ObservedObject var store: DocumentStore
     @Environment(\.dismiss) private var dismiss
+    var onPicked: (() -> Void)?
 
     func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
         let types: [UTType] = [.pdf, .image, .jpeg, .png]
@@ -2644,6 +2645,7 @@ struct DocumentPickerView: UIViewControllerRepresentable {
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             guard let url = urls.first else { return }
             parent.store.save(parent.docKind, from: url)
+            parent.onPicked?()
             parent.dismiss()
         }
 
@@ -3499,7 +3501,9 @@ struct SettingsView: View {
             s.vfpsInput = vm.vfpsID
         }
         .sheet(item: $pickingDocKind) { kind in
-            DocumentPickerView(docKind: kind, store: docStore)
+            DocumentPickerView(docKind: kind, store: docStore) {
+                settingsToast.show("\(kind.title) добавлен", icon: "checkmark.circle.fill")
+            }
         }
         .alert("Выйти из аккаунта?", isPresented: $showSignOutAlert) {
             Button("Отмена", role: .cancel) { }
