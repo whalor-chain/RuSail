@@ -1691,9 +1691,10 @@ struct SearchView: View {
                 .overlay(.white.opacity(0.1))
 
             HStack(spacing: 8) {
-                Image(systemName: "calendar.day.timeline.left")
+                Image(systemName: showUpcomingOnly ? "calendar" : "calendar.day.timeline.left")
                     .font(.system(size: 25, weight: .semibold))
                     .foregroundStyle(.green)
+                    .contentTransition(.symbolEffect(.replace.magic(fallback: .downUp.byLayer), options: .nonRepeating))
 
                 Text("Предстоящие регаты")
                     .font(.headline)
