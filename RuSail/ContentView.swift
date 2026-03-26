@@ -1696,7 +1696,7 @@ struct SearchView: View {
                     .foregroundStyle(.green)
                     .contentTransition(.symbolEffect(.replace.magic(fallback: .downUp.byLayer), options: .nonRepeating))
 
-                Text("Где я?")
+                Text(showUpcomingOnly ? "Вот где!" : "Где я?")
                     .font(.headline)
                     .foregroundStyle(.white)
 
