@@ -3502,7 +3502,7 @@ struct SettingsView: View {
         }
         .sheet(item: $pickingDocKind) { kind in
             DocumentPickerView(docKind: kind, store: docStore) {
-                settingsToast.show("\(kind.title) добавлен", icon: "checkmark.circle.fill")
+                settingsToast.show("\(kind.title) добавлено", icon: "checkmark.circle.fill")
             }
         }
         .alert("Выйти из аккаунта?", isPresented: $showSignOutAlert) {
