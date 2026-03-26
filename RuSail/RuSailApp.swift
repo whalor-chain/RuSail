@@ -7,6 +7,15 @@ struct RuSailApp: App {
     @StateObject private var themeManager = ThemeManager()
     @State private var showSplash = true
 
+    init() {
+        let tabAppearance = UITabBarAppearance()
+        tabAppearance.configureWithTransparentBackground()
+        tabAppearance.backgroundColor = .clear
+        tabAppearance.shadowColor = .clear
+        UITabBar.appearance().standardAppearance = tabAppearance
+        UITabBar.appearance().scrollEdgeAppearance = tabAppearance
+    }
+
     var body: some Scene {
         WindowGroup {
             ZStack {

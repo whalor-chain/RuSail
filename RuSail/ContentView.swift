@@ -234,12 +234,6 @@ struct RootTabView: View {
                 UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
                 UINavigationBar.appearance().compactAppearance = navAppearance
 
-                let tabAppearance = UITabBarAppearance()
-                tabAppearance.configureWithTransparentBackground()
-                tabAppearance.backgroundColor = .clear
-                tabAppearance.shadowColor = .clear
-                UITabBar.appearance().standardAppearance = tabAppearance
-                UITabBar.appearance().scrollEdgeAppearance = tabAppearance
             }
 
             FavoriteToastOverlay()
