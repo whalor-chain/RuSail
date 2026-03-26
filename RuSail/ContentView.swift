@@ -2972,7 +2972,7 @@ struct AboutPopover: View {
 
             Button {
                 vm.showAboutSheet = false
-                if let url = URL(string: "mailto:rusail.app@icloud.com") {
+                if let url = URL(string: "https://t.me/whalor") {
                     UIApplication.shared.open(url)
                 }
             } label: {
