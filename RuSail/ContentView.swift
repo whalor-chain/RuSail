@@ -3016,7 +3016,7 @@ struct AboutPopover: View {
                 .padding(.vertical, 12)
                 .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(HighlightButtonStyle())
         }
         .frame(width: 260)
         .padding(.bottom, 6)
@@ -3042,7 +3042,15 @@ struct AboutPopover: View {
             .padding(.vertical, 12)
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(HighlightButtonStyle())
+    }
+}
+
+private struct HighlightButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .background(configuration.isPressed ? Color.gray.opacity(0.25) : Color.clear)
+            .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
     }
 }
 
