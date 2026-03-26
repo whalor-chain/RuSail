@@ -3293,6 +3293,7 @@ struct SettingsView: View {
     var body: some View {
         ZStack {
             GlassBackground()
+                .ignoresSafeArea(.keyboard)
 
             VStack(spacing: 0) {
                 ScrollView {
@@ -3495,7 +3496,6 @@ struct SettingsView: View {
             .animation(.easeInOut(duration: 0.25), value: s.vfpsInput != vm.vfpsID)
             .background(.clear)
         }
-        .ignoresSafeArea(.keyboard)
         .navigationTitle("Настройки")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
