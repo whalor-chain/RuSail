@@ -1702,7 +1702,7 @@ struct SearchView: View {
 
                 Spacer()
 
-                Toggle("", isOn: $showUpcomingOnly.animation(.easeInOut(duration: 0.25)))
+                Toggle("", isOn: $showUpcomingOnly.animation(.easeInOut(duration: 0.5)))
                     .labelsHidden()
                     .tint(.green)
             }
