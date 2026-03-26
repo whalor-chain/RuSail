@@ -3495,6 +3495,7 @@ struct SettingsView: View {
             .animation(.easeInOut(duration: 0.25), value: s.vfpsInput != vm.vfpsID)
             .background(.clear)
         }
+        .ignoresSafeArea(.keyboard)
         .navigationTitle("Настройки")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
