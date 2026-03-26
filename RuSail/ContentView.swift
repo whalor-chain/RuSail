@@ -3731,17 +3731,6 @@ struct DocumentsListView: View {
                         }
                     }
                     .glassPane(cornerRadius: 20)
-                    // Tip
-                    HStack(spacing: 8) {
-                        Image(systemName: "hand.draw")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundStyle(.white.opacity(0.4))
-                        Text("Для закрытия документа, свайпни пальцем вниз")
-                            .font(.caption)
-                            .foregroundStyle(.white.opacity(0.4))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, 4)
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 12)
