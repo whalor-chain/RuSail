@@ -1399,7 +1399,7 @@ struct SmallStatCard: View {
     let tint: Color
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(spacing: 8) {
             Text(title)
                 .font(.caption)
                 .foregroundStyle(.white.opacity(0.68))
@@ -1412,7 +1412,7 @@ struct SmallStatCard: View {
                 .fill(tint.opacity(0.9))
                 .frame(width: 28, height: 6)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity)
         .padding(14)
         .glassPane(cornerRadius: 22)
     }
