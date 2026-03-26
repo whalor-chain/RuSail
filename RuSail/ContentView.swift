@@ -3257,8 +3257,8 @@ struct FileRowButton: View {
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.gray)
                 } else {
-                    Image(systemName: "chevron.right")
-                        .font(.caption.weight(.bold))
+                    Image(systemName: "eye.slash")
+                        .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.white.opacity(0.45))
                 }
             }
