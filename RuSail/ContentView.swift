@@ -1364,7 +1364,7 @@ struct UpcomingEventRow: View {
             VStack(spacing: 6) {
                 Image(systemName: "calendar.badge.clock")
                     .foregroundStyle(AppTheme.accent)
-                    .font(.headline)
+                    .font(.system(size: 20, weight: .semibold))
 
                 Rectangle()
                     .fill(Color.white.opacity(0.10))
