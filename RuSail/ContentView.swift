@@ -516,7 +516,7 @@ struct SettingsToastOverlay: View {
                 HStack(spacing: 12) {
                     Image(systemName: settingsToast.icon)
                         .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(.green)
+                        .foregroundStyle(settingsToast.icon.contains("trash") ? .red : .green)
                         .symbolEffect(.bounce, value: settingsToast.isShowing)
 
                     Text(settingsToast.message)
