@@ -760,7 +760,6 @@ struct FavoriteEventCard: View {
                     Image(systemName: favoritesStore.contains(event) ? "heart.fill" : "heart")
                         .font(.system(size: 18, weight: .semibold))
                         .foregroundStyle(favoritesStore.contains(event) ? .red : .white)
-                        .contentTransition(.symbolEffect(.replace.magic(fallback: .downUp.byLayer), options: .nonRepeating))
                         .frame(width: 36, height: 36)
                         .background(AppTheme.cardBackground, in: Circle())
                 }
@@ -1671,9 +1670,10 @@ struct SearchView: View {
     private var togglesCard: some View {
         VStack(spacing: 0) {
             HStack(spacing: 8) {
-                Image(systemName: "heart.text.square")
+                Image(systemName: showFavoritesOnly ? "heart.text.square.fill" : "heart.text.square")
                     .font(.system(size: 25, weight: .semibold))
                     .foregroundStyle(.red)
+                    .contentTransition(.symbolEffect(.replace.magic(fallback: .downUp.byLayer), options: .nonRepeating))
 
                 Text("Избранные регаты")
                     .font(.headline)
@@ -1733,7 +1733,6 @@ struct SearchView: View {
                     Image(systemName: isFavorite ? "heart.fill" : "heart")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundStyle(isFavorite ? .red : .white)
-                        .contentTransition(.symbolEffect(.replace.magic(fallback: .downUp.byLayer), options: .nonRepeating))
                         .scaleEffect(isFavorite ? 1.0 : 0.92)
                         .frame(width: 34, height: 34)
                         .background(AppTheme.cardBackground, in: Circle())
