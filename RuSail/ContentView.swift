@@ -1691,7 +1691,7 @@ struct SearchView: View {
                 .overlay(.white.opacity(0.1))
 
             HStack(spacing: 8) {
-                Image(systemName: showUpcomingOnly ? "inset.filled.topthird.middlethird.bottomthird.rectangle" : "calendar.day.timeline.left")
+                Image(systemName: showUpcomingOnly ? "calendar.day.timeline.left" : "inset.filled.topthird.middlethird.bottomthird.rectangle")
                     .font(.system(size: 25, weight: .semibold))
                     .foregroundStyle(.green)
                     .contentTransition(.symbolEffect(.replace.magic(fallback: .downUp.byLayer), options: .nonRepeating))
