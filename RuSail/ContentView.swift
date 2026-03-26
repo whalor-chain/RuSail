@@ -966,7 +966,7 @@ struct HomeView: View {
     private var headerCards: some View {
         HStack(spacing: 10) {
             SmallStatCard(title: "Сейчас идут", value: "\(currentEvents.count)", tint: .green, icon: "livephoto")
-            SmallStatCard(title: "Избранное", value: "\(favoriteEvents.count)", tint: .red)
+            SmallStatCard(title: "Избранное", value: "\(favoriteEvents.count)", tint: .red, icon: "heart.fill", pulseEffect: true)
         }
     }
 
@@ -1403,16 +1403,25 @@ struct SmallStatCard: View {
     let value: String
     let tint: Color
     var icon: String?
+    var pulseEffect: Bool = false
 
     var body: some View {
         VStack(spacing: 10) {
             ZStack {
                 if let icon {
-                    Image(systemName: icon)
-                        .font(.system(size: 42, weight: .semibold))
-                        .foregroundStyle(tint.opacity(0.15))
-                        .symbolEffect(.breathe)
-                        .frame(width: 44, height: 44)
+                    if pulseEffect {
+                        Image(systemName: icon)
+                            .font(.system(size: 42, weight: .semibold))
+                            .foregroundStyle(tint.opacity(0.15))
+                            .symbolEffect(.breathe.pulse.byLayer, options: .repeat(.continuous))
+                            .frame(width: 44, height: 44)
+                    } else {
+                        Image(systemName: icon)
+                            .font(.system(size: 42, weight: .semibold))
+                            .foregroundStyle(tint.opacity(0.15))
+                            .symbolEffect(.breathe)
+                            .frame(width: 44, height: 44)
+                    }
                 } else {
                     Circle()
                         .fill(tint.opacity(0.15))
