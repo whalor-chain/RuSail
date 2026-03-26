@@ -3499,7 +3499,32 @@ struct SettingsView: View {
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(AppTheme.accent, in: Capsule())
+                        .background {
+                            Capsule()
+                                .fill(
+                                    LinearGradient(
+                                        colors: [AppTheme.accent.opacity(0.9), AppTheme.accent],
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .overlay(
+                                    Capsule()
+                                        .fill(.ultraThinMaterial.opacity(0.3))
+                                )
+                                .overlay(
+                                    Capsule()
+                                        .strokeBorder(
+                                            LinearGradient(
+                                                colors: [.white.opacity(0.35), .white.opacity(0.05)],
+                                                startPoint: .top,
+                                                endPoint: .bottom
+                                            ),
+                                            lineWidth: 0.8
+                                        )
+                                )
+                                .shadow(color: AppTheme.accent.opacity(0.4), radius: 16, x: 0, y: 8)
+                        }
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal, 16)
