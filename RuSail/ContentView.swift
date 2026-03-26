@@ -1670,7 +1670,7 @@ struct SearchView: View {
     private var togglesCard: some View {
         VStack(spacing: 0) {
             HStack(spacing: 8) {
-                Image(systemName: showFavoritesOnly ? "heart.text.square.fill" : "heart.text.square")
+                Image(systemName: showFavoritesOnly ? "heart.fill" : "heart.text.square")
                     .font(.system(size: 25, weight: .semibold))
                     .foregroundStyle(.red)
                     .contentTransition(.symbolEffect(.replace.magic(fallback: .downUp.byLayer), options: .nonRepeating))
