@@ -1691,12 +1691,12 @@ struct SearchView: View {
                 .overlay(.white.opacity(0.1))
 
             HStack(spacing: 8) {
-                Image(systemName: showUpcomingOnly ? "calendar.day.timeline.left" : "inset.filled.topthird.middlethird.bottomthird.rectangle")
+                Image(systemName: showUpcomingOnly ? "mappin.and.ellipse" : "mappin")
                     .font(.system(size: 25, weight: .semibold))
                     .foregroundStyle(.green)
                     .contentTransition(.symbolEffect(.replace.magic(fallback: .downUp.byLayer), options: .nonRepeating))
 
-                Text("Предстоящие регаты")
+                Text("Где я?")
                     .font(.headline)
                     .foregroundStyle(.white)
 
