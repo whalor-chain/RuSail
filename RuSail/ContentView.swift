@@ -3376,6 +3376,17 @@ struct SettingsView: View {
 
                             TextField("Введите ВФПС ID", text: $s.vfpsInput)
                                 .keyboardType(.numberPad)
+                                .toolbar {
+                                    ToolbarItemGroup(placement: .keyboard) {
+                                        Spacer()
+                                        Button {
+                                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                        } label: {
+                                            Image(systemName: "keyboard.chevron.compact.down")
+                                                .foregroundStyle(.white.opacity(0.7))
+                                        }
+                                    }
+                                }
                                 .foregroundStyle(.white)
                                 .padding(14)
                                 .background {
