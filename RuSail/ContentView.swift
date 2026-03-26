@@ -1438,7 +1438,7 @@ struct SmallStatCard: View {
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
-                            lineWidth: 0.6
+                            lineWidth: 1.5
                         )
                 )
         }
