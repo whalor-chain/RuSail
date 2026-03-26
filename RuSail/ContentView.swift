@@ -2720,29 +2720,17 @@ final class ProfileVM: ObservableObject {
 @MainActor
 final class AppUpdateChecker: ObservableObject {
     @Published var updateAvailable = false
-    @Published var appStoreVersion = ""
 
-    private let appID = "Wave.RuSail"
+    private let latestVersion = "1.0.0"
 
     var currentVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
     }
 
-    func checkForUpdate() {
-        guard let url = URL(string: "https://itunes.apple.com/lookup?bundleId=\(appID)&country=ru") else { return }
+    var displayVersion: String { latestVersion }
 
-        Task {
-            do {
-                let (data, _) = try await URLSession.shared.data(from: url)
-                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let results = json["results"] as? [[String: Any]],
-                   let first = results.first,
-                   let storeVersion = first["version"] as? String {
-                    appStoreVersion = storeVersion
-                    updateAvailable = isNewer(storeVersion, than: currentVersion)
-                }
-            } catch {}
-        }
+    func checkForUpdate() {
+        updateAvailable = isNewer(latestVersion, than: currentVersion)
     }
 
     private func isNewer(_ store: String, than current: String) -> Bool {
@@ -2757,8 +2745,8 @@ final class AppUpdateChecker: ObservableObject {
         return false
     }
 
-    func openAppStore() {
-        if let url = URL(string: "https://apps.apple.com/app/id6746498041") {
+    func openTestFlight() {
+        if let url = URL(string: "https://testflight.apple.com/join/pkZV7Je5") {
             UIApplication.shared.open(url)
         }
     }
@@ -2779,7 +2767,7 @@ struct ProfileView: View {
                     VStack(spacing: 10) {
                         if updateChecker.updateAvailable {
                             Button {
-                                updateChecker.openAppStore()
+                                updateChecker.openTestFlight()
                             } label: {
                                 HStack(spacing: 14) {
                                     Image(systemName: "arrow.down.app")
@@ -2793,7 +2781,7 @@ struct ProfileView: View {
                                             .font(.headline)
                                             .foregroundStyle(.white)
 
-                                        Text("Версия \(updateChecker.appStoreVersion)")
+                                        Text("Версия \(updateChecker.displayVersion)")
                                             .font(.caption)
                                             .foregroundStyle(.white.opacity(0.5))
                                     }
