@@ -1809,6 +1809,8 @@ struct BrowseView: View {
         BrowseCategory(icon: "person.3.fill", title: "Отбор в Сборную", tint: .green),
         BrowseCategory(icon: "trophy.fill", title: "Результаты", tint: .cyan),
         BrowseCategory(icon: "cart.fill", title: "Магазин", tint: .purple),
+        BrowseCategory(icon: "calendar.badge.clock", title: "Мероприятия", tint: .orange),
+        BrowseCategory(icon: "graduationcap.fill", title: "Студенческая Лига", tint: .mint),
     ]
 
     private var allLinks: [LinkItem] {
@@ -2847,6 +2849,17 @@ struct MyDataSheet: View {
             .background(Color.gray.opacity(0.2), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .padding(.horizontal, 16)
 
+            HStack(spacing: 8) {
+                Image(systemName: "lock.shield")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.4))
+                Text("Все данные защищены.")
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.4))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.top, 4)
+
             Spacer(minLength: 16)
         }
         .presentationDetents([.medium])
@@ -2900,6 +2913,17 @@ struct MyFilesSheet: View {
             }
             .padding(.horizontal, 16)
 
+            HStack(spacing: 8) {
+                Image(systemName: "lock.shield")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.4))
+                Text("Все файлы защищены.")
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.4))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.top, 4)
+
             Spacer(minLength: 16)
         }
         .presentationDetents([.medium])
@@ -2943,6 +2967,29 @@ struct AboutPopover: View {
                     vm.showTermsOfUse = true
                 }
             }
+
+            Divider()
+
+            Button {
+                vm.showAboutSheet = false
+                if let url = URL(string: "mailto:rusail.app@icloud.com") {
+                    UIApplication.shared.open(url)
+                }
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "square.and.pencil")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(.secondary)
+                    Text("Связаться с разработчиком")
+                        .font(.body)
+                        .foregroundStyle(.primary)
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
         }
         .frame(width: 260)
         .padding(.bottom, 6)
