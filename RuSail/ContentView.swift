@@ -2715,10 +2715,60 @@ final class ProfileVM: ObservableObject {
     }
 }
 
+// MARK: - App Update Checker
+
+@MainActor
+final class AppUpdateChecker: ObservableObject {
+    @Published var updateAvailable = false
+    @Published var appStoreVersion = ""
+
+    private let appID = "Wave.RuSail"
+
+    var currentVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+    }
+
+    func checkForUpdate() {
+        guard let url = URL(string: "https://itunes.apple.com/lookup?bundleId=\(appID)&country=ru") else { return }
+
+        Task {
+            do {
+                let (data, _) = try await URLSession.shared.data(from: url)
+                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let results = json["results"] as? [[String: Any]],
+                   let first = results.first,
+                   let storeVersion = first["version"] as? String {
+                    appStoreVersion = storeVersion
+                    updateAvailable = isNewer(storeVersion, than: currentVersion)
+                }
+            } catch {}
+        }
+    }
+
+    private func isNewer(_ store: String, than current: String) -> Bool {
+        let s = store.split(separator: ".").compactMap { Int($0) }
+        let c = current.split(separator: ".").compactMap { Int($0) }
+        for i in 0..<max(s.count, c.count) {
+            let sv = i < s.count ? s[i] : 0
+            let cv = i < c.count ? c[i] : 0
+            if sv > cv { return true }
+            if sv < cv { return false }
+        }
+        return false
+    }
+
+    func openAppStore() {
+        if let url = URL(string: "https://apps.apple.com/app/id6746498041") {
+            UIApplication.shared.open(url)
+        }
+    }
+}
+
 struct ProfileView: View {
     @EnvironmentObject private var session: SessionStore
     @ObservedObject var vm: ProfileVM
     @ObservedObject var docStore: DocumentStore
+    @StateObject private var updateChecker = AppUpdateChecker()
 
     var body: some View {
         NavigationStack {
@@ -2727,6 +2777,57 @@ struct ProfileView: View {
 
                 ScrollView {
                     VStack(spacing: 10) {
+                        if updateChecker.updateAvailable {
+                            Button {
+                                updateChecker.openAppStore()
+                            } label: {
+                                HStack(spacing: 14) {
+                                    Image(systemName: "arrow.down.app")
+                                        .font(.system(size: 22, weight: .semibold))
+                                        .foregroundStyle(AppTheme.accent)
+                                        .frame(width: 40, height: 40)
+                                        .background(AppTheme.accent.opacity(0.15), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text("Доступно обновление")
+                                            .font(.headline)
+                                            .foregroundStyle(.white)
+
+                                        Text("Версия \(updateChecker.appStoreVersion)")
+                                            .font(.caption)
+                                            .foregroundStyle(.white.opacity(0.5))
+                                    }
+
+                                    Spacer()
+
+                                    Text("Обновить")
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(.white)
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 8)
+                                        .background(AppTheme.accent, in: Capsule())
+                                }
+                                .padding(14)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                        .fill(AppTheme.cardBackground)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                                .strokeBorder(
+                                                    LinearGradient(
+                                                        colors: [AppTheme.accent.opacity(0.3), AppTheme.accent.opacity(0.05)],
+                                                        startPoint: .topLeading,
+                                                        endPoint: .bottomTrailing
+                                                    ),
+                                                    lineWidth: 1
+                                                )
+                                        )
+                                }
+                            }
+                            .buttonStyle(.plain)
+                            .transition(.opacity)
+                        }
+
                         Button {
                             vm.showMyDataSheet = true
                         } label: {
@@ -2751,6 +2852,7 @@ struct ProfileView: View {
                     .padding(.top, 12)
                     .padding(.bottom, 26)
                 }
+                .onAppear { updateChecker.checkForUpdate() }
             }
             .navigationTitle("Профиль")
             .navigationBarTitleDisplayMode(.large)
