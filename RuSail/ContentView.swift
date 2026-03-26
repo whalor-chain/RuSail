@@ -2460,15 +2460,17 @@ struct NewsDetailView: View {
 // MARK: - Document Store
 
 enum DocKind: String, CaseIterable, Identifiable {
-    case certificate = "certificate"
-    case license     = "license"
-    case insurance   = "insurance"
+    case certificate    = "certificate"
+    case helmsman       = "helmsman"
+    case license        = "license"
+    case insurance      = "insurance"
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
         case .certificate: return "Сертификат РУСАДА"
+        case .helmsman:    return "Права рулевого"
         case .license:     return "Права ГИМС"
         case .insurance:   return "Страховка"
         }
@@ -2477,6 +2479,7 @@ enum DocKind: String, CaseIterable, Identifiable {
     var icon: String {
         switch self {
         case .certificate: return "doc.richtext"
+        case .helmsman:    return "person.text.rectangle"
         case .license:     return "person.text.rectangle"
         case .insurance:   return "cross.case"
         }
@@ -2485,6 +2488,7 @@ enum DocKind: String, CaseIterable, Identifiable {
     var tint: Color {
         switch self {
         case .certificate: return AppTheme.accent
+        case .helmsman:    return AppTheme.accent
         case .license:     return AppTheme.accent
         case .insurance:   return AppTheme.accent
         }
