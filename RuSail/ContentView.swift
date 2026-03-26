@@ -2715,39 +2715,10 @@ final class ProfileVM: ObservableObject {
     }
 }
 
-// MARK: - App Update Checker
-
-@MainActor
-final class AppUpdateChecker: ObservableObject {
-    @Published var updateAvailable = false
-
-    private let latestBuild = 3
-
-    var currentBuild: Int {
-        Int(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0") ?? 0
-    }
-
-    var displayVersion: String {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-        return "\(version) (\(latestBuild))"
-    }
-
-    func checkForUpdate() {
-        updateAvailable = latestBuild > currentBuild
-    }
-
-    func openTestFlight() {
-        if let url = URL(string: "https://testflight.apple.com/join/pkZV7Je5") {
-            UIApplication.shared.open(url)
-        }
-    }
-}
-
 struct ProfileView: View {
     @EnvironmentObject private var session: SessionStore
     @ObservedObject var vm: ProfileVM
     @ObservedObject var docStore: DocumentStore
-    @StateObject private var updateChecker = AppUpdateChecker()
 
     var body: some View {
         NavigationStack {
@@ -2756,57 +2727,6 @@ struct ProfileView: View {
 
                 ScrollView {
                     VStack(spacing: 10) {
-                        if updateChecker.updateAvailable {
-                            Button {
-                                updateChecker.openTestFlight()
-                            } label: {
-                                HStack(spacing: 14) {
-                                    Image(systemName: "arrow.down.app")
-                                        .font(.system(size: 22, weight: .semibold))
-                                        .foregroundStyle(AppTheme.accent)
-                                        .frame(width: 40, height: 40)
-                                        .background(AppTheme.accent.opacity(0.15), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text("Доступно обновление")
-                                            .font(.headline)
-                                            .foregroundStyle(.white)
-
-                                        Text("Версия \(updateChecker.displayVersion)")
-                                            .font(.caption)
-                                            .foregroundStyle(.white.opacity(0.5))
-                                    }
-
-                                    Spacer()
-
-                                    Text("Обновить")
-                                        .font(.subheadline.weight(.semibold))
-                                        .foregroundStyle(.white)
-                                        .padding(.horizontal, 14)
-                                        .padding(.vertical, 8)
-                                        .background(AppTheme.accent, in: Capsule())
-                                }
-                                .padding(14)
-                                .background {
-                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                        .fill(AppTheme.cardBackground)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                                .strokeBorder(
-                                                    LinearGradient(
-                                                        colors: [AppTheme.accent.opacity(0.3), AppTheme.accent.opacity(0.05)],
-                                                        startPoint: .topLeading,
-                                                        endPoint: .bottomTrailing
-                                                    ),
-                                                    lineWidth: 1
-                                                )
-                                        )
-                                }
-                            }
-                            .buttonStyle(.plain)
-                            .transition(.opacity)
-                        }
-
                         Button {
                             vm.showMyDataSheet = true
                         } label: {
@@ -2831,7 +2751,6 @@ struct ProfileView: View {
                     .padding(.top, 12)
                     .padding(.bottom, 26)
                 }
-                .onAppear { updateChecker.checkForUpdate() }
             }
             .navigationTitle("Профиль")
             .navigationBarTitleDisplayMode(.large)
