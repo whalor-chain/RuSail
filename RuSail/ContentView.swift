@@ -1699,7 +1699,6 @@ struct SearchView: View {
                 Text(showUpcomingOnly ? "Вот где!" : "Где я?")
                     .font(.headline)
                     .foregroundStyle(.white)
-                    .contentTransition(.interpolate)
 
                 Spacer()
 
