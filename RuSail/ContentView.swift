@@ -2484,9 +2484,9 @@ enum DocKind: String, CaseIterable, Identifiable {
 
     var tint: Color {
         switch self {
-        case .certificate: return .green
-        case .license:     return .teal
-        case .insurance:   return .orange
+        case .certificate: return AppTheme.accent
+        case .license:     return AppTheme.accent
+        case .insurance:   return AppTheme.accent
         }
     }
 
@@ -2725,7 +2725,7 @@ struct ProfileView: View {
                         Button {
                             vm.showMyDataSheet = true
                         } label: {
-                            RowChevron(icon: "person.text.rectangle", title: "Мои данные", tint: AppTheme.accent)
+                            RowChevron(icon: "person.crop.square.on.square.angled", title: "Мои данные", tint: AppTheme.accent)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 14)
                                 .glassPane(cornerRadius: 20)
