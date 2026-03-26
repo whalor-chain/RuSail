@@ -3503,14 +3503,10 @@ struct SettingsView: View {
                             Capsule()
                                 .fill(
                                     LinearGradient(
-                                        colors: [AppTheme.accent.opacity(0.9), AppTheme.accent],
+                                        colors: [AppTheme.accent, AppTheme.accent],
                                         startPoint: .top,
                                         endPoint: .bottom
                                     )
-                                )
-                                .overlay(
-                                    Capsule()
-                                        .fill(.ultraThinMaterial.opacity(0.3))
                                 )
                                 .overlay(
                                     Capsule()
@@ -3529,8 +3525,8 @@ struct SettingsView: View {
                 .buttonStyle(.plain)
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
-                .transition(.move(edge: .bottom).combined(with: .opacity))
-                .animation(.easeInOut(duration: 0.25), value: s.vfpsInput != vm.vfpsID)
+                .transition(.opacity)
+                .animation(.easeInOut(duration: 0.3), value: s.vfpsInput != vm.vfpsID)
             }
         }
         .ignoresSafeArea(.keyboard)
