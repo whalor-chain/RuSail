@@ -2895,7 +2895,7 @@ struct MyDataSheet: View {
         .presentationDetents([.medium])
         .presentationDragIndicator(.hidden)
         .presentationBackground(.clear)
-        .presentationCornerRadius(48)
+        .presentationCornerRadius(56)
     }
 }
 
@@ -2959,7 +2959,7 @@ struct MyFilesSheet: View {
         .presentationDetents([.medium])
         .presentationDragIndicator(.hidden)
         .presentationBackground(.clear)
-        .presentationCornerRadius(48)
+        .presentationCornerRadius(56)
         .quickLookPreview($previewURL)
     }
 }
