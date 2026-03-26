@@ -223,6 +223,8 @@ struct RootTabView: View {
                 }
             }
             .tint(AppTheme.accent)
+            .toolbarBackground(.hidden, for: .tabBar)
+            .toolbarColorScheme(.dark, for: .tabBar)
             .onAppear {
                 let navAppearance = UINavigationBarAppearance()
                 navAppearance.configureWithTransparentBackground()
