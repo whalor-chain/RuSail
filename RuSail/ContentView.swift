@@ -1409,7 +1409,7 @@ struct SmallStatCard: View {
             ZStack {
                 if let icon {
                     Image(systemName: icon)
-                        .font(.system(size: 28, weight: .semibold))
+                        .font(.system(size: 42, weight: .semibold))
                         .foregroundStyle(tint.opacity(0.15))
                         .symbolEffect(.breathe)
                         .frame(width: 44, height: 44)
