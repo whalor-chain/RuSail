@@ -3502,7 +3502,7 @@ struct SettingsView: View {
         }
         .sheet(item: $pickingDocKind) { kind in
             DocumentPickerView(docKind: kind, store: docStore) {
-                settingsToast.show("\(kind.title) добавлено", icon: "checkmark.circle.fill")
+                settingsToast.show("«\(kind.title)» добавлено", icon: "checkmark.circle.fill")
             }
         }
         .alert("Выйти из аккаунта?", isPresented: $showSignOutAlert) {
@@ -3532,7 +3532,7 @@ struct SettingsView: View {
             Button("Удалить", role: .destructive) {
                 if let kind = deletingDocKind {
                     docStore.remove(kind)
-                    settingsToast.show("\(kind.title) удалён", icon: "trash.circle.fill")
+                    settingsToast.show("«\(kind.title)» удалено", icon: "trash.circle.fill")
                 }
                 deletingDocKind = nil
             }
