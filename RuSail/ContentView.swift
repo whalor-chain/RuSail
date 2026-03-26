@@ -2721,28 +2721,19 @@ final class ProfileVM: ObservableObject {
 final class AppUpdateChecker: ObservableObject {
     @Published var updateAvailable = false
 
-    private let latestVersion = "1.0.0"
+    private let latestBuild = 3
 
-    var currentVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+    var currentBuild: Int {
+        Int(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0") ?? 0
     }
 
-    var displayVersion: String { latestVersion }
+    var displayVersion: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        return "\(version) (\(latestBuild))"
+    }
 
     func checkForUpdate() {
-        updateAvailable = isNewer(latestVersion, than: currentVersion)
-    }
-
-    private func isNewer(_ store: String, than current: String) -> Bool {
-        let s = store.split(separator: ".").compactMap { Int($0) }
-        let c = current.split(separator: ".").compactMap { Int($0) }
-        for i in 0..<max(s.count, c.count) {
-            let sv = i < s.count ? s[i] : 0
-            let cv = i < c.count ? c[i] : 0
-            if sv > cv { return true }
-            if sv < cv { return false }
-        }
-        return false
+        updateAvailable = latestBuild > currentBuild
     }
 
     func openTestFlight() {
