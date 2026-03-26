@@ -3579,7 +3579,7 @@ struct SettingsView: View {
                         .foregroundStyle(.red.opacity(0.7))
                         .frame(width: 34, height: 34)
                         .background(AppTheme.cardBackground, in: Circle())
-                        .overlay(Circle().strokeBorder(Color.red.opacity(0.15), lineWidth: 0.6))
+                        .overlay(Circle().strokeBorder(Color.red.opacity(0.25), lineWidth: 1.5))
                 }
                 .buttonStyle(.plain)
             } else {
