@@ -3473,29 +3473,31 @@ struct SettingsView: View {
                     .padding(.bottom, 100)
                 }
 
-                // Bottom Save button pinned — only visible when changes exist
-                if s.vfpsInput != vm.vfpsID {
-                    Button {
-                        vm.vfpsID = s.vfpsInput
-                        settingsToast.show("Настройки сохранены")
-                        dismiss()
-                    } label: {
-                        Text("Сохранить")
-                            .font(.headline.weight(.semibold))
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(AppTheme.accent, in: Capsule())
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 16)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-                }
             }
-            .animation(.easeInOut(duration: 0.25), value: s.vfpsInput != vm.vfpsID)
             .background(.clear)
         }
+        .overlay(alignment: .bottom) {
+            if s.vfpsInput != vm.vfpsID {
+                Button {
+                    vm.vfpsID = s.vfpsInput
+                    settingsToast.show("Настройки сохранены")
+                    dismiss()
+                } label: {
+                    Text("Сохранить")
+                        .font(.headline.weight(.semibold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(AppTheme.accent, in: Capsule())
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 16)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .animation(.easeInOut(duration: 0.25), value: s.vfpsInput != vm.vfpsID)
+            }
+        }
+        .ignoresSafeArea(.keyboard)
         .navigationTitle("Настройки")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
