@@ -1809,8 +1809,8 @@ struct BrowseView: View {
         BrowseCategory(icon: "person.3.fill", title: "Отбор в Сборную", tint: .green),
         BrowseCategory(icon: "trophy.fill", title: "Результаты", tint: .cyan),
         BrowseCategory(icon: "cart.fill", title: "Магазин", tint: .purple),
-        BrowseCategory(icon: "calendar.badge.clock", title: "Мероприятия", tint: .orange),
-        BrowseCategory(icon: "graduationcap.fill", title: "Студенческая Лига", tint: .mint),
+        BrowseCategory(icon: "calendar.badge.clock", title: "Мероприятия", tint: .pink),
+        BrowseCategory(icon: "graduationcap.fill", title: "Студенческая Лига", tint: .red),
     ]
 
     private var allLinks: [LinkItem] {
