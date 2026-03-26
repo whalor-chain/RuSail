@@ -1983,13 +1983,7 @@ struct BrowseView: View {
         .navigationTitle("Поиск")
         .navigationBarTitleDisplayMode(.large)
         .searchable(text: $searchText, prompt: "Поиск")
-        .sheet(item: Binding(
-            get: { selectedDocURL.map { IdentifiableURL(url: $0) } },
-            set: { selectedDocURL = $0?.url }
-        )) { item in
-            QLPreviewSheet(url: item.url)
-                .ignoresSafeArea()
-        }
+        .quickLookPreview($selectedDocURL)
     }
 
     @ViewBuilder
@@ -3756,13 +3750,7 @@ struct DocumentsListView: View {
         }
         .navigationTitle("Документы")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(item: Binding(
-            get: { selectedDocURL.map { IdentifiableURL(url: $0) } },
-            set: { selectedDocURL = $0?.url }
-        )) { item in
-            QLPreviewSheet(url: item.url)
-                .ignoresSafeArea()
-        }
+        .quickLookPreview($selectedDocURL)
     }
 
     @ViewBuilder
