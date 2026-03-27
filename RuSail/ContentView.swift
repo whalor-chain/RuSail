@@ -778,7 +778,7 @@ struct FavoriteEventCard: View {
     @EnvironmentObject private var toast: FavoriteToastState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .top) {
                 Text(event.title)
                     .font(.headline)
@@ -806,6 +806,7 @@ struct FavoriteEventCard: View {
             }
 
             infoRow(icon: "calendar", text: "\(event.startDate) – \(event.endDate)")
+                .padding(.top, -6)
             infoRow(icon: "mappin.and.ellipse", text: event.location)
 
             VStack(alignment: .leading, spacing: 8) {
