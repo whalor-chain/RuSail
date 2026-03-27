@@ -778,7 +778,7 @@ struct FavoriteEventCard: View {
     @EnvironmentObject private var toast: FavoriteToastState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .top) {
                 Text(event.title)
                     .font(.headline)
@@ -808,7 +808,7 @@ struct FavoriteEventCard: View {
             infoRow(icon: "calendar", text: "\(event.startDate) – \(event.endDate)")
             infoRow(icon: "mappin.and.ellipse", text: event.location)
 
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text("Классы яхт")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.white.opacity(0.72))
@@ -840,7 +840,7 @@ struct FavoriteEventCard: View {
             }
 
         }
-        .padding(16)
+        .padding(18)
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .background {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
@@ -1143,15 +1143,25 @@ struct FavoritesSection: View {
                 .glassPane(cornerRadius: 24)
             } else {
                 VStack(spacing: 8) {
-                    TabView(selection: $selectedIndex) {
-                        ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
-                            FavoriteEventCard(event: event, favoritesStore: favoritesStore)
-                                .tag(index)
-                                .padding(.horizontal, 2)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHStack(spacing: 0) {
+                            ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
+                                FavoriteEventCard(event: event, favoritesStore: favoritesStore)
+                                    .containerRelativeFrame(.horizontal)
+                                    .padding(.horizontal, 2)
+                            }
                         }
+                        .scrollTargetLayout()
                     }
-                    .tabViewStyle(.page(indexDisplayMode: .never))
-                    .frame(height: 235)
+                    .scrollTargetBehavior(.viewAligned)
+                    .scrollPosition(id: Binding(
+                        get: { events.indices.contains(selectedIndex) ? events[selectedIndex].id : nil },
+                        set: { newID in
+                            if let newID, let idx = events.firstIndex(where: { $0.id == newID }) {
+                                selectedIndex = idx
+                            }
+                        }
+                    ))
 
                     HStack(spacing: 8) {
                         ForEach(0..<events.count, id: \.self) { index in
