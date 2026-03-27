@@ -1149,7 +1149,7 @@ struct FavoritesSection: View {
                             ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
                                 FavoriteEventCard(event: event, favoritesStore: favoritesStore)
                                     .containerRelativeFrame(.horizontal)
-                                    .padding(.horizontal, 2)
+                                    .padding(.horizontal, 6)
                             }
                         }
                         .scrollTargetLayout()
