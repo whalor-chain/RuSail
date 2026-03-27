@@ -1556,6 +1556,7 @@ struct SearchView: View {
     @State private var selectedFilter: YachtFilter = yachtFilters[0]
     @State private var showFavoritesOnly = false
     @State private var showUpcomingOnly = false
+    @State private var scrollID: String?
 
     private var filteredEvents: [RaceEvent] {
         let term = q.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -1613,35 +1614,54 @@ struct SearchView: View {
             ZStack {
                 GlassBackground()
 
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        filters
-                        togglesCard
-                        statsCard
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(spacing: 16) {
+                            Color.clear.frame(height: 0).id("calendarTop")
 
-                        ForEach(groupedEvents, id: \.key) { month, events in
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text(monthTitle(month))
-                                    .font(.title3.weight(.bold))
-                                    .foregroundStyle(.white)
+                            filters
+                            togglesCard
+                            statsCard
 
-                                ForEach(events) { event in
-                                    eventCard(event)
+                            ForEach(groupedEvents, id: \.key) { month, events in
+                                VStack(alignment: .leading, spacing: 10) {
+                                    Text(monthTitle(month))
+                                        .font(.title3.weight(.bold))
+                                        .foregroundStyle(.white)
+
+                                    ForEach(events) { event in
+                                        eventCard(event)
+                                    }
                                 }
+                                .glassCard(.thinMaterial, cornerRadius: 28)
                             }
-                            .glassCard(.thinMaterial, cornerRadius: 28)
-                        }
 
-                        if displayedEvents.isEmpty {
-                            Text(showFavoritesOnly || showUpcomingOnly ? "Нет регат по выбранным фильтрам" : "По выбранному фильтру ничего не найдено")
-                                .font(.headline)
-                                .foregroundStyle(.white.opacity(0.65))
-                                .padding(.top, 24)
+                            if displayedEvents.isEmpty {
+                                Text(showFavoritesOnly || showUpcomingOnly ? "Нет регат по выбранным фильтрам" : "По выбранному фильтру ничего не найдено")
+                                    .font(.headline)
+                                    .foregroundStyle(.white.opacity(0.65))
+                                    .padding(.top, 24)
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 12)
+                        .padding(.bottom, 26)
+                    }
+                    .onChange(of: selectedFilter) { _ in
+                        withAnimation(.none) {
+                            proxy.scrollTo("calendarTop", anchor: .top)
                         }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 12)
-                    .padding(.bottom, 26)
+                    .onChange(of: showFavoritesOnly) { _ in
+                        withAnimation(.none) {
+                            proxy.scrollTo("calendarTop", anchor: .top)
+                        }
+                    }
+                    .onChange(of: showUpcomingOnly) { _ in
+                        withAnimation(.none) {
+                            proxy.scrollTo("calendarTop", anchor: .top)
+                        }
+                    }
                 }
             }
             .navigationTitle("Календарь")
