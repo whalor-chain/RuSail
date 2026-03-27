@@ -12,6 +12,7 @@ import SwiftUI
 struct RuSailWidgetBundle: WidgetBundle {
     var body: some Widget {
         RuSailWidget()
+        RuSailLockScreenWidget()
         RuSailWidgetLiveActivity()
     }
 }

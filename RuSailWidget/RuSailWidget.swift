@@ -52,7 +52,7 @@ struct RaceEntry: TimelineEntry {
     let event: RaceEvent?
 }
 
-// MARK: - Widget View
+// MARK: - Home Screen Widget View
 
 struct RuSailWidgetEntryView: View {
     var entry: RaceEntry
@@ -85,7 +85,69 @@ struct RuSailWidgetEntryView: View {
     }
 }
 
-// MARK: - Widget
+// MARK: - Lock Screen Widget Views
+
+struct LockScreenRectangularView: View {
+    var entry: RaceEntry
+
+    var body: some View {
+        if let event = entry.event {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(event.title)
+                    .font(.system(size: 13, weight: .bold))
+                    .lineLimit(1)
+                Text("\(formatDate(event.startDate)) – \(formatDate(event.endDate))")
+                    .font(.system(size: 11))
+                    .opacity(0.7)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        } else {
+            Text("Нет регат")
+                .font(.caption)
+        }
+    }
+}
+
+struct LockScreenCircularView: View {
+    var entry: RaceEntry
+
+    var body: some View {
+        if let event = entry.event {
+            VStack(spacing: 2) {
+                Image(systemName: "sailboat.fill")
+                    .font(.system(size: 14))
+                Text(shortDate(event.startDate))
+                    .font(.system(size: 10, weight: .bold))
+                    .minimumScaleFactor(0.6)
+            }
+        } else {
+            Image(systemName: "sailboat")
+                .font(.system(size: 18))
+        }
+    }
+}
+
+struct LockScreenInlineView: View {
+    var entry: RaceEntry
+
+    var body: some View {
+        if let event = entry.event {
+            Text("⛵ \(event.title) · \(formatDate(event.startDate))")
+        } else {
+            Text("⛵ Нет регат")
+        }
+    }
+}
+
+private func shortDate(_ dateString: String) -> String {
+    guard let date = inputFormatter.date(from: dateString) else { return dateString }
+    let f = DateFormatter()
+    f.locale = Locale(identifier: "ru_RU")
+    f.dateFormat = "d MMM"
+    return f.string(from: date)
+}
+
+// MARK: - Home Screen Widget
 
 struct RuSailWidget: Widget {
     let kind: String = "RuSailWidget"
@@ -100,6 +162,39 @@ struct RuSailWidget: Widget {
         .configurationDisplayName("RuSail")
         .description("Ближайшая регата")
         .supportedFamilies([.systemSmall, .systemMedium])
+    }
+}
+
+// MARK: - Lock Screen Widget
+
+struct RuSailLockScreenWidget: Widget {
+    let kind: String = "RuSailLockScreenWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+            LockScreenWidgetEntryView(entry: entry)
+        }
+        .configurationDisplayName("RuSail")
+        .description("Ближайшая регата")
+        .supportedFamilies([.accessoryRectangular, .accessoryCircular, .accessoryInline])
+    }
+}
+
+// MARK: - Lock Screen Widget View Resolver
+
+struct LockScreenWidgetEntryView: View {
+    var entry: RaceEntry
+    @Environment(\.widgetFamily) var family
+
+    var body: some View {
+        switch family {
+        case .accessoryCircular:
+            LockScreenCircularView(entry: entry)
+        case .accessoryInline:
+            LockScreenInlineView(entry: entry)
+        default:
+            LockScreenRectangularView(entry: entry)
+        }
     }
 }
 
