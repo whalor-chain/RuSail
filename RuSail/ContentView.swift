@@ -1365,6 +1365,7 @@ struct UpcomingEventRow: View {
                 Image(systemName: "calendar.badge.clock")
                     .foregroundStyle(AppTheme.accent)
                     .font(.system(size: 20, weight: .semibold))
+                    .symbolEffect(.pulse.byLayer, options: .repeat(.periodic(delay: 2.0)))
 
                 Rectangle()
                     .fill(Color.white.opacity(0.10))
