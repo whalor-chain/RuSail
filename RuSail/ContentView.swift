@@ -1556,8 +1556,6 @@ struct SearchView: View {
     @State private var selectedFilter: YachtFilter = yachtFilters[0]
     @State private var showFavoritesOnly = false
     @State private var showUpcomingOnly = false
-    @State private var isLoaded = false
-    @State private var scrollViewID = UUID()
 
     private var filteredEvents: [RaceEvent] {
         let term = q.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -1615,59 +1613,35 @@ struct SearchView: View {
             ZStack {
                 GlassBackground()
 
-                if !isLoaded {
-                    VStack(spacing: 16) {
-                        ProgressView()
-                            .controlSize(.large)
-                            .tint(.white)
-                        Text("Загрузка регат…")
-                            .font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.5))
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                            withAnimation(.easeOut(duration: 0.3)) {
-                                isLoaded = true
-                            }
-                        }
-                    }
-                } else {
-                    ScrollView {
-                        LazyVStack(spacing: 16) {
-                            filters
-                            togglesCard
-                            statsCard
+                ScrollView {
+                    LazyVStack(spacing: 16) {
+                        filters
+                        togglesCard
+                        statsCard
 
-                            ForEach(groupedEvents, id: \.key) { month, events in
-                                VStack(alignment: .leading, spacing: 10) {
-                                    Text(monthTitle(month))
-                                        .font(.title3.weight(.bold))
-                                        .foregroundStyle(.white)
+                        ForEach(groupedEvents, id: \.key) { month, events in
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text(monthTitle(month))
+                                    .font(.title3.weight(.bold))
+                                    .foregroundStyle(.white)
 
-                                    ForEach(events) { event in
-                                        eventCard(event)
-                                    }
+                                ForEach(events) { event in
+                                    eventCard(event)
                                 }
-                                .glassCard(.thinMaterial, cornerRadius: 28)
                             }
-
-                            if displayedEvents.isEmpty {
-                                Text(showFavoritesOnly || showUpcomingOnly ? "Нет регат по выбранным фильтрам" : "По выбранному фильтру ничего не найдено")
-                                    .font(.headline)
-                                    .foregroundStyle(.white.opacity(0.65))
-                                    .padding(.top, 24)
-                            }
+                            .glassCard(.thinMaterial, cornerRadius: 28)
                         }
-                        .padding(.horizontal, 16)
-                        .padding(.top, 12)
-                        .padding(.bottom, 26)
+
+                        if displayedEvents.isEmpty {
+                            Text(showFavoritesOnly || showUpcomingOnly ? "Нет регат по выбранным фильтрам" : "По выбранному фильтру ничего не найдено")
+                                .font(.headline)
+                                .foregroundStyle(.white.opacity(0.65))
+                                .padding(.top, 24)
+                        }
                     }
-                    .id(scrollViewID)
-                    .transition(.opacity)
-                    .onChange(of: selectedFilter) { _ in scrollViewID = UUID() }
-                    .onChange(of: showFavoritesOnly) { _ in scrollViewID = UUID() }
-                    .onChange(of: showUpcomingOnly) { _ in scrollViewID = UUID() }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+                    .padding(.bottom, 26)
                 }
             }
             .navigationTitle("Календарь")
