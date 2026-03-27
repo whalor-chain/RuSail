@@ -1775,7 +1775,25 @@ struct SearchView: View {
                         .foregroundStyle(isFavorite ? .red : .white)
                         .scaleEffect(isFavorite ? 1.0 : 0.92)
                         .frame(width: 34, height: 34)
-                        .background(AppTheme.cardBackground, in: Circle())
+                        .background(
+                            Circle()
+                                .fill(.ultraThinMaterial)
+                                .overlay(
+                                    Circle()
+                                        .fill(Color.white.opacity(0.06))
+                                )
+                                .overlay(
+                                    Circle()
+                                        .strokeBorder(
+                                            LinearGradient(
+                                                colors: [.white.opacity(0.25), .white.opacity(0.05)],
+                                                startPoint: .top,
+                                                endPoint: .bottom
+                                            ),
+                                            lineWidth: 0.6
+                                        )
+                                )
+                        )
                 }
                 .buttonStyle(.plain)
                 .animation(.spring(response: 0.28, dampingFraction: 0.75), value: isFavorite)
