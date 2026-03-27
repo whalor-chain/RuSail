@@ -1151,7 +1151,7 @@ struct FavoritesSection: View {
                         }
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
-                    .frame(height: 210)
+                    .frame(height: 230)
 
                     HStack(spacing: 8) {
                         ForEach(0..<events.count, id: \.self) { index in
