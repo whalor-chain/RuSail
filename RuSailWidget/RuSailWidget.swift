@@ -1,88 +1,110 @@
-//
-//  RuSailWidget.swift
-//  RuSailWidget
-//
-//  Created by Станислава Гункер on 08.03.2026.
-//
-
 import WidgetKit
 import SwiftUI
 
-struct Provider: AppIntentTimelineProvider {
-    func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent())
-    }
+// MARK: - Date Helpers
 
-    func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: configuration)
-    }
-    
-    func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        var entries: [SimpleEntry] = []
+private let inputFormatter: DateFormatter = {
+    let f = DateFormatter()
+    f.dateFormat = "dd.MM.yyyy"
+    return f
+}()
 
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, configuration: configuration)
-            entries.append(entry)
-        }
+private let displayFormatter: DateFormatter = {
+    let f = DateFormatter()
+    f.locale = Locale(identifier: "ru_RU")
+    f.dateFormat = "d MMM"
+    return f
+}()
 
-        return Timeline(entries: entries, policy: .atEnd)
-    }
-
-//    func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
-//        // Generate a list containing the contexts this widget is relevant in.
-//    }
+private func formatDate(_ dateString: String) -> String {
+    guard let date = inputFormatter.date(from: dateString) else { return dateString }
+    return displayFormatter.string(from: date)
 }
 
-struct SimpleEntry: TimelineEntry {
+private func nextUpcomingEvent() -> RaceEvent? {
+    let today = Calendar.current.startOfDay(for: Date())
+    return raceEvents2026.first { event in
+        guard let end = inputFormatter.date(from: event.endDate) else { return false }
+        return Calendar.current.startOfDay(for: end) >= today
+    }
+}
+
+// MARK: - Provider
+
+struct Provider: TimelineProvider {
+    func placeholder(in context: Context) -> RaceEntry {
+        RaceEntry(date: Date(), event: raceEvents2026.first)
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (RaceEntry) -> Void) {
+        completion(RaceEntry(date: Date(), event: nextUpcomingEvent()))
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<RaceEntry>) -> Void) {
+        let entry = RaceEntry(date: Date(), event: nextUpcomingEvent())
+        let nextUpdate = Calendar.current.date(byAdding: .hour, value: 1, to: Date())!
+        completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
+    }
+}
+
+struct RaceEntry: TimelineEntry {
     let date: Date
-    let configuration: ConfigurationAppIntent
+    let event: RaceEvent?
 }
 
-struct RuSailWidgetEntryView : View {
-    var entry: Provider.Entry
+// MARK: - Widget View
+
+struct RuSailWidgetEntryView: View {
+    var entry: RaceEntry
+    @Environment(\.widgetFamily) var family
 
     var body: some View {
-        VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
+        if let event = entry.event {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(event.title)
+                    .font(.system(size: family == .systemSmall ? 13 : 15, weight: .bold))
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
 
-            Text("Favorite Emoji:")
-            Text(entry.configuration.favoriteEmoji)
+                Text("\(formatDate(event.startDate)) – \(formatDate(event.endDate))")
+                    .font(.system(size: family == .systemSmall ? 12 : 13, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.7))
+
+                Text(event.location)
+                    .font(.system(size: family == .systemSmall ? 11 : 12))
+                    .foregroundStyle(.white.opacity(0.5))
+                    .lineLimit(1)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(2)
+        } else {
+            Text("Нет предстоящих регат")
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.5))
         }
     }
 }
+
+// MARK: - Widget
 
 struct RuSailWidget: Widget {
     let kind: String = "RuSailWidget"
 
     var body: some WidgetConfiguration {
-        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
+        StaticConfiguration(kind: kind, provider: Provider()) { entry in
             RuSailWidgetEntryView(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
+                .containerBackground(for: .widget) {
+                    Color.black
+                }
         }
-    }
-}
-
-extension ConfigurationAppIntent {
-    fileprivate static var smiley: ConfigurationAppIntent {
-        let intent = ConfigurationAppIntent()
-        intent.favoriteEmoji = "😀"
-        return intent
-    }
-    
-    fileprivate static var starEyes: ConfigurationAppIntent {
-        let intent = ConfigurationAppIntent()
-        intent.favoriteEmoji = "🤩"
-        return intent
+        .configurationDisplayName("RuSail")
+        .description("Ближайшая регата")
+        .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
 
 #Preview(as: .systemSmall) {
     RuSailWidget()
 } timeline: {
-    SimpleEntry(date: .now, configuration: .smiley)
-    SimpleEntry(date: .now, configuration: .starEyes)
+    RaceEntry(date: .now, event: raceEvents2026.first)
 }

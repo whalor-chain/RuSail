@@ -11,6 +11,7 @@ import SwiftUI
 @main
 struct RuSailWidgetBundle: WidgetBundle {
     var body: some Widget {
-        FavoriteRaceLockScreenWidget()
+        RuSailWidget()
+        RuSailWidgetLiveActivity()
     }
 }
