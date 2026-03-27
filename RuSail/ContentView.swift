@@ -3874,15 +3874,15 @@ struct LinkItem: Identifiable {
 }
 
 private let linksTopSection: [LinkItem] = [
-    LinkItem(sfSymbol: "pills.fill", title: "Антидопинг 2026 (РУСАДА)", url: "https://course.rusada.ru/course/53", tint: .red),
+    LinkItem(sfSymbol: "pills", title: "Антидопинг 2026 (РУСАДА)", url: "https://course.rusada.ru/course/53", tint: .red),
 ]
 
 private let linksTelegramSection: [LinkItem] = [
-    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в Тольятти", url: "https://t.me/togliattiregattas", tint: .red),
-    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в Геленджике", url: "https://t.me/gelendzhik_regattas", tint: .red),
-    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в Сочи", url: "https://t.me/RusSailChamp2022", tint: .red),
-    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в Таганроге", url: "https://t.me/parusataganrog2023", tint: .red),
-    LinkItem(sfSymbol: "paperplane.fill", title: "Регаты в СПб", url: "https://t.me/pervenstvo", tint: .red),
+    LinkItem(sfSymbol: "paperplane", title: "Регаты в Тольятти", url: "https://t.me/togliattiregattas", tint: .red),
+    LinkItem(sfSymbol: "paperplane", title: "Регаты в Геленджике", url: "https://t.me/gelendzhik_regattas", tint: .red),
+    LinkItem(sfSymbol: "paperplane", title: "Регаты в Сочи", url: "https://t.me/RusSailChamp2022", tint: .red),
+    LinkItem(sfSymbol: "paperplane", title: "Регаты в Таганроге", url: "https://t.me/parusataganrog2023", tint: .red),
+    LinkItem(sfSymbol: "paperplane", title: "Регаты в СПб", url: "https://t.me/pervenstvo", tint: .red),
 ]
 
 struct LinksListView: View {
