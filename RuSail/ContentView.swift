@@ -778,7 +778,7 @@ struct FavoriteEventCard: View {
     @EnvironmentObject private var toast: FavoriteToastState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top) {
                 Text(event.title)
                     .font(.headline)
@@ -808,7 +808,7 @@ struct FavoriteEventCard: View {
             infoRow(icon: "calendar", text: "\(event.startDate) – \(event.endDate)")
             infoRow(icon: "mappin.and.ellipse", text: event.location)
 
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text("Классы яхт")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.white.opacity(0.72))
@@ -840,7 +840,7 @@ struct FavoriteEventCard: View {
             }
 
         }
-        .padding(18)
+        .padding(16)
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .background {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
@@ -1148,11 +1148,10 @@ struct FavoritesSection: View {
                             FavoriteEventCard(event: event, favoritesStore: favoritesStore)
                                 .tag(index)
                                 .padding(.horizontal, 2)
-                                .padding(.vertical, 4)
                         }
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
-                    .frame(height: 210)
+                    .frame(height: 235)
 
                     HStack(spacing: 8) {
                         ForEach(0..<events.count, id: \.self) { index in
