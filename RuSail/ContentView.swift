@@ -1148,10 +1148,11 @@ struct FavoritesSection: View {
                             FavoriteEventCard(event: event, favoritesStore: favoritesStore)
                                 .tag(index)
                                 .padding(.horizontal, 2)
+                                .padding(.vertical, 4)
                         }
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
-                    .frame(height: 230)
+                    .frame(height: 210)
 
                     HStack(spacing: 8) {
                         ForEach(0..<events.count, id: \.self) { index in
