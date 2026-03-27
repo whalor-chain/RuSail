@@ -1742,7 +1742,7 @@ struct SearchView: View {
 
                 Spacer()
 
-                Toggle("", isOn: $showFavoritesOnly.animation(.easeInOut(duration: 0.25)))
+                Toggle("", isOn: $showFavoritesOnly)
                     .labelsHidden()
                     .tint(.red)
             }
@@ -1763,7 +1763,7 @@ struct SearchView: View {
 
                 Spacer()
 
-                Toggle("", isOn: $showUpcomingOnly.animation(.easeInOut(duration: 0.25)))
+                Toggle("", isOn: $showUpcomingOnly)
                     .labelsHidden()
                     .tint(.green)
             }
