@@ -1144,25 +1144,15 @@ struct FavoritesSection: View {
                 .glassPane(cornerRadius: 24)
             } else {
                 VStack(spacing: 8) {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        LazyHStack(spacing: 0) {
-                            ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
-                                FavoriteEventCard(event: event, favoritesStore: favoritesStore)
-                                    .containerRelativeFrame(.horizontal)
-                                    .padding(.horizontal, 6)
-                            }
+                    TabView(selection: $selectedIndex) {
+                        ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
+                            FavoriteEventCard(event: event, favoritesStore: favoritesStore)
+                                .tag(index)
+                                .padding(.horizontal, 2)
                         }
-                        .scrollTargetLayout()
                     }
-                    .scrollTargetBehavior(.viewAligned)
-                    .scrollPosition(id: Binding(
-                        get: { events.indices.contains(selectedIndex) ? events[selectedIndex].id : nil },
-                        set: { newID in
-                            if let newID, let idx = events.firstIndex(where: { $0.id == newID }) {
-                                selectedIndex = idx
-                            }
-                        }
-                    ))
+                    .tabViewStyle(.page(indexDisplayMode: .never))
+                    .frame(height: 210)
 
                     HStack(spacing: 8) {
                         ForEach(0..<events.count, id: \.self) { index in
