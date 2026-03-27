@@ -1557,6 +1557,7 @@ struct SearchView: View {
     @State private var showFavoritesOnly = false
     @State private var showUpcomingOnly = false
     @State private var isLoaded = false
+    @State private var scrollViewID = UUID()
 
     private var filteredEvents: [RaceEvent] {
         let term = q.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -1633,7 +1634,7 @@ struct SearchView: View {
                     }
                 } else {
                     ScrollView {
-                        VStack(spacing: 16) {
+                        LazyVStack(spacing: 16) {
                             filters
                             togglesCard
                             statsCard
@@ -1662,7 +1663,11 @@ struct SearchView: View {
                         .padding(.top, 12)
                         .padding(.bottom, 26)
                     }
+                    .id(scrollViewID)
                     .transition(.opacity)
+                    .onChange(of: selectedFilter) { _ in scrollViewID = UUID() }
+                    .onChange(of: showFavoritesOnly) { _ in scrollViewID = UUID() }
+                    .onChange(of: showUpcomingOnly) { _ in scrollViewID = UUID() }
                 }
             }
             .navigationTitle("Календарь")
