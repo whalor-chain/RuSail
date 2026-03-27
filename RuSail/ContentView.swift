@@ -1052,7 +1052,7 @@ struct LiveNowCarouselSection: View {
             if events.isEmpty {
                 EmptyLiveStateCard()
             } else {
-                VStack(spacing: 12) {
+                VStack(spacing: 8) {
                     TabView(selection: $selectedIndex) {
                         ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
                             LiveEventCard(event: event)
@@ -1142,7 +1142,7 @@ struct FavoritesSection: View {
                 .padding(18)
                 .glassPane(cornerRadius: 24)
             } else {
-                VStack(spacing: 12) {
+                VStack(spacing: 8) {
                     TabView(selection: $selectedIndex) {
                         ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
                             FavoriteEventCard(event: event, favoritesStore: favoritesStore)
@@ -1151,7 +1151,7 @@ struct FavoritesSection: View {
                         }
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
-                    .frame(height: 235)
+                    .frame(height: 280)
 
                     HStack(spacing: 8) {
                         ForEach(0..<events.count, id: \.self) { index in
