@@ -778,7 +778,7 @@ struct FavoriteEventCard: View {
     @EnvironmentObject private var toast: FavoriteToastState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top) {
                 Text(event.title)
                     .font(.headline)
